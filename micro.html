@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8086 Microprocessor Study Hub</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --neon-blue: #00f0ff;
+            --neon-purple: #b026ff;
+            --glass-blur: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(176, 38, 255, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.15), transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(var(--glass-blur));
+            border-bottom: 1px solid var(--card-border);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Main Container */
+        main {
+            padding: 100px 5% 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography & Highlights */
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--neon-blue); }
+        h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--neon-purple); }
+        
+        .highlight {
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* Home Hero */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Glassmorphism Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 16px;
+            padding: 2px;
+            background: linear-gradient(45deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(176, 38, 255, 0.2);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Lists inside cards */
+        .card ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .card ul li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .card ul li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--neon-purple);
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #000;
+            border-left: 3px solid var(--neon-blue);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #a5b4fc;
+            margin-top: 0.5rem;
+        }
+
+        .instruction-type {
+            color: #34d399; /* Green for commands */
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* In a real app, implement a hamburger menu here */
+            }
+            .nav-links.mobile-active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(11, 15, 25, 0.95);
+                padding: 1rem;
+            }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+<nav>
+    <div class="logo" onclick="switchTab('home')"><i class="fa-solid fa-microchip"></i> 8086 Hub</div>
+    <div class="nav-links">
+        
+        <a href="https://drive.google.com/drive/folders/1czypjXXLjvCTdN6dTKszuI0NE6PvqFTw?usp=drive_link" class="nav-btn active">Drive</a>
+         <a href="https://youtube.com/playlist?list=PL0P-pP_LQZV0xxaPZ42UL7bpULw2ypnFQ&si=qZIC7lOuX0dr2fOF" class="nav-btn active">Youtube</a>
+    </div>
+</nav>
+    <!-- Main Content -->
+    <main>
+        
+        <!-- Home Section -->
+        <section id="home" class="section active hero">
+            <h1>8086 Microprocessor <span style="color: var(--neon-blue)">Study Hub</span></h1>
+            <p>Quick, efficient, and visually clear notes for mastering the fundamentals of the 16-bit 8086 Microprocessor.</p>
+            
+            <div class="topic-grid">
+                <div class="card" style="cursor: pointer;" onclick="switchTab('architecture')">
+                    <i class="fa-solid fa-sitemap"></i>
+                    <h3>Architecture</h3>
+                    <p>BIU, EU, and internal register organization.</p>
+                </div>
+                <div class="card" style="cursor: pointer;" onclick="switchTab('pins')">
+                    <i class="fa-solid fa-plug"></i>
+                    <h3>Pin Diagram</h3>
+                    <p>40 pins, control signals, and operating modes.</p>
+                </div>
+                <div class="card" style="cursor: pointer;" onclick="switchTab('instructions')">
+                    <i class="fa-solid fa-code"></i>
+                    <h3>Instruction Set</h3>
+                    <p>Data transfer, arithmetic, logic, and control.</p>
+                </div>
+                <div class="card" style="cursor: pointer;" onclick="switchTab('addressing')">
+                    <i class="fa-solid fa-route"></i>
+                    <h3>Addressing Modes</h3>
+                    <p>Ways the 8086 accesses data in memory.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section id="architecture" class="section">
+            <h2><i class="fa-solid fa-sitemap"></i> Architecture of 8086</h2>
+            <p>The 8086 is a <span class="highlight">16-bit microprocessor</span> that accesses up to <span class="highlight">1MB of memory</span> via a 20-bit address bus.</p>
+            
+            <div class="topic-grid">
+                <div class="card">
+                    <h3>Two Main Units</h3>
+                    <ul>
+                        <li><span class="highlight">BIU (Bus Interface Unit):</span> Handles all data and addresses on the buses. Fetches instructions, reads/writes data to memory and I/O.</li>
+                        <li><span class="highlight">EU (Execution Unit):</span> Tells the BIU where to fetch instructions or data from. Decodes and executes instructions.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Registers (16-bit)</h3>
+                    <ul>
+                        <li><span class="highlight">General Purpose:</span> AX (Accumulator), BX (Base), CX (Count), DX (Data)</li>
+                        <li><span class="highlight">Segment:</span> CS (Code), DS (Data), SS (Stack), ES (Extra)</li>
+                        <li><span class="highlight">Pointer & Index:</span> SP (Stack Pointer), BP (Base Pointer), SI (Source Index), DI (Destination Index)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pin Diagram Section -->
+        <section id="pins" class="section">
+            <h2><i class="fa-solid fa-plug"></i> Pin Diagram</h2>
+            <p>The 8086 is a 40-pin Dual Inline Package (DIP) IC. It operates in two modes based on the MN/MX pin.</p>
+            
+            <div class="topic-grid">
+                <div class="card">
+                    <h3>Pin Categories</h3>
+                    <ul>
+                        <li><span class="highlight">Address/Data (AD0–AD15):</span> Time-multiplexed pins carrying either address or data.</li>
+                        <li><span class="highlight">Address/Status (A16/S3–A19/S6):</span> Upper 4 bits of the 20-bit address.</li>
+                        <li><span class="highlight">Control Signals:</span> RD (Read), WR (Write), ALE (Address Latch Enable).</li>
+                        <li><span class="highlight">Power:</span> Vcc (+5V, Pin 40), GND (Pins 1 & 20).</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Operating Modes</h3>
+                    <ul>
+                        <li><span class="highlight">Minimum Mode (Pin 33 High):</span> The 8086 operates as a single processor in the system. It generates all control signals itself.</li>
+                        <li><span class="highlight">Maximum Mode (Pin 33 Low):</span> Used in multiprocessor systems (e.g., with 8087 coprocessor). An external bus controller (8288) generates control signals.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Instruction Set Section -->
+        <section id="instructions" class="section">
+            <h2><i class="fa-solid fa-code"></i> Instruction Set</h2>
+            <p>The instructions used by the 8086 can be grouped into several key functional categories.</p>
+
+            <div class="topic-grid">
+                <div class="card">
+                    <h3>Data Transfer</h3>
+                    <p>Moves data between registers, or between memory and registers.</p>
+                    <div class="code-block">
+                        <span class="instruction-type">MOV</span> AX, BX  // Copies BX to AX<br>
+                        <span class="instruction-type">PUSH</span> CX     // Pushes CX to stack<br>
+                        <span class="instruction-type">POP</span> DX      // Pops stack top to DX
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Arithmetic</h3>
+                    <p>Performs basic math operations.</p>
+                    <div class="code-block">
+                        <span class="instruction-type">ADD</span> AL, 05H // AL = AL + 05H<br>
+                        <span class="instruction-type">SUB</span> CX, BX  // CX = CX - BX<br>
+                        <span class="instruction-type">MUL</span> BL      // AX = AL * BL
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Logical</h3>
+                    <p>Bitwise operations and shifting.</p>
+                    <div class="code-block">
+                        <span class="instruction-type">AND</span> AX, 0FFFH // Bitwise AND<br>
+                        <span class="instruction-type">XOR</span> BX, BX    // Clears BX (BX=0)<br>
+                        <span class="instruction-type">NOT</span> CX        // 1's complement of CX
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Control Transfer</h3>
+                    <p>Alters the flow of program execution.</p>
+                    <div class="code-block">
+                        <span class="instruction-type">JMP</span> 2000H     // Unconditional jump<br>
+                        <span class="instruction-type">CALL</span> 3000H    // Call subroutine<br>
+                        <span class="instruction-type">RET</span>           // Return from subroutine
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Addressing Modes Section -->
+        <section id="addressing" class="section">
+            <h2><i class="fa-solid fa-route"></i> Addressing Modes</h2>
+            <p>Addressing modes define how the microprocessor finds the data required for an instruction.</p>
+
+            <div class="topic-grid">
+                <div class="card">
+                    <h3>Immediate & Register</h3>
+                    <ul>
+                        <li><span class="highlight">Immediate:</span> The 8-bit or 16-bit data is specified directly in the instruction.
+                            <div class="code-block">MOV AX, 1234H</div>
+                        </li>
+                        <li><span class="highlight">Register:</span> The operand is contained in an 8-bit or 16-bit register.
+                            <div class="code-block">MOV AX, BX</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Direct & Indirect</h3>
+                    <ul>
+                        <li><span class="highlight">Direct:</span> The effective address of the memory location is given directly.
+                            <div class="code-block">MOV AX, [5000H]</div>
+                        </li>
+                        <li><span class="highlight">Register Indirect:</span> The effective address is stored in a pointer/index register (BX, DI, SI).
+                            <div class="code-block">MOV AX, [BX]</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Indexed & Based</h3>
+                    <ul>
+                        <li><span class="highlight">Indexed:</span> Operand's address is the sum of an index register (SI/DI) and an 8/16-bit displacement.
+                            <div class="code-block">MOV AX, [SI + 20H]</div>
+                        </li>
+                        <li><span class="highlight">Based:</span> Operand's address is the sum of a base register (BX/BP) and a displacement.
+                            <div class="code-block">MOV AX, [BX + 04H]</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript for Navigation -->
+    <script>
+        function switchTab(tabId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show target section
+            document.getElementById(tabId).classList.add('active');
+
+            // Highlight active nav button (if it's not the logo clicked)
+            event.currentTarget.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>

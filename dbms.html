@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBMS Learning Hub</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Prism.js (Syntax Highlighting) CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            /* Dark Mode (Default) */
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --primary-color: #0ea5e9;
+            --secondary-color: #6366f1;
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .light-mode {
+            --bg-color: #f8fafc;
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        /* Progress Bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--gradient);
+            z-index: 1000;
+            width: 0%;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            z-index: 999;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-bar {
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        button.theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Header / Hero Section */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .quick-access {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-glass {
+            padding: 12px 24px;
+            border-radius: 30px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .btn-glass:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
+            color: #fff;
+        }
+
+        /* Container & Sections */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        section {
+            margin-bottom: 100px;
+            padding-top: 80px; /* Offset for sticky nav */
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glass-shadow);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Grid Layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+
+        /* Accordions */
+        .accordion {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .accordion-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .accordion.active .accordion-content {
+            padding: 20px;
+            max-height: 1000px; /* arbitrary large number */
+        }
+
+        .accordion.active .accordion-header i {
+            transform: rotate(180deg);
+            transition: transform 0.3s;
+        }
+
+        ul { margin-left: 20px; line-height: 1.8; color: var(--text-muted); }
+        h3 { margin-bottom: 15px; color: var(--primary-color); }
+        
+        /* Floating Nav Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient);
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .floating-btn.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            header h1 { font-size: 2.5rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* Navbar Buttons */
+.nav-btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.nav-btn-solid {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 10px rgba(14, 165, 233, 0.2);
+}
+
+.nav-btn-solid:hover {
+    background-color: #0284c7;
+    transform: translateY(-1px);
+}
+
+.nav-btn-outline {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1.5px solid var(--primary-color);
+}
+
+.nav-btn-outline:hover {
+    background-color: rgba(14, 165, 233, 0.1);
+    transform: translateY(-1px);
+}
+
+    </style>
+</head>
+<body>
+
+    <div id="progress-bar"></div>
+
+    <nav>
+       <nav>
+    <div class="logo"><i class="fas fa-database"></i> DBMS Hub</div>
+    <div class="nav-links">
+        <a href="#intro">Intro</a>
+        <a href="#normalization">Normalization</a>
+        <a href="#sql">SQL</a>
+        <a href="#keys">Keys & Rel</a>
+    </div>
+    
+    <!-- NEW CONTROLS SECTION -->
+    <div class="controls">
+        <a href="https://www.youtube.com/watch?v=YRnjGeQbsHQ" class="nav-btn nav-btn-outline">Video</a>
+        <a href="https://drive.google.com/drive/folders/1JjtRHyF3nCg8_EOac5-Nrj--JPIPY0B9?usp=drive_link" class="nav-btn nav-btn-solid">Drive</a>
+        
+        <!-- Keeping the dark mode toggle next to the buttons -->
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+</nav>
+      
+    </nav>
+
+    <header id="home">
+        <h1 data-aos="fade-down">DBMS Learning Hub</h1>
+        <p data-aos="fade-up" data-aos-delay="100">Master Database Management Systems with interactive notes</p>
+        <div class="quick-access" data-aos="fade-up" data-aos-delay="200">
+            <a href="#intro" class="btn-glass"><i class="fas fa-book"></i> Intro to DBMS</a>
+            <a href="#normalization" class="btn-glass"><i class="fas fa-layer-group"></i> Normalization</a>
+            <a href="#sql" class="btn-glass"><i class="fas fa-code"></i> SQL Commands</a>
+            <a href="#keys" class="btn-glass"><i class="fas fa-key"></i> Keys & Relations</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Section 1: Introduction -->
+        <section id="intro" class="searchable">
+            <h2 class="section-title" data-aos="fade-right">1. Introduction to DBMS</h2>
+            
+            <div class="glass-card" data-aos="fade-up">
+                <h3>Definition & Basics</h3>
+                <p>A Database Management System (DBMS) is software designed to store, retrieve, define, and manage data in a database.</p>
+                <br>
+                <div class="grid-2">
+                    <div>
+                        <h4>Data vs Information</h4>
+                        <ul>
+                            <li><strong>Data:</strong> Raw, unorganized facts (e.g., "100", "John").</li>
+                            <li><strong>Information:</strong> Processed data that carries meaning (e.g., "Student John scored 100").</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Advantages of DBMS</h4>
+                        <ul>
+                            <li>Controls database redundancy</li>
+                            <li>Data sharing and integration</li>
+                            <li>Enforces data security and integrity</li>
+                            <li>Data consistency</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
+                    <h3>Features of DBMS</h3>
+                    <ul>
+                        <li><i class="fas fa-shield-alt"></i> <strong>Data Security:</strong> Protection against unauthorized access.</li>
+                        <li><i class="fas fa-compress-arrows-alt"></i> <strong>Reduced Redundancy:</strong> Eliminates duplicate data.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Data Consistency:</strong> Ensures data is accurate across all tables.</li>
+                        <li><i class="fas fa-users"></i> <strong>Multi-user Access:</strong> Concurrent access without data loss.</li>
+                    </ul>
+                </div>
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="200">
+                    <h3>Types of DBMS</h3>
+                    <ul>
+                        <li><strong>Hierarchical:</strong> Tree-like structure (Parent-Child).</li>
+                        <li><strong>Network:</strong> Graph structure allowing complex relationships.</li>
+                        <li><strong>Relational (RDBMS):</strong> Data stored in tables (Rows/Columns). <em>Most common.</em></li>
+                        <li><strong>Object-Oriented:</strong> Data stored as objects, similar to OOP.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Normalization -->
+        <section id="normalization" class="searchable">
+            <h2 class="section-title" data-aos="fade-right">2. Normalization</h2>
+            <div class="glass-card" data-aos="fade-up">
+                <h3>Definition & Purpose</h3>
+                <p>Normalization is the process of organizing data to minimize redundancy and eliminate insertion, update, and deletion anomalies. <strong>Purpose:</strong> Reduce redundancy and improve data consistency.</p>
+            </div>
+
+            <div class="accordion-container" data-aos="fade-up" data-aos-delay="100">
+                <div class="accordion">
+                    <div class="accordion-header">First Normal Form (1NF) <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">
+                        <p>A table is in 1NF if it contains only atomic (indivisible) values. There are no repeating groups or arrays.</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header">Second Normal Form (2NF) <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">
+                        <p>Must be in 1NF. All non-key attributes must be fully functionally dependent on the primary key. (Removes partial dependency).</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header">Third Normal Form (3NF) <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">
+                        <p>Must be in 2NF. There should be no transitive dependency (non-key attributes should not depend on other non-key attributes).</p>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header">Boyce-Codd Normal Form (BCNF) <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">
+                        <p>A stricter version of 3NF. For every functional dependency X → Y, X must be a super key.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: SQL Commands -->
+        <section id="sql" class="searchable">
+            <h2 class="section-title" data-aos="fade-right">3. SQL Commands</h2>
+            
+            <div class="grid-2">
+                <!-- DDL -->
+                <div class="glass-card" data-aos="fade-up">
+                    <h3>Data Definition Language (DDL)</h3>
+                    <p>Defines the database structure or schema.</p>
+                    <ul>
+                        <li><code>CREATE</code>: Creates a new table/database.</li>
+                        <li><code>ALTER</code>: Modifies structure.</li>
+                        <li><code>DROP</code>: Deletes table structure and data.</li>
+                    </ul>
+                    <pre><code class="language-sql">CREATE TABLE Student(
+   ID INT PRIMARY KEY,
+   Name VARCHAR(20)
+);</code></pre>
+                </div>
+
+                <!-- DML -->
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
+                    <h3>Data Manipulation Language (DML)</h3>
+                    <p>Manages data within schema objects.</p>
+                    <ul>
+                        <li><code>INSERT</code>: Adds new rows.</li>
+                        <li><code>UPDATE</code>: Modifies existing rows.</li>
+                        <li><code>DELETE</code>: Removes rows.</li>
+                    </ul>
+                    <pre><code class="language-sql">INSERT INTO Student (ID, Name) 
+VALUES (1, 'Alice');
+
+UPDATE Student SET Name = 'Bob' 
+WHERE ID = 1;</code></pre>
+                </div>
+
+                <!-- DQL & TCL -->
+                <div class="glass-card" data-aos="fade-up">
+                    <h3>DQL & TCL</h3>
+                    <p><strong>DQL (Data Query Language):</strong> Used to fetch data.</p>
+                    <pre><code class="language-sql">SELECT * FROM Student;</code></pre>
+                    <br>
+                    <p><strong>TCL (Transaction Control Language):</strong> Manages transactions.</p>
+                    <ul>
+                        <li><code>COMMIT</code>: Saves work permanently.</li>
+                        <li><code>ROLLBACK</code>: Restores database to last commit.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Keys & Relationships -->
+        <section id="keys" class="searchable">
+            <h2 class="section-title" data-aos="fade-right">4. Keys & Relationships</h2>
+            
+            <div class="grid-2">
+                <div class="glass-card" data-aos="fade-up">
+                    <h3>Database Keys</h3>
+                    <ul>
+                        <li><strong>Primary Key:</strong> Uniquely identifies each record in a table. Cannot be NULL.</li>
+                        <li><strong>Foreign Key:</strong> A key used to link two tables together; refers to the PK of another table.</li>
+                        <li><strong>Candidate Key:</strong> A set of attributes that can uniquely identify a tuple. A table can have multiple.</li>
+                        <li><strong>Super Key:</strong> A set of one or more attributes which can uniquely identify a row.</li>
+                        <li><strong>Composite Key:</strong> A primary key consisting of more than one attribute.</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
+                    <h3>Table Relationships</h3>
+                    <div class="accordion-container">
+                        <div class="accordion">
+                            <div class="accordion-header">One-to-One (1:1) <i class="fas fa-link"></i></div>
+                            <div class="accordion-content">
+                                <p>One record in Table A is linked to exactly one record in Table B. (e.g., User and UserProfile).</p>
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <div class="accordion-header">One-to-Many (1:N) <i class="fas fa-project-diagram"></i></div>
+                            <div class="accordion-content">
+                                <p>One record in Table A relates to multiple records in Table B. (e.g., Department and Employees).</p>
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <div class="accordion-header">Many-to-Many (M:N) <i class="fas fa-network-wired"></i></div>
+                            <div class="accordion-content">
+                                <p>Multiple records in Table A relate to multiple records in Table B. Requires a junction table. (e.g., Students and Courses).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Floating Back to Top -->
+    <a href="#home" class="floating-btn" id="scrollTop"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Scripts -->
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Prism.js for Syntax Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        // Scroll Progress Bar
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+
+            // Floating Button Visibility
+            const floatBtn = document.getElementById('scrollTop');
+            if (document.documentElement.scrollTop > 300) {
+                floatBtn.classList.add('visible');
+            } else {
+                floatBtn.classList.remove('visible');
+            }
+        };
+
+        // Accordion Logic
+        const accordions = document.querySelectorAll('.accordion');
+        accordions.forEach(acc => {
+            const header = acc.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                // Close others
+                accordions.forEach(item => {
+                    if (item !== acc) item.classList.remove('active');
+                });
+                acc.classList.toggle('active');
+            });
+        });
+
+        // Simple Search Filter
+        const searchInput = document.getElementById('searchInput');
+        const searchableSections = document.querySelectorAll('.searchable');
+
+        searchInput.addEventListener('keyup', function(e) {
+            const term = e.target.value.toLowerCase();
+            
+            searchableSections.forEach(section => {
+                const text = section.innerText.toLowerCase();
+                if(text.includes(term)) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
