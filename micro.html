@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>8086 Microprocessor Study Hub</title>
     
+  <!-- Navigation -->
+<nav>
+    <div class="logo" onclick="switchTab('home')"><i class="fa-solid fa-microchip"></i> 8086 Hub</div>
+    <div class="nav-links">
+        
+         <a href="https://youtube.com/playlist?list=PL0P-pP_LQZV0xxaPZ42UL7bpULw2ypnFQ&si=qZIC7lOuX0dr2fOF" class="nav-btn active">Youtube</a>
+    </div>
+</nav>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
@@ -241,15 +250,6 @@
 </head>
 <body>
 
-  <!-- Navigation -->
-<nav>
-    <div class="logo" onclick="switchTab('home')"><i class="fa-solid fa-microchip"></i> 8086 Hub</div>
-    <div class="nav-links">
-        
-        <a href="https://drive.google.com/drive/folders/1czypjXXLjvCTdN6dTKszuI0NE6PvqFTw?usp=drive_link" class="nav-btn active">Drive</a>
-         <a href="https://youtube.com/playlist?list=PL0P-pP_LQZV0xxaPZ42UL7bpULw2ypnFQ&si=qZIC7lOuX0dr2fOF" class="nav-btn active">Youtube</a>
-    </div>
-</nav>
     <!-- Main Content -->
     <main>
         
@@ -278,6 +278,11 @@
                     <i class="fa-solid fa-route"></i>
                     <h3>Addressing Modes</h3>
                     <p>Ways the 8086 accesses data in memory.</p>
+                </div>
+                 <div class="card" style="cursor: pointer;" onclick="switchTab('link')">
+                    <i class="fa-solid fa-plug"></i>
+                    <h3>LINKS</h3>
+                    <p>Click for pdfs</p>
                 </div>
             </div>
         </section>
@@ -418,6 +423,23 @@
             </div>
         </section>
 
+        <!-- link Section -->
+        <section id="link" class="section">
+            <h2><i class="fa-solid fa-plug"></i> links</h2>
+            <p>Click for pdfs</p>
+            
+            <div class="topic-grid">
+                <div class="card">
+                    <h3>Follow links for notes</h3>
+                    <ul>
+                        <li><a href="docs/MP Unit I.pdf" target="_blank">Unit 1</a></li>
+                        <li><a href="docs/MP Unit II.pdf" target="_blank">Unit 2</a></li>
+                        <li><a href="docs/MP Unit III.pdf" target="_blank">Unit 3</a></li>
+                        <li><a href="docs/MP Unit IV.pdf" target="_blank">Unit 4</a></li>   
+                    </ul>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- JavaScript for Navigation -->
