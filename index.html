@@ -284,6 +284,161 @@
         }
 
         /* --- RESPONSIVE DESIGN --- */
+        /* --- EXAM POPUP MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 2px solid var(--accent);
+            border-radius: 25px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .modal-body {
+            margin: 2rem 0;
+        }
+
+        .modal-body p {
+            color: var(--text-main);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body .highlight {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .modal-body .countdown {
+            background: rgba(100, 255, 218, 0.1);
+            border: 2px solid var(--accent);
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.9rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: #ffffff;
+        }
+
+        .modal-btn-primary:hover {
+            box-shadow: 0 8px 20px rgba(100, 255, 218, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            color: var(--primary-dark);
+            border: 2px solid var(--primary-dark);
+        }
+
+        .modal-btn-secondary:hover {
+            background: var(--primary-dark);
+            color: #ffffff;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none; /* In a real app, you'd add a hamburger menu here */
@@ -293,6 +448,13 @@
             }
             .card-container {
                 grid-template-columns: 1fr;
+            }
+            .modal-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            .modal-title {
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -310,6 +472,32 @@
             <li><a href="#about">About</a></li>
         </ul>
     </nav>
+
+    <!-- Exam Notification Modal -->
+    <div id="examModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🎓 Upcoming Exam</h2>
+                <button class="close-btn" onclick="closeExamModal()">&times;</button>
+            </div>
+            <div class="modal-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="modal-body">
+                <p>Prepare for your <span class="highlight">End Semester Exams</span>!</p>
+                <div class="countdown">
+                    <p>📅 Starting from May 15, 2026</p>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-light);">Click below to view the complete timetable and exam schedule.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="timetable.html" class="modal-btn modal-btn-primary">
+                    <i class="fa-solid fa-calendar-check"></i> View Timetable
+                </a>
+                <button class="modal-btn modal-btn-secondary" onclick="closeExamModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -360,10 +548,17 @@
                 <!-- Links to PDF -->
                 <a href="docs/peace.pdf" class="btn">Open Course</a>
             </div>
-        </div>
-    </section>
 
-    <!-- Footer -->
+            <!-- Exam Timetable Card -->
+            <div class="card">
+                <i class="fa-solid fa-calendar-check card-icon"></i>
+                <h3>Exam Timetable</h3>
+                <p>View the complete end semester examination schedule with dates, times, and important instructions for all exams.</p>
+                <!-- Links to timetable page -->
+                <a href="timetable.html" class="btn">View Timetable</a>
+            </div>
+
+        </div>
     <footer id="about">
         <p>Made with <i class="fa-solid fa-heart" style="color: #ff4757;"></i> for BSc CS Students</p>
         <div class="social-links">
@@ -375,6 +570,37 @@
 
     <!-- JavaScript for Scroll Animations -->
     <script>
+        // Modal Functions
+        function openExamModal() {
+            document.getElementById('examModal').classList.add('show');
+        }
+
+        function closeExamModal() {
+            document.getElementById('examModal').classList.remove('show');
+            // Store in localStorage so it doesn't show again for 24 hours
+            localStorage.setItem('examModalClosed', new Date().getTime());
+        }
+
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            const modal = document.getElementById('examModal');
+            if (event.target === modal) {
+                closeExamModal();
+            }
+        }
+
+        // Show modal on page load (if not closed in last 24 hours)
+        window.addEventListener('load', function() {
+            const lastClosed = localStorage.getItem('examModalClosed');
+            const now = new Date().getTime();
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+
+            // Show modal if it hasn't been closed or if 24 hours have passed
+            if (!lastClosed || (now - lastClosed) > twentyFourHours) {
+                openExamModal();
+            }
+        });
+
         // Intersection Observer to trigger fade-in animations on scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
