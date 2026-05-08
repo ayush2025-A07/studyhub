@@ -113,15 +113,17 @@
         }
 
         .install-btn {
+            display: inline-block;
             background: var(--accent);
-            color: var(--primary-dark);
+            color: #ffffff;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-weight: 600;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
 
         .install-btn:hover {
@@ -492,7 +494,6 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#subjects">Subjects</a></li>
             <li><a href="#about">About</a></li>
-            <li><button id="installBtn" class="install-btn"><i class="fa-solid fa-download"></i> Install App</button></li>
         </ul>
     </nav>
 
@@ -528,6 +529,7 @@
         <h1>BSc Computer Science <br><span>Study Portal</span></h1>
         <p>Refer to drive and plylist for deyail studies</p>
         <a href="#subjects" class="btn">Explore Courses <i class="fa-solid fa-arrow-down" style="margin-left: 8px;"></i></a>
+        <button id="installBtn" class="install-btn"><i class="fa-solid fa-download"></i> Install App</button>
     </section>
 
     <!-- Main Subjects Section -->
