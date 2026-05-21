@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundation of Peace — PCE10010 | MIT-WPU Study Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+ <style>
+    /* ============================================================
+   FOUNDATION OF PEACE — PCE10010 — STYLE.CSS
+   Aesthetic: Refined Dark Academia meets Structured Clarity
+   ============================================================ */
+
+:root {
+  --bg: #0d0f14;
+  --surface: #13161e;
+  --surface2: #1a1e2a;
+  --surface3: #20253a;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8eaf2;
+  --text-muted: #7a81a0;
+  --text-sub: #a0a8c5;
+  --accent: #7c9eff;
+  --accent-glow: rgba(124,158,255,0.15);
+  --gold: #e8c96a;
+  --gold-dim: rgba(232,201,106,0.12);
+  --green: #5dd9a4;
+  --green-dim: rgba(93,217,164,0.1);
+  --red: #ff7272;
+  --red-dim: rgba(255,114,114,0.1);
+  --yellow: #f5c842;
+  --yellow-dim: rgba(245,200,66,0.1);
+  --sidebar-w: 260px;
+  --header-h: 60px;
+  --progress-h: 5px;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="light"] {
+  --bg: #f4f3ef;
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --surface3: #e8e4dd;
+  --border: rgba(0,0,0,0.08);
+  --text: #1a1c28;
+  --text-muted: #666b80;
+  --text-sub: #4a5068;
+  --accent: #3660e8;
+  --accent-glow: rgba(54,96,232,0.1);
+  --gold: #b87c08;
+  --gold-dim: rgba(184,124,8,0.08);
+  --green: #1a8c5c;
+  --green-dim: rgba(26,140,92,0.08);
+  --red: #d63031;
+  --red-dim: rgba(214,48,49,0.08);
+  --shadow: 0 4px 24px rgba(0,0,0,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+  overflow-x: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* ======== LOADER ======== */
+#loader {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; }
+.loader-inner { text-align: center; }
+.loader-logo { font-size: 4rem; margin-bottom: 1rem; animation: pulse 1s infinite; }
+.loader-text { font-family: var(--font-body); color: var(--text-muted); margin-bottom: 1.5rem; letter-spacing: 0.1em; font-size: 0.8rem; text-transform: uppercase; }
+.loader-bar { width: 200px; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.loader-fill { height: 100%; background: var(--accent); border-radius: 2px; animation: loadFill 1.8s ease forwards; }
+@keyframes loadFill { from { width: 0; } to { width: 100%; } }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+/* ======== HEADER ======== */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.logo { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+.header-subtitle { font-size: 0.72rem; color: var(--text-muted); border-left: 1px solid var(--border); padding-left: 1rem; }
+.header-right { display: flex; align-items: center; gap: 0.75rem; }
+
+/* Search */
+.search-wrap { position: relative; }
+.search-wrap input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.45rem 2.5rem 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.83rem;
+  width: 220px;
+  outline: none;
+  transition: border-color var(--transition), width var(--transition);
+}
+.search-wrap input:focus { border-color: var(--accent); width: 280px; }
+.search-icon { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.1rem; pointer-events: none; }
+.search-dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 200;
+  display: none;
+}
+.search-dropdown.open { display: block; }
+.search-result-item {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+.search-result-item:hover { background: var(--surface3); }
+.search-result-item mark { background: var(--accent-glow); color: var(--accent); border-radius: 2px; padding: 0 2px; }
+
+.theme-btn, .icon-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  transition: all var(--transition);
+}
+.theme-btn:hover, .icon-btn:hover { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+
+/* ======== PROGRESS RIBBON ======== */
+.progress-ribbon {
+  position: fixed; top: var(--header-h); left: 0; right: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.35rem 1.5rem;
+  z-index: 99;
+  display: flex; align-items: center;
+}
+.progress-bar-wrap { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+.progress-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+.progress-track { flex: 1; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 4px; width: 0%; transition: width 0.5s ease; }
+.progress-pct { font-size: 0.7rem; color: var(--accent); font-family: var(--font-mono); white-space: nowrap; min-width: 35px; }
+
+/* ======== LAYOUT ======== */
+.layout {
+  display: flex;
+  margin-top: calc(var(--header-h) + 33px);
+  min-height: 100vh;
+}
+
+/* ======== SIDEBAR ======== */
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: calc(var(--header-h) + 33px);
+  height: calc(100vh - var(--header-h) - 33px);
+  overflow-y: auto;
+  z-index: 80;
+  transition: width var(--transition), min-width var(--transition);
+  flex-shrink: 0;
+}
+.sidebar.collapsed { width: 0; min-width: 0; overflow: hidden; }
+.sidebar-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  position: sticky; top: 0; background: var(--surface); z-index: 1;
+}
+.sidebar-toggle {
+  background: none; border: none; color: var(--text-muted);
+  cursor: pointer; font-size: 0.9rem;
+  padding: 2px 6px; border-radius: 4px;
+  transition: all var(--transition);
+}
+.sidebar-toggle:hover { color: var(--accent); background: var(--accent-glow); }
+
+.nav-list { list-style: none; padding: 0.5rem 0; }
+.nav-list li { position: relative; }
+.nav-link {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.nav-link:hover { color: var(--text); background: var(--surface2); }
+.nav-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-glow); }
+.nav-link.completed { color: var(--green); }
+.nav-link.completed::after { content: '✓'; margin-left: auto; font-size: 0.7rem; }
+.nav-num { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); min-width: 22px; }
+
+/* ======== CONTENT ======== */
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 2.5rem;
+  max-width: 940px;
+}
+
+/* ======== HERO ======== */
+.hero-section {
+  padding: 3rem 0 2rem;
+  position: relative;
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--gold-dim);
+  color: var(--gold);
+  border: 1px solid rgba(232,201,106,0.25);
+  padding: 0.3rem 1rem;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+.hero-title em { color: var(--accent); font-style: italic; }
+.hero-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2.5rem; }
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  transition: all var(--transition);
+}
+.stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 900; color: var(--accent); }
+.stat-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.vision-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.vision-icon { font-size: 1.5rem; color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+.vision-box p { font-size: 0.88rem; color: var(--text-sub); margin-bottom: 0.4rem; }
+
+/* ======== CHAPTERS ======== */
+.chapter {
+  margin-bottom: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+.chapter-header {
+  display: flex; align-items: flex-start; gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+}
+.ch-num {
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--border);
+  line-height: 1;
+  min-width: 60px;
+  user-select: none;
+}
+.ch-meta { flex: 1; }
+.ch-meta h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.2rem;
+}
+.ch-meta p { color: var(--text-muted); font-size: 0.85rem; }
+.ch-actions { display: flex; gap: 0.5rem; align-items: flex-start; }
+
+.bookmark-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-muted); cursor: pointer;
+  padding: 0.35rem 0.6rem; border-radius: var(--radius-sm);
+  font-size: 0.9rem; transition: all var(--transition);
+}
+.bookmark-btn:hover, .bookmark-btn.active { color: var(--gold); border-color: var(--gold); background: var(--gold-dim); }
+.bookmark-btn.active { content: '★'; }
+
+.complete-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-muted); cursor: pointer;
+  padding: 0.35rem 0.85rem; border-radius: var(--radius-sm);
+  font-size: 0.77rem; font-family: var(--font-body);
+  transition: all var(--transition); white-space: nowrap;
+}
+.complete-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+.complete-btn.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+
+/* ======== CARDS ======== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  transition: border-color var(--transition);
+}
+.card:hover { border-color: rgba(255,255,255,0.15); }
+.card h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+.card-inner { background: var(--surface2); border-radius: var(--radius-sm); padding: 1.25rem; }
+.card-inner h4 { font-size: 0.92rem; margin-bottom: 0.5rem; }
+
+.overview-card { border-left: 3px solid var(--accent); }
+.highlight-green { border-left: 3px solid var(--green) !important; }
+.highlight-blue { border-left: 3px solid var(--accent) !important; }
+.highlight-red { border-left: 3px solid var(--red) !important; }
+.highlight-yellow { border-left: 3px solid var(--yellow) !important; }
+.highlight-gold { border-left: 3px solid var(--gold) !important; }
+
+/* ======== KEY CONCEPTS TAGS ======== */
+.key-concepts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.concept-tag {
+  background: var(--accent-glow);
+  color: var(--accent);
+  border: 1px solid rgba(124,158,255,0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+}
+
+/* ======== DEFINITION GRID ======== */
+.def-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.def-item {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+.def-icon { font-size: 1.4rem; flex-shrink: 0; }
+.def-item strong { display: block; margin-bottom: 0.2rem; font-size: 0.88rem; }
+.def-item p { color: var(--text-muted); font-size: 0.8rem; margin: 0; }
+
+/* ======== TABLES ======== */
+.table-wrap { overflow-x: auto; margin-top: 0.75rem; border-radius: var(--radius-sm); }
+.data-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.83rem;
+}
+.data-table thead tr { background: var(--surface3); }
+.data-table th {
+  padding: 0.7rem 1rem; text-align: left;
+  font-size: 0.72rem; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--text-muted);
+  font-weight: 600;
+}
+.data-table td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.data-table tr:hover td { background: var(--surface2); }
+.data-table tr:last-child td { border-bottom: none; }
+.comparison-table th:first-child { width: 20%; }
+
+/* ======== QUOTE BLOCK ======== */
+.quote-block {
+  background: var(--surface2);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.25rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+  font-style: italic;
+}
+.quote-block cite { display: block; margin-top: 0.5rem; font-style: normal; color: var(--text-muted); font-size: 0.78rem; }
+.quote-block p { margin: 0 0 0.3rem; }
+.quote-explain { font-style: normal; color: var(--text-sub); margin-top: 0.5rem; font-size: 0.83rem; }
+
+/* ======== DEF BLOCK ======== */
+.def-block {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+/* ======== ALERT BOX ======== */
+.alert-box {
+  background: rgba(255,114,114,0.06);
+  border: 1px solid rgba(255,114,114,0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.1rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-top: 0.75rem;
+}
+
+/* ======== EXAM BOX ======== */
+.exam-box {
+  background: var(--gold-dim);
+  border: 1px solid rgba(232,201,106,0.2);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+.exam-tag {
+  display: inline-block;
+  background: var(--gold);
+  color: #1a1200;
+  padding: 0.15rem 0.65rem;
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+.exam-box p { font-size: 0.88rem; margin-bottom: 0.4rem; }
+
+/* ======== TWO/THREE COL ======== */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.mini-card {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  font-size: 0.85rem;
+}
+.mini-card strong { display: block; margin-bottom: 0.4rem; }
+.mini-card p { color: var(--text-muted); font-size: 0.8rem; margin: 0; }
+
+/* ======== CONTENT LIST ======== */
+.content-list { list-style: none; }
+.content-list li {
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+  padding-left: 1.25rem;
+  position: relative;
+}
+.content-list li::before {
+  content: '→';
+  position: absolute; left: 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+/* ======== SKILL GRID ======== */
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.skill-item {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  text-align: center;
+}
+.skill-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.skill-item strong { display: block; font-size: 0.85rem; margin-bottom: 0.3rem; }
+.skill-item p { font-size: 0.77rem; color: var(--text-muted); margin: 0; }
+
+/* ======== TIMELINE ======== */
+.timeline { position: relative; padding-left: 2rem; margin-top: 0.75rem; }
+.timeline::before {
+  content: '';
+  position: absolute; left: 0.45rem; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.tl-item { position: relative; margin-bottom: 1.5rem; }
+.tl-dot {
+  position: absolute; left: -1.75rem; top: 0.4rem;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+.tl-content strong { display: block; margin-bottom: 0.25rem; font-size: 0.9rem; }
+.tl-content p { font-size: 0.83rem; color: var(--text-muted); margin: 0; }
+
+/* ======== PURUSHARTH GRID ======== */
+.purusharth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.p-card {
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  position: relative;
+}
+.p-card.dharma { background: rgba(124,158,255,0.07); border: 1px solid rgba(124,158,255,0.2); }
+.p-card.artha { background: rgba(232,201,106,0.07); border: 1px solid rgba(232,201,106,0.2); }
+.p-card.kama { background: rgba(93,217,164,0.07); border: 1px solid rgba(93,217,164,0.2); }
+.p-card.moksha { background: rgba(255,114,114,0.07); border: 1px solid rgba(255,114,114,0.2); }
+.p-num {
+  position: absolute; top: 0.75rem; right: 0.75rem;
+  font-family: var(--font-mono); font-size: 1.8rem;
+  font-weight: 700; opacity: 0.15;
+}
+.p-card h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+.p-card p { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+.p-card ul { list-style: none; }
+.p-card li { font-size: 0.8rem; padding: 0.2rem 0; padding-left: 1rem; position: relative; }
+.p-card li::before { content: '•'; position: absolute; left: 0; }
+
+/* ======== MNEMONIC BOX ======== */
+.mnemonic-box {
+  background: var(--gold-dim);
+  border: 1px dashed rgba(232,201,106,0.3);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1.1rem;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+/* ======== MANTRA BLOCK ======== */
+.mantra-block {
+  background: var(--surface3);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+.sanskrit {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+  font-style: italic;
+}
+
+/* ======== APPROACHES GRID ======== */
+.approaches-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.approach-card {
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  font-size: 0.83rem;
+}
+.approach-card h4 { font-size: 0.92rem; margin-bottom: 0.5rem; }
+.approach-card p { margin-bottom: 0.5rem; color: var(--text-muted); }
+.approach-card em { font-style: italic; color: var(--text-sub); }
+.peacekeeping { background: rgba(255,114,114,0.07); border: 1px solid rgba(255,114,114,0.2); }
+.peacemaking { background: rgba(124,158,255,0.07); border: 1px solid rgba(124,158,255,0.2); }
+.peacebuilding { background: rgba(93,217,164,0.07); border: 1px solid rgba(93,217,164,0.2); }
+
+/* ======== POSITIVE PEACE LIST ======== */
+.positive-peace-list { display: grid; gap: 0.75rem; margin-top: 0.75rem; }
+.pp-item { display: flex; gap: 1rem; align-items: flex-start; background: var(--surface2); border-radius: var(--radius-sm); padding: 0.85rem 1rem; }
+.pp-icon { font-size: 1.3rem; flex-shrink: 0; }
+.pp-item strong { display: block; font-size: 0.88rem; margin-bottom: 0.2rem; }
+.pp-item p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+
+/* ======== VIOLENCE TRIANGLE ======== */
+.violence-triangle {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.vt-item {
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  font-size: 0.83rem;
+  text-align: center;
+}
+.vt-item strong { display: block; font-size: 0.9rem; margin-bottom: 0.35rem; }
+.vt-item span { display: inline-block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.5rem; border-radius: 100px; margin-bottom: 0.6rem; }
+.vt-item.direct { background: rgba(255,114,114,0.08); border: 1px solid rgba(255,114,114,0.2); }
+.vt-item.direct span { background: rgba(255,114,114,0.15); color: var(--red); }
+.vt-item.structural { background: rgba(232,201,106,0.08); border: 1px solid rgba(232,201,106,0.2); }
+.vt-item.structural span { background: var(--gold-dim); color: var(--gold); }
+.vt-item.cultural { background: rgba(124,158,255,0.08); border: 1px solid rgba(124,158,255,0.2); }
+.vt-item.cultural span { background: var(--accent-glow); color: var(--accent); }
+.vt-item p { color: var(--text-muted); font-size: 0.79rem; }
+
+/* ======== NUMBERED LIST ======== */
+.numbered-list { display: grid; gap: 0.75rem; }
+.num-item { display: flex; gap: 1rem; align-items: flex-start; }
+.num { min-width: 36px; height: 36px; border-radius: 50%; background: var(--accent-glow); color: var(--accent); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem; flex-shrink: 0; border: 1px solid rgba(124,158,255,0.25); }
+.num-item strong { font-size: 0.9rem; display: block; margin-bottom: 0.2rem; }
+.num-item p { font-size: 0.82rem; color: var(--text-muted); margin: 0; }
+
+/* ======== FORMS GRID ======== */
+.forms-grid, .types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.form-card, .type-card {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+.form-card h4, .type-card strong { display: block; font-size: 0.88rem; margin-bottom: 0.35rem; }
+.form-card p, .type-card p { font-size: 0.79rem; color: var(--text-muted); margin: 0; }
+
+/* ======== KOSHA LIST ======== */
+.kosha-list { display: grid; gap: 0.5rem; margin-top: 0.5rem; }
+.kosha-item {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  padding-left: calc(0.75rem + var(--k, 1) * 8px);
+  border-left: 3px solid var(--accent);
+  opacity: calc(1 - (var(--k, 1) - 1) * 0.1);
+}
+.kosha-item strong { color: var(--accent); }
+
+/* ======== ACCORDION ======== */
+.accordion { display: grid; gap: 0.5rem; }
+.acc-item {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.acc-header {
+  padding: 0.85rem 1.1rem;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.88rem; font-weight: 600;
+  transition: background var(--transition);
+  user-select: none;
+}
+.acc-header:hover { background: var(--surface3); }
+.acc-header.open { color: var(--accent); }
+.acc-header span { color: var(--text-muted); font-size: 1.2rem; transition: transform var(--transition); }
+.acc-header.open span { transform: rotate(45deg); color: var(--accent); }
+.acc-body {
+  padding: 0 1.1rem;
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.25s ease;
+  font-size: 0.84rem; color: var(--text-sub);
+}
+.acc-body.open { padding: 1rem 1.1rem; max-height: 500px; }
+.acc-body ul { list-style: none; }
+.acc-body li { padding: 0.25rem 0 0.25rem 1.1rem; position: relative; }
+.acc-body li::before { content: '·'; position: absolute; left: 0; color: var(--accent); }
+
+/* ======== BENEFITS LIST ======== */
+.benefits-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem; }
+.benefit-item { background: var(--surface2); border-radius: var(--radius-sm); padding: 0.65rem 0.9rem; font-size: 0.82rem; }
+
+/* ======== MISTAKE LIST ======== */
+.mistake-list { display: grid; gap: 0.85rem; }
+.mistake-item { background: var(--surface2); border-radius: var(--radius-sm); overflow: hidden; }
+.mistake-wrong { padding: 0.65rem 1rem; background: rgba(255,114,114,0.07); border-bottom: 1px dashed var(--border); font-size: 0.83rem; color: var(--red); }
+.mistake-right { padding: 0.65rem 1rem; font-size: 0.83rem; color: var(--green); }
+
+/* ======== CHECKLIST ======== */
+.checklist { display: grid; gap: 0.4rem; margin-top: 0.75rem; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.check-item:hover { background: var(--surface2); }
+.check-item input[type="checkbox"] {
+  accent-color: var(--green);
+  width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px;
+  cursor: pointer;
+}
+.check-item.checked { color: var(--text-muted); text-decoration: line-through; }
+
+/* ======== IMPORTANT QUESTIONS ======== */
+.iq-list { display: grid; gap: 0.75rem; margin-top: 0.75rem; }
+.iq-item { display: flex; gap: 1rem; align-items: flex-start; background: var(--surface2); border-radius: var(--radius-sm); padding: 1rem; }
+.iq-mark { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(124,158,255,0.25); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-family: var(--font-mono); white-space: nowrap; margin-top: 2px; }
+.iq-item p { font-size: 0.86rem; margin: 0; }
+
+.sq-list { display: grid; gap: 0.5rem; margin-top: 0.75rem; }
+.sq-item { background: var(--surface2); border-radius: var(--radius-sm); padding: 0.65rem 1rem; font-size: 0.84rem; }
+
+/* ======== FLASHCARDS ======== */
+.flashcard-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; padding: 1rem 0; }
+.flashcard {
+  width: 100%; max-width: 500px; min-height: 160px;
+  background: var(--surface2);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.92rem;
+}
+.flashcard:hover { border-color: var(--accent); }
+.fc-front { font-size: 1rem; font-weight: 600; }
+.fc-back { color: var(--text-sub); font-size: 0.88rem; line-height: 1.6; }
+.fc-controls { display: flex; gap: 0.75rem; align-items: center; }
+.fc-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 0.45rem 1rem; border-radius: var(--radius-sm);
+  cursor: pointer; font-family: var(--font-body); font-size: 0.82rem;
+  transition: all var(--transition);
+}
+.fc-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+.fc-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+
+/* ======== QUIZ ======== */
+.quiz-question { font-size: 0.95rem; font-weight: 600; margin-bottom: 1.25rem; line-height: 1.5; }
+.quiz-options { display: grid; gap: 0.6rem; margin-bottom: 1rem; }
+.quiz-option {
+  padding: 0.75rem 1rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all var(--transition);
+}
+.quiz-option:hover { border-color: var(--accent); background: var(--accent-glow); }
+.quiz-option.correct { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+.quiz-option.wrong { border-color: var(--red); background: var(--red-dim); color: var(--red); }
+.quiz-option.disabled { pointer-events: none; }
+.quiz-feedback { font-size: 0.85rem; padding: 0.65rem 0; min-height: 28px; }
+.quiz-feedback.correct-fb { color: var(--green); }
+.quiz-feedback.wrong-fb { color: var(--red); }
+.quiz-nav { display: flex; align-items: center; gap: 1rem; }
+.quiz-score { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+.quiz-result { text-align: center; padding: 2rem; }
+.quiz-result h4 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 1rem; }
+.final-score { font-family: var(--font-display); font-size: 3rem; font-weight: 900; color: var(--accent); margin-bottom: 1.5rem; }
+.btn-primary {
+  background: var(--accent); color: white;
+  border: none; padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-sm); cursor: pointer;
+  font-family: var(--font-body); font-size: 0.88rem;
+  transition: opacity var(--transition);
+}
+.btn-primary:hover { opacity: 0.85; }
+
+/* ======== MONO ======== */
+.mono { font-family: var(--font-mono); font-size: 0.88em; }
+
+/* ======== SITE FOOTER ======== */
+.site-footer {
+  margin-top: 4rem;
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 0 3rem;
+  text-align: center;
+}
+.footer-logo { font-family: var(--font-display); font-size: 1.1rem; color: var(--accent); margin-bottom: 0.5rem; }
+.site-footer p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+.footer-motto { font-style: italic; color: var(--gold) !important; }
+
+/* ======== BACK TO TOP ======== */
+.back-top {
+  position: fixed; bottom: 2rem; right: 1.5rem;
+  width: 44px; height: 44px;
+  background: var(--accent); color: white;
+  border: none; border-radius: 50%;
+  cursor: pointer; font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(124,158,255,0.35);
+  opacity: 0; transform: translateY(10px);
+  transition: all var(--transition);
+  z-index: 90;
+}
+.back-top.visible { opacity: 1; transform: none; }
+.back-top:hover { transform: translateY(-2px); }
+
+/* ======== SCROLLBAR ======== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ======== PRINT ======== */
+@media print {
+  .site-header, .sidebar, .progress-ribbon, .back-top, .ch-actions, .exam-box .exam-tag, #quizArea { display: none !important; }
+  .layout { display: block; }
+  .content { padding: 1rem; max-width: 100%; }
+  .chapter { page-break-inside: avoid; }
+  * { color: black !important; background: white !important; border-color: #ccc !important; }
+  .data-table th { background: #eee !important; }
+}
+
+/* ======== RESPONSIVE ======== */
+@media (max-width: 900px) {
+  .sidebar { position: fixed; left: 0; top: calc(var(--header-h) + 33px); height: calc(100vh - var(--header-h) - 33px); transform: translateX(-100%); transition: transform var(--transition); box-shadow: var(--shadow); }
+  .sidebar.mobile-open { transform: none; }
+  .content { padding: 1.5rem 1.25rem; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .approaches-grid, .violence-triangle, .purusharth-grid { grid-template-columns: 1fr; }
+  .two-col, .three-col, .benefits-list { grid-template-columns: 1fr; }
+  .chapter-header { flex-wrap: wrap; }
+  .search-wrap input { width: 160px; }
+  .header-subtitle { display: none; }
+}
+@media (max-width: 600px) {
+  .hero-title { font-size: 2.4rem; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .ch-num { font-size: 1.8rem; min-width: 40px; }
+}
+ </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-left">
+    <a href="index.html" class="logo" style="text-decoration: none; color: inherit; cursor: pointer;">☮ PCE10010</a>
+    <div class="header-subtitle">Foundation of Peace · MIT-WPU</div>
+  </div>
+  <div class="header-right">
+    <div class="search-wrap">
+      <input type="text" id="globalSearch" placeholder="Search topics..." autocomplete="off">
+      <span class="search-icon">⌕</span>
+      <div id="searchResults" class="search-dropdown"></div>
+    </div>
+    <button id="themeToggle" class="theme-btn" title="Toggle theme">◑</button>
+    <button id="printBtn" class="icon-btn" title="Print">⎙</button>
+  </div>
+</header>
+
+<!-- Progress Bar -->
+<div class="progress-ribbon">
+  <div class="progress-bar-wrap">
+    <span class="progress-label">Study Progress</span>
+    <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
+    <span id="progressPct" class="progress-pct">0%</span>
+  </div>
+</div>
+
+<!-- Layout -->
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>Chapters</span>
+      <button id="sidebarToggle" class="sidebar-toggle">←</button>
+    </div>
+    <ul class="nav-list" id="navList">
+      <li><a href="#ch1" class="nav-link" data-section="ch1"><span class="nav-num">01</span>Why Peace: Meaning</a></li>
+      <li><a href="#ch2" class="nav-link" data-section="ch2"><span class="nav-num">02</span>Peace Education</a></li>
+      <li><a href="#ch3" class="nav-link" data-section="ch3"><span class="nav-num">03</span>Indian Lineage of Peace</a></li>
+      <li><a href="#ch4" class="nav-link" data-section="ch4"><span class="nav-num">04</span>Negative Peace</a></li>
+      <li><a href="#ch5" class="nav-link" data-section="ch5"><span class="nav-num">05</span>Positive Peace</a></li>
+      <li><a href="#ch6" class="nav-link" data-section="ch6"><span class="nav-num">06</span>Types of Violence</a></li>
+      <li><a href="#ch7" class="nav-link" data-section="ch7"><span class="nav-num">07</span>Structural Violence</a></li>
+      <li><a href="#ch8" class="nav-link" data-section="ch8"><span class="nav-num">08</span>Cultural Violence</a></li>
+      <li><a href="#ch9" class="nav-link" data-section="ch9"><span class="nav-num">09</span>Vedas & Upanishads</a></li>
+      <li><a href="#ch10" class="nav-link" data-section="ch10"><span class="nav-num">10</span>Buddhism</a></li>
+      <li><a href="#ch11" class="nav-link" data-section="ch11"><span class="nav-num">11</span>Jainism</a></li>
+      <li><a href="#ch12" class="nav-link" data-section="ch12"><span class="nav-num">12</span>Purusharth Philosophy</a></li>
+      <li><a href="#ch13" class="nav-link" data-section="ch13"><span class="nav-num">13</span>Quick Revision</a></li>
+      <li><a href="#ch14" class="nav-link" data-section="ch14"><span class="nav-num">14</span>Practice & MCQs</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="content" id="mainContent">
+
+    <!-- Hero -->
+    <div class="hero-section">
+      <div class="hero-badge">MIT World Peace University · Pune</div>
+      <h1 class="hero-title">Foundation<br><em>of Peace</em></h1>
+      <p class="hero-sub">Course Code: PCE10010 · Complete Exam-Ready Study Notes</p>
+      <div class="hero-stats">
+        <div class="stat-card"><div class="stat-num">16+</div><div class="stat-label">Chapters</div></div>
+        <div class="stat-card"><div class="stat-num">100%</div><div class="stat-label">Syllabus</div></div>
+        <div class="stat-card"><div class="stat-num">50+</div><div class="stat-label">Key Concepts</div></div>
+        <div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">Revision Ready</div></div>
+      </div>
+      <div class="vision-box">
+        <div class="vision-icon">✦</div>
+        <p><strong>Vision:</strong> "Union of Science and Spirituality alone will bring peace to mankind"</p>
+        <p><strong>Mission:</strong> To create Globally Responsible, Mindful and Peaceful leaders.</p>
+      </div>
+    </div>
+
+    <!-- ========== CHAPTER 1: WHY PEACE MEANING ========== -->
+    <section class="chapter" id="ch1" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">01</div>
+        <div class="ch-meta">
+          <h2>Why Peace: Meaning</h2>
+          <p>Concept, definitions, inner & outer peace</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch1" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch1">Mark Done</button>
+        </div>
+      </div>
+
+      <!-- Overview -->
+      <div class="card overview-card">
+        <h3>📌 Topic Overview</h3>
+        <p>Peace is far more than the absence of war. It spans cultural, philosophical, spiritual, and political dimensions. Understanding what peace means is the first step to building a peaceful world.</p>
+        <div class="key-concepts">
+          <span class="concept-tag">Inner Peace</span>
+          <span class="concept-tag">Outer Peace</span>
+          <span class="concept-tag">World Peace</span>
+          <span class="concept-tag">Shanti / Salaam / Shalom</span>
+          <span class="concept-tag">Merriam-Webster Definition</span>
+        </div>
+      </div>
+
+      <!-- Definitions in Multiple Languages -->
+      <div class="card">
+        <h3>🌐 Peace Across Languages & Traditions</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Term</th><th>Language/Tradition</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Satyagrahavarda</strong></td><td>Sanskrit</td><td>Physical, mental & spiritual forces producing individual and social harmony</td></tr>
+              <tr><td><strong>Shalom</strong></td><td>Hebrew</td><td>Individual wellbeing and spiritual wholeness</td></tr>
+              <tr><td><strong>Salaam</strong></td><td>Arabic</td><td>Individual wellbeing and spiritual wholeness</td></tr>
+              <tr><td><strong>Eirene</strong></td><td>Greek</td><td>An ethical social relationship</td></tr>
+              <tr><td><strong>Pax</strong></td><td>Latin</td><td>Law, order, and mutual duty in a society</td></tr>
+              <tr><td><strong>Shanti</strong></td><td>Indian/Sanskrit</td><td>Tranquility, calm, freedom from distress</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Merriam-Webster Definitions -->
+      <div class="card">
+        <h3>📖 Merriam-Webster Definitions of Peace</h3>
+        <div class="def-grid">
+          <div class="def-item"><div class="def-icon">🏘️</div><div><strong>Community Calm</strong><p>A condition of calm or quietness within a community</p></div></div>
+          <div class="def-item"><div class="def-icon">🧠</div><div><strong>Inner Peace</strong><p>Liberation from troubling or burdensome thoughts or emotions</p></div></div>
+          <div class="def-item"><div class="def-icon">🤝</div><div><strong>Harmony</strong><p>Agreement and harmony in personal relationships</p></div></div>
+          <div class="def-item"><div class="def-icon">🌍</div><div><strong>State of Agreement</strong><p>A state or duration of mutual agreement between governments</p></div></div>
+          <div class="def-item"><div class="def-icon">📜</div><div><strong>Formal Pact</strong><p>A formal arrangement to cease hostilities</p></div></div>
+        </div>
+      </div>
+
+      <!-- Inner vs Outer Peace -->
+      <div class="two-col">
+        <div class="card highlight-green">
+          <h3>🧘 Inner Peace</h3>
+          <ul class="content-list">
+            <li>Peace <em>within oneself</em> — derived from training the mind</li>
+            <li>Addresses worry, anxiety, greed, desire, hatred, ill-will, delusion</li>
+            <li>Achieved through prayer, meditation, wisdom</li>
+            <li>Regarded as <strong>true peace</strong> and the real foundation of social peace</li>
+            <li>"Nothing can bring you peace but yourself." — <em>Ralph Waldo Emerson</em></li>
+          </ul>
+        </div>
+        <div class="card highlight-blue">
+          <h3>🌏 Outer Peace</h3>
+          <ul class="content-list">
+            <li>Refers to peace in the <em>external environment</em></li>
+            <li>Cluttered, chaotic environments hinder inner peace</li>
+            <li>Calm, organized surroundings support wellbeing</li>
+            <li>"Inner peace begins with outer peace"</li>
+            <li>We must take responsibility for outer peace too</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <div class="exam-tag">⭐ Exam Essential</div>
+        <p><strong>Formula:</strong> Inner Peace + Outer Peace = World Peace</p>
+        <p>This is the core model of MIT World Peace University. Know this diagram.</p>
+      </div>
+
+      <!-- Types of Peace -->
+      <div class="card">
+        <h3>🌈 Types of Peace (All 11 Types)</h3>
+        <div class="types-grid">
+          <div class="type-card"><strong>Cultural Peace</strong><p>Harmony among cultures; promotes diversity & intercultural dialogue</p></div>
+          <div class="type-card"><strong>Environmental Peace</strong><p>Harmony between humans & nature; sustainable practices</p></div>
+          <div class="type-card"><strong>Political Peace</strong><p>Stability in governance; democracy and good governance</p></div>
+          <div class="type-card"><strong>Interpersonal Peace</strong><p>Harmony in personal relationships; effective communication</p></div>
+          <div class="type-card"><strong>Social Peace</strong><p>Societal well-being; addressing inequalities, basic needs</p></div>
+          <div class="type-card"><strong>Economic Peace</strong><p>Stability in economic systems; reducing poverty</p></div>
+          <div class="type-card"><strong>Intrastate Peace</strong><p>Peace <em>within</em> a country; addressing internal conflicts</p></div>
+          <div class="type-card"><strong>Interstate Peace</strong><p>Peace <em>between</em> nations; diplomacy & cooperation</p></div>
+          <div class="type-card"><strong>Psychological Peace</strong><p>Inner calm; mental health, stress reduction</p></div>
+          <div class="type-card"><strong>Justice & Legal Peace</strong><p>Rule of law, human rights, dispute resolution</p></div>
+          <div class="type-card"><strong>Gender Peace</strong><p>Equality between genders; addressing gender-based violence</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 2: PEACE EDUCATION ========== -->
+    <section class="chapter" id="ch2" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">02</div>
+        <div class="ch-meta">
+          <h2>Peace Education</h2>
+          <p>Betty Reardon's framework and social transformation</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch2" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch2">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📚 What is Peace Education?</h3>
+        <div class="quote-block">
+          <p>"Peace education seeks to transform the present human condition by changing social structures and patterns of thought that have created it."</p>
+          <cite>— Betty Reardon, <em>Comprehensive Peace Education</em>, 1988</cite>
+        </div>
+        <div class="quote-block">
+          <p>Main purposes: elimination of social injustice, rejection of violence, and abolition of war.</p>
+          <cite>— Reardon & Cabezudo, <em>Learning to Abolish War</em>, 2002</cite>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🔄 Contribution to Social Transformation</h3>
+        <div class="accordion">
+          <div class="acc-item">
+            <div class="acc-header">Fostering Understanding <span>+</span></div>
+            <div class="acc-body">Peace education promotes deep understanding of root causes of conflicts and violence. It helps individuals comprehend complexities of social issues, promoting empathy and tolerance among diverse groups.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Conflict Resolution Skills <span>+</span></div>
+            <div class="acc-body">Equips individuals with nonviolent conflict resolution skills — crucial for fostering positive social changes and enabling people to address disagreements without resorting to violence.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Promoting Social Justice <span>+</span></div>
+            <div class="acc-body">Educates about structural arrangements that produce and legitimize injustice. Encourages critical analysis — empowers individuals to challenge systems that perpetuate social disparities.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Empowering Young People <span>+</span></div>
+            <div class="acc-body">Provides new perspectives on conflict resolution, essential skills (critical thinking, communication, empathy), and values of cooperation, respect, and social responsibility.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🛠️ Nonviolent Alternatives for Managing Conflict</h3>
+        <div class="skill-grid">
+          <div class="skill-item"><div class="skill-icon">💬</div><strong>Communication Skills</strong><p>Effective communication and active listening</p></div>
+          <div class="skill-item"><div class="skill-icon">🤝</div><strong>Negotiation & Mediation</strong><p>Peacefully navigate disputes; foster collaboration</p></div>
+          <div class="skill-item"><div class="skill-icon">🔄</div><strong>Conflict Transformation</strong><p>Address root issues for lasting positive changes</p></div>
+          <div class="skill-item"><div class="skill-icon">⚖️</div><strong>Advocacy Skills</strong><p>Work toward dismantling inequality structures</p></div>
+          <div class="skill-item"><div class="skill-icon">🌐</div><strong>Global Citizenship</strong><p>Peace not just locally, but on a global scale</p></div>
+          <div class="skill-item"><div class="skill-icon">👥</div><strong>Community Engagement</strong><p>Collective efforts to build a culture of peace</p></div>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <div class="exam-tag">⭐ Frequently Asked</div>
+        <p><strong>Q: What are the main purposes of Peace Education according to Reardon?</strong></p>
+        <p>A: (1) Elimination of social injustice, (2) Rejection of violence, (3) Abolition of war</p>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 3: INDIAN LINEAGE ========== -->
+    <section class="chapter" id="ch3" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">03</div>
+        <div class="ch-meta">
+          <h2>Indian Lineage of Peace</h2>
+          <p>Purusharth, Vedic wisdom & contemporary visions</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch3" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch3">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🔱 Purusharth Philosophy — Four Goals of Life</h3>
+        <p>Derived from Sanskrit: <strong>Purusha</strong> (individual soul) + <strong>Artha</strong> (purpose/goal)</p>
+        <div class="purusharth-grid">
+          <div class="p-card dharma">
+            <div class="p-num">1</div>
+            <h4>⚖️ Dharma</h4>
+            <p><strong>Righteousness & Duty</strong></p>
+            <ul>
+              <li>Righteous living; fulfilling moral & social responsibilities</li>
+              <li>Ethical conduct; duty to oneself, society & cosmos</li>
+              <li>Examples: familial obligations, integrity, social welfare</li>
+            </ul>
+          </div>
+          <div class="p-card artha">
+            <div class="p-num">2</div>
+            <h4>💰 Artha</h4>
+            <p><strong>Wealth & Prosperity</strong></p>
+            <ul>
+              <li>Pursuit of material well-being and economic prosperity</li>
+              <li>Work hard, accumulate wealth ethically</li>
+              <li>Entrepreneurship, responsible resource management</li>
+            </ul>
+          </div>
+          <div class="p-card kama">
+            <div class="p-num">3</div>
+            <h4>❤️ Kama</h4>
+            <p><strong>Desire & Pleasure</strong></p>
+            <ul>
+              <li>Sensory & aesthetic pleasures — emotional, intellectual, sensual</li>
+              <li>Within boundaries of morality and righteousness</li>
+              <li>Art, music, literature, healthy relationships</li>
+            </ul>
+          </div>
+          <div class="p-card moksha">
+            <div class="p-num">4</div>
+            <h4>🕊️ Moksha</h4>
+            <p><strong>Liberation & Enlightenment</strong></p>
+            <ul>
+              <li>Liberation from cycle of birth & death (samsara)</li>
+              <li>Union with the divine; self-realization</li>
+              <li>Meditation, self-discipline, devotion</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mnemonic-box">
+          <strong>🧠 Mnemonic:</strong> <span class="mono">D-A-K-M</span> — "Disciplined Actions Kindle Moksha"
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🕉️ Key Sources of Indian Lineage of Peace</h3>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>Vedic Wisdom</strong><p>Vedas contain hymns promoting peace, unity & cosmic order. Emphasis on <em>dharma</em> (righteousness) and <em>ahimsa</em> (non-violence).</p></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>Upanishadic Philosophy</strong><p>Emphasize inner peace through self-realization; understanding interconnectedness of all beings.</p></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>Buddhism</strong><p>Four Noble Truths & Eightfold Path; core principles: compassion, mindfulness, non-attachment.</p></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>Jainism</strong><p>Ahimsa, truthfulness, compassion — non-violence in actions, thoughts AND words.</p></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>Bhagavad Gita</strong><p>Duty, righteousness & pursuit of inner peace amid life's challenges.</p></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>Yoga Philosophy</strong><p>Patanjali's Yoga Sutras: yamas & niyamas contribute to personal and societal well-being.</p></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>Sufism</strong><p>Love, tolerance, and mystical experience. Sufi saints like Rumi and Kabir influenced Indian spirituality.</p></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>Modern Peace Movements</strong><p>Mahatma Gandhi's satyagraha (non-violent resistance) and philosophy of ahimsa.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 4: NEGATIVE PEACE ========== -->
+    <section class="chapter" id="ch4" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">04</div>
+        <div class="ch-meta">
+          <h2>Negative Peace</h2>
+          <p>Absence of direct violence; approaches to peace</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch4" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch4">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📌 Definition</h3>
+        <div class="def-block">
+          <strong>Negative Peace</strong> refers to a situation where there is <em>no ongoing violence or open conflict</em>, resulting in a temporary calm (often a cease-fire). However, this state does <strong>not</strong> address the underlying issues that initially led to the conflict.
+        </div>
+        <div class="alert-box">
+          ⚠️ Negative peace ≠ True Peace. It only deals with the <em>absence of direct physical violence</em>. Root causes, inequalities, and structural issues persist.
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card highlight-green">
+          <h3>✅ Why Negative Peace is Better than War</h3>
+          <ul class="content-list">
+            <li><strong>Avoidance of Direct Harm:</strong> No physical harm; protects lives, minimizes casualties</li>
+            <li><strong>Potential for Stability:</strong> Creates temporary calm; opportunity for recovery</li>
+            <li><strong>Diplomatic Window:</strong> Space for negotiations and dialogue</li>
+          </ul>
+        </div>
+        <div class="card highlight-red">
+          <h3>❌ Limitations of Negative Peace</h3>
+          <ul class="content-list">
+            <li>Does not address root causes of conflict</li>
+            <li>Risk of renewed tensions always present</li>
+            <li>Falls short on social justice & equality</li>
+            <li>Cultural & structural violence may persist</li>
+            <li>Galtung: Cannot achieve genuine, lasting peace</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Examples of Negative Peace -->
+      <div class="card">
+        <h3>📋 External Examples of Negative Peace</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Type</th><th>Definition</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>Ceasefire in Interstate Conflict</td><td>Temporary halt of hostilities between nations</td><td>Two warring nations agree to ceasefire without resolving political disputes</td></tr>
+              <tr><td>Border Conflict Management</td><td>Measures to prevent violence over borders</td><td>Neighboring countries establishing diplomatic protocols</td></tr>
+              <tr><td>Community Mediation</td><td>Resolving disputes through dialogue to prevent escalation</td><td>Community leaders facilitating discussions on local conflicts</td></tr>
+              <tr><td>UN Peacekeeping</td><td>Separating conflicting parties to prevent direct violence</td><td>UN peacekeeping missions in conflict zones</td></tr>
+              <tr><td>Government Suppression</td><td>Enforcing laws to prevent demonstrations</td><td>Superficial peace without addressing political repression</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Three Approaches -->
+      <div class="card">
+        <h3>🔺 Three Approaches to Peace (Galtung's Framework)</h3>
+        <div class="approaches-grid">
+          <div class="approach-card peacekeeping">
+            <h4>🛡️ Peacekeeping</h4>
+            <p><strong>Focus:</strong> Behaviour / Physical Violence</p>
+            <p>Deployment of neutral third-party military/civilian force to monitor conflicts, supervise ceasefires, implement peace agreements.</p>
+            <p><em>Goal: Create stable, secure environment</em></p>
+          </div>
+          <div class="approach-card peacemaking">
+            <h4>🕊️ Peacemaking</h4>
+            <p><strong>Focus:</strong> Attitudes / Cultural Violence</p>
+            <p>Diplomatic efforts & negotiations to bring conflicting parties to negotiation table and address underlying issues.</p>
+            <p><em>Goal: Find common ground; broker agreements</em></p>
+          </div>
+          <div class="approach-card peacebuilding">
+            <h4>🏗️ Peacebuilding</h4>
+            <p><strong>Focus:</strong> Structural Violence / Contradictions</p>
+            <p>Comprehensive long-term process addressing structural & societal issues: governance, economic development, social cohesion, institutions.</p>
+            <p><em>Goal: Lasting peace by addressing root causes</em></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inner Negative Peace -->
+      <div class="card">
+        <h3>🧘 Inner Negative Peace</h3>
+        <p>Cultivating inner negative peace (addressing internal conflicts; attaining inner calm) is crucial for:</p>
+        <div class="def-grid">
+          <div class="def-item"><div class="def-icon">💬</div><div><strong>Conflict Resolution</strong><p>Approach disagreements with clear, composed mindset; effective communication & active listening</p></div></div>
+          <div class="def-item"><div class="def-icon">💙</div><div><strong>Emotional Well-being</strong><p>Meditation & mindfulness; reduced stress, improved self-regulation, overall sense of well-being</p></div></div>
+          <div class="def-item"><div class="def-icon">👨‍👩‍👦</div><div><strong>Healthy Family Dynamics</strong><p>Family members with inner peace handle disagreements calmly; maintain harmonious domestic environment</p></div></div>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <div class="exam-tag">⭐ High Weightage</div>
+        <p><strong>Compare Peacekeeping, Peacemaking & Peacebuilding</strong> — this comparison is a very common exam question. Know the differences in focus, method, and goal for each.</p>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 5: POSITIVE PEACE ========== -->
+    <section class="chapter" id="ch5" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">05</div>
+        <div class="ch-meta">
+          <h2>Positive Peace</h2>
+          <p>Presence of justice, wellness, and development</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch5" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch5">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>✨ Definition</h3>
+        <div class="def-block">
+          <strong>Positive Peace</strong> signifies a state marked by the <em>nonexistence of both actual and potential violence</em>, along with the absence of indirect and structural violence. It surpasses simply lacking conflict, embracing numerous positive elements.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>✅ What Positive Peace Means</h3>
+        <div class="positive-peace-list">
+          <div class="pp-item"><div class="pp-icon">🚫</div><div><strong>Absence of Actual & Potential Violence</strong><p>Neither present violence nor the threat of future violence</p></div></div>
+          <div class="pp-item"><div class="pp-icon">🔗</div><div><strong>Absence of Indirect Violence</strong><p>Elimination of discrimination, social inequalities, non-physical forms of harm</p></div></div>
+          <div class="pp-item"><div class="pp-icon">🏛️</div><div><strong>Absence of Structural Violence</strong><p>Dismantling systemic injustices in social, economic, political structures</p></div></div>
+          <div class="pp-item"><div class="pp-icon">⚖️</div><div><strong>Presence of Justice</strong><p>Fair legal systems, social justice, safeguarding human rights for all</p></div></div>
+          <div class="pp-item"><div class="pp-icon">💚</div><div><strong>Opportunities for Wellness</strong><p>Mental & physical health, access to healthcare, sense of security</p></div></div>
+          <div class="pp-item"><div class="pp-icon">📈</div><div><strong>Conditions for Development</strong><p>Addressing economic disparities, fostering education, social & economic progress</p></div></div>
+        </div>
+      </div>
+
+      <!-- Positive vs Negative Peace Comparison -->
+      <div class="card">
+        <h3>📊 Negative Peace vs Positive Peace</h3>
+        <div class="table-wrap">
+          <table class="data-table comparison-table">
+            <thead><tr><th>Aspect</th><th>Negative Peace</th><th>Positive Peace</th></tr></thead>
+            <tbody>
+              <tr><td>Definition</td><td>Absence of direct/physical violence</td><td>Presence of conditions of well-being & just relationships</td></tr>
+              <tr><td>Scope</td><td>Macro & micro level direct violence</td><td>Social, economic, political, ecological</td></tr>
+              <tr><td>Violence addressed</td><td>Direct violence (war, torture, abuse)</td><td>Structural & socio-cultural violence</td></tr>
+              <tr><td>Focus</td><td>Stop fighting</td><td>Build just, equitable society</td></tr>
+              <tr><td>Duration</td><td>Temporary / Short-term</td><td>Long-term / Sustainable</td></tr>
+              <tr><td>Approach</td><td>Peacekeeping</td><td>Peacebuilding</td></tr>
+              <tr><td>Root causes</td><td>Not addressed</td><td>Fully addressed</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🎯 How Positive Peace Ends Three Types of Violence</h3>
+        <div class="accordion">
+          <div class="acc-item">
+            <div class="acc-header">Ending Direct Violence <span>+</span></div>
+            <div class="acc-body">
+              <ul>
+                <li><strong>Preventing Conflicts:</strong> Targets root causes; emphasizes diplomacy and mediation</li>
+                <li><strong>Social Justice:</strong> Tackles inequalities that trigger direct violence</li>
+                <li><strong>Building Communities:</strong> Connected communities prevent interpersonal violence</li>
+              </ul>
+            </div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Ending Structural Violence <span>+</span></div>
+            <div class="acc-body">
+              <ul>
+                <li><strong>Economic Development:</strong> Reduces structural inequalities; addresses poverty</li>
+                <li><strong>Reforming Institutions:</strong> Legal, education, and governance reform; ending discrimination</li>
+                <li><strong>Empowering through Education:</strong> Breaks down barriers; fosters tolerance</li>
+              </ul>
+            </div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Ending Cultural Violence <span>+</span></div>
+            <div class="acc-body">
+              <ul>
+                <li><strong>Celebrating Diversity:</strong> Fosters understanding and respect across cultures</li>
+                <li><strong>Cultural Exchange:</strong> Breaks down stereotypes and prejudices</li>
+                <li><strong>Promoting Tolerance:</strong> Education and awareness to counter cultural violence</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 6: TYPES OF VIOLENCE ========== -->
+    <section class="chapter" id="ch6" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">06</div>
+        <div class="ch-meta">
+          <h2>Types of Violence</h2>
+          <p>Galtung's framework: Direct, Structural, Cultural</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch6" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch6">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>👨‍🔬 Johan Galtung — Father of Peace Science</h3>
+        <div class="quote-block">
+          <p>Violence is the opposite of peace — like disease is opposite to health. War is NOT the antithesis of peace; rather, <em>violence</em> is its opposite.</p>
+          <cite>— Johan Galtung, 1969</cite>
+        </div>
+        <div class="def-block">
+          <strong>Galtung's Core Idea:</strong> Violence prevents human beings from achieving their physical and mental potential. It manifests in three forms: Direct, Structural, and Cultural — each reinforcing the other.
+        </div>
+      </div>
+
+      <!-- Three Types Visual -->
+      <div class="card">
+        <h3>🔺 Galtung's Triangle of Violence</h3>
+        <div class="violence-triangle">
+          <div class="vt-item direct"><strong>Direct Violence</strong><span>VISIBLE</span><p>War, murder, assault, torture, child & woman abuse</p></div>
+          <div class="vt-item structural"><strong>Structural Violence</strong><span>INVISIBLE</span><p>Poverty, hunger, inequality, discrimination built into systems</p></div>
+          <div class="vt-item cultural"><strong>Cultural Violence</strong><span>INVISIBLE</span><p>Racism, sexism, religious intolerance legitimizing violence</p></div>
+        </div>
+      </div>
+
+      <!-- Direct vs Indirect -->
+      <div class="card">
+        <h3>⚡ Direct vs Indirect Violence</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Aspect</th><th>Direct Violence</th><th>Indirect Violence</th></tr></thead>
+            <tbody>
+              <tr><td>Definition</td><td>Intentional use of physical/psychological force to harm</td><td>Harm from systemic, societal, or structural factors</td></tr>
+              <tr><td>Causation</td><td>Intentional actions</td><td>Systemic/structural factors, not necessarily intentional</td></tr>
+              <tr><td>Immediacy</td><td>Immediate & visible consequences</td><td>Indirect & often delayed consequences</td></tr>
+              <tr><td>Observability</td><td>Observable & apparent</td><td>Not immediately noticeable</td></tr>
+              <tr><td>Scale</td><td>Individual or collective level</td><td>Systemic; affects larger societal structures</td></tr>
+              <tr><td>Examples</td><td>Physical assault, homicide, verbal abuse, war, bullying</td><td>Discriminatory policies, economic disparities, unequal access to education/healthcare</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Intentionality in Direct Violence -->
+      <div class="card">
+        <h3>🎯 Intentionality in Direct Violence</h3>
+        <div class="two-col">
+          <div class="highlight-yellow card-inner">
+            <h4>Unintended Consequences</h4>
+            <p>Harm occurs but was NOT the intended outcome.</p>
+            <p><em>Example: A parent shaking a baby to stop crying — not intending brain damage but causing it.</em></p>
+          </div>
+          <div class="highlight-red card-inner">
+            <h4>Intention Without Recognition of Violence</h4>
+            <p>Consequences were intended, but perpetrators don't recognize their behavior as violent.</p>
+            <p><em>Example: Physical punishment in certain educational traditions may not be considered violence by perpetrators.</em></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <div class="exam-tag">⭐ Key Thinker</div>
+        <p><strong>Johan Galtung</strong> is the "Father of Peace Science." His 1969 essay "Violence, Peace, and Peace Research" introduced the concepts of structural violence, negative peace, and positive peace. Always cite him!</p>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 7: STRUCTURAL VIOLENCE ========== -->
+    <section class="chapter" id="ch7" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">07</div>
+        <div class="ch-meta">
+          <h2>Structural Violence</h2>
+          <p>Systemic injustice embedded in social structures</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch7" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch7">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🏛️ Definition</h3>
+        <div class="def-block">
+          <strong>Structural Violence</strong> (coined by Johan Galtung, 1969) refers to societal harm or injustice <em>embedded in structures and institutions</em> of a society — operating subtly through systemic mechanisms, resulting in unequal access to resources, opportunities, and basic needs.
+        </div>
+        <div class="quote-block">
+          <p>"Structural violence is injustice and exploitation built into a social system that generates wealth for the few and poverty for the many, stunting everyone's ability to develop their full humanity."</p>
+          <cite>— Hathaway, 2013</cite>
+        </div>
+      </div>
+
+      <!-- Key Characteristics -->
+      <div class="card">
+        <h3>🔍 5 Key Characteristics of Structural Violence</h3>
+        <div class="numbered-list">
+          <div class="num-item"><div class="num">1</div><div><strong>Indirect Nature</strong><p>Harm does not result from immediate, intentional actions — rooted in broader systemic conditions</p></div></div>
+          <div class="num-item"><div class="num">2</div><div><strong>Depersonalized Perpetrator</strong><p>No clearly identifiable perpetrator — it is woven into the fabric of systemic structures</p></div></div>
+          <div class="num-item"><div class="num">3</div><div><strong>Inherent in Power Structures</strong><p>Permeates social, economic, and political systems — resistant to easy eradication</p></div></div>
+          <div class="num-item"><div class="num">4</div><div><strong>Unequal Access to Opportunities</strong><p>Disparity in education, healthcare, employment — creating systemic disadvantages for specific groups</p></div></div>
+          <div class="num-item"><div class="num">5</div><div><strong>Invisibility & Normalization</strong><p>Operates covertly; becomes normalized and routinized within societal structures</p></div></div>
+        </div>
+      </div>
+
+      <!-- Forms of Structural Violence -->
+      <div class="card">
+        <h3>🗂️ Six Forms of Structural Violence</h3>
+        <div class="forms-grid">
+          <div class="form-card"><h4>🏷️ Caste</h4><p>Systemic discrimination based on social caste; constrains opportunities for specific caste groups</p></div>
+          <div class="form-card"><h4>💼 Class</h4><p>Inequities in opportunities linked to socioeconomic class; unequal wealth, education, employment</p></div>
+          <div class="form-card"><h4>♀️ Gender</h4><p>Systemic inequalities faced based on gender; unequal access to education, employment, healthcare</p></div>
+          <div class="form-card"><h4>🎭 Racism</h4><p>Systemic discrimination rooted in race/ethnicity; ingrained in social institutions</p></div>
+          <div class="form-card"><h4>🍽️ Hunger</h4><p>Uneven distribution of food resources; socioeconomic conditions & policies contributing to food insecurity</p></div>
+          <div class="form-card"><h4>📉 Poverty</h4><p>Systematic disadvantages due to economic inequalities; limited access to education, healthcare, jobs</p></div>
+        </div>
+      </div>
+
+      <!-- Social Structure Concepts -->
+      <div class="card">
+        <h3>🏗️ Understanding Social Structure</h3>
+        <div class="three-col">
+          <div class="mini-card"><strong>Status</strong><p>Socially defined position within a group based on age, sex, qualifications, economic power, education</p></div>
+          <div class="mini-card"><strong>Rights & Duties</strong><p>Entitlements and responsibilities associated with a particular status</p></div>
+          <div class="mini-card"><strong>Role</strong><p>Expected behavior associated with someone occupying a particular status</p></div>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <div class="exam-tag">⭐ Exam Important</div>
+        <p>Always state that structural violence was introduced by <strong>Johan Galtung in 1969</strong> in "Violence, Peace, and Peace Research." Mention the 5 characteristics and 6 forms — these are frequently tested.</p>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 8: CULTURAL VIOLENCE ========== -->
+    <section class="chapter" id="ch8" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">08</div>
+        <div class="ch-meta">
+          <h2>Cultural Violence</h2>
+          <p>Legitimization of structural & direct violence through culture</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch8" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch8">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🎭 Definition & Impact</h3>
+        <div class="def-block">
+          Cultural violence refers to aspects of culture (religion, ideology, language, art, empirical science) that can be used to <em>legitimize</em> direct or structural violence in its direct or structural form. It makes violence appear "normal" or "justified."
+        </div>
+        <p>Cultural violence operates <strong>covertly</strong> — integrating deeply into societal norms, making it difficult to identify and question. It perpetuates biased ideologies: racism, sexism, religious intolerance.</p>
+      </div>
+
+      <!-- Tools of Cultural Violence -->
+      <div class="card">
+        <h3>🔧 Four Tools of Cultural Violence</h3>
+        <div class="numbered-list">
+          <div class="num-item"><div class="num">1</div><div><strong>Cultural Norms</strong><p>Prevalent societal beliefs that shape acceptable behavior. When norms endorse discrimination, they normalize prejudiced attitudes — contributing to a culture of inequality.</p></div></div>
+          <div class="num-item"><div class="num">2</div><div><strong>Stereotypes & Prejudices</strong><p>Fixed, oversimplified ideas about certain groups. Dehumanize individuals based on characteristics, perpetuating cultural violence.</p></div></div>
+          <div class="num-item"><div class="num">3</div><div><strong>Racist or Sexist Language</strong><p>Language reinforces or challenges cultural norms. Racist/sexist language reflects and reinforces biased beliefs.</p></div></div>
+          <div class="num-item"><div class="num">4</div><div><strong>Language-Based Discrimination</strong><p>Targeting individuals based on language; reinforces social hierarchies and power imbalances; leads to exclusionary practices.</p></div></div>
+        </div>
+      </div>
+
+      <!-- Relationship between Cultural & Structural Violence -->
+      <div class="card">
+        <h3>🔗 Relationship: Cultural ↔ Structural Violence</h3>
+        <div class="accordion">
+          <div class="acc-item">
+            <div class="acc-header">1. Reinforcement Mechanism <span>+</span></div>
+            <div class="acc-body">Cultural violence can strengthen and legitimize structural violence. Biased cultural beliefs are used to justify unfair policies. <em>Example: Cultural narratives perpetuating stereotypes are used to justify discriminatory institutional practices.</em></div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">2. Normalization of Inequality <span>+</span></div>
+            <div class="acc-body">Cultural violence makes discriminatory practices seem normal, supporting structural violence by embedding biased attitudes into societal norms. <em>Example: Cultural acceptance of gender discrimination normalizes unequal treatment of women.</em></div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">3. Resistance & Change <span>+</span></div>
+            <div class="acc-body">Changes in cultural norms can challenge structural violence; conversely, changes in structural policies influence cultural perceptions. <em>Example: Increased awareness of racial equality leads to changes in laws challenging structural racism.</em></div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">4. Intersectionality <span>+</span></div>
+            <div class="acc-body">Cultural and structural violence intersect with direct violence — creating intricate webs of oppression. <em>Example: Discrimination based on race AND socioeconomic status creates disparities in education, health, and jobs.</em></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 9: VEDAS & UPANISHADS ========== -->
+    <section class="chapter" id="ch9" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">09</div>
+        <div class="ch-meta">
+          <h2>Vedas & Upanishads</h2>
+          <p>Ancient wisdom — structure, philosophy, Mahavakyas</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch9" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch9">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📜 Introduction to the Vedas</h3>
+        <ul class="content-list">
+          <li><strong>Root word:</strong> Sanskrit 'vid' = knowledge</li>
+          <li><strong>Apaurusheya:</strong> Not authored by human beings — divine origin</li>
+          <li><strong>Shruti:</strong> "Heard" — belonging to oral tradition</li>
+          <li><strong>Compiled by:</strong> Sage Krishna Dwaipayana Vyasa (Veda Vyasa)</li>
+          <li><strong>Four Vedas:</strong> Rig, Yajur, Sama, Atharva</li>
+          <li><strong>Assistants in compilation:</strong> Paila (Rig), Vaisampayana (Yajur), Jaimini (Sama), Sumantu (Atharva)</li>
+        </ul>
+      </div>
+
+      <!-- Structure of Vedas -->
+      <div class="card">
+        <h3>🗂️ Structure of Each Veda (Two Parts)</h3>
+        <div class="two-col">
+          <div class="card-inner highlight-blue">
+            <h4>Karma Kanda (Action)</h4>
+            <p><strong>Samhitas:</strong> Collections of Mantras (hymns to gods for material favor)</p>
+            <p><strong>Brahmanas:</strong> Elaborate ritualism; rules for performing yajnyas (sacrifices)</p>
+          </div>
+          <div class="card-inner highlight-green">
+            <h4>Jnyan Kanda (Knowledge)</h4>
+            <p><strong>Aranyakas:</strong> Composed in forests; transition from ritualism to free inquiry; mystical interpretation of sacrifices</p>
+            <p><strong>Upanishads:</strong> Highly philosophical; cream of Vedic philosophy = "Vedanta"</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Four Vedas -->
+      <div class="card">
+        <h3>📚 The Four Vedas</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Veda</th><th>Meaning</th><th>Content</th><th>Branches</th><th>Upaveda</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Rigveda</strong></td><td>Rik = verse/praise</td><td>10 Mandalas, 1017 Suktas, 10,472 Riks — hymns praising deities</td><td>21 (2 available)</td><td>Ayurveda</td></tr>
+              <tr><td><strong>Yajurveda</strong></td><td>Yajus = sentence</td><td>Sentences for ritual procedures (Krishna & Shukla Yajurveda)</td><td>9</td><td>Dhanurveda</td></tr>
+              <tr><td><strong>Samaveda</strong></td><td>Sama = to sing</td><td>Musical form of Rigveda; Riks with music become Samas</td><td>1000 (3 available)</td><td>Gandharvaveda</td></tr>
+              <tr><td><strong>Atharvaveda</strong></td><td>Atharva = name of Rishi</td><td>20 Kandas, 736 Suktas, 5918 Mantras; blend of prose & poetry; secular aspects</td><td>9 (2 available)</td><td>Arthashastra</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mnemonic-box">
+          <strong>🧠 Mnemonic for Vedas:</strong> <span class="mono">R-Y-S-A</span> — "Rishis Yearly Sing Anthems"
+        </div>
+      </div>
+
+      <!-- Key Rigveda Mantra -->
+      <div class="card highlight-gold">
+        <h3>🌟 Famous Mantra — Rigveda 10-191-4</h3>
+        <div class="mantra-block">
+          <p class="sanskrit">समानी व आकूतिः समाना हृदयानि वः।<br>समानमस्तु वो मनो यथा वः सुसहासति॥</p>
+          <p><em>Let the desires of all of us be the same.<br>Let the hearts of all of us be the same.<br>Let the thoughts of all of us run on the same rope.<br>Let all of us unite and become good friends.</em></p>
+        </div>
+        <p>This is the <strong>last Mantra of Rigveda</strong> — emphasizing equality and unity among human beings.</p>
+      </div>
+
+      <!-- Upanishads -->
+      <div class="card">
+        <h3>🧘 The Upanishads</h3>
+        <div class="def-block">
+          <strong>Upanishad</strong> = "Upa-ni-sad" = "to sit nearby" — teachings imparted by a guru to students sitting at his side. Also means "that which takes one to Brahman."
+        </div>
+        <p><strong>Major Upanishads (Adi Shankaracharya's 9):</strong> Isha, Kena, Katha, Prashna, Mundaka, Mandukya, Taittirīya, Chandogya, Brihadaranyaka</p>
+        <p><strong>Central teaching:</strong> The ultimate Reality — <em>Brahman/Atman</em></p>
+      </div>
+
+      <!-- Key Upanishads -->
+      <div class="card">
+        <h3>📖 Key Upanishads & Their Teachings</h3>
+        <div class="accordion">
+          <div class="acc-item">
+            <div class="acc-header">Isha Upanishad (Shukla Yajurveda) <span>+</span></div>
+            <div class="acc-body">Brahman is One — does not move yet faster than mind; far yet near; outward yet inward. Doctrine of the infinite. "Everything pervaded by the Lord."</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Kena Upanishad (Samaveda) <span>+</span></div>
+            <div class="acc-body">What impels senses & mind? Brahman sustains all but nothing sustains it. "He who says he knows it does not really know it." Story of Yaksha — quelling of pride before self-realization.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Katha Upanishad (Samaveda) <span>+</span></div>
+            <div class="acc-body">Knowledge of Atman — smaller than smallest, greater than greatest. Story of Nachiketa & Yama. Two paths: Shreyas (good) vs Preyas (pleasant). Body = chariot, Soul = rider, Intellect = charioteer, Mind = reins, Senses = horses.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Mandukya Upanishad (Atharvaveda) <span>+</span></div>
+            <div class="acc-body">Only 12 mantras — "Mandukya alone is enough for liberation." Explains OM (AUM). Atman has 4 states: Jagrat (waking), Svapna (dream), Sushupti (deep sleep), Turiya (pure state).</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Chandogya Upanishad (Rigveda) <span>+</span></div>
+            <div class="acc-body">Everything is Brahman. Contains "Tat tvam asi" (That art thou) — Uddalaka teaches son Shvetaketu. Rivers merging into ocean = everything entering Atman.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">Taittiriya Upanishad (Samaveda) <span>+</span></div>
+            <div class="acc-body">Five Koshas (sheaths of self): Annamaya (food), Pranamaya (breath), Manomaya (mind), Vijnanamaya (knowledge), Anandamaya (bliss). Brahman = Truth, Consciousness, Infinite.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seven Mahavakyas -->
+      <div class="card">
+        <h3>🗝️ Seven Mahavakyas (Great Utterances)</h3>
+        <p>The Great Sentences of Advaita Vedanta — for contemplation and self-realization.</p>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>Mahavakya</th><th>Meaning</th><th>Source</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><span class="mono">Brahma satyam jagan mithya</span></td><td>Brahman is real; the world is unreal</td><td>—</td></tr>
+              <tr><td>2</td><td><span class="mono">Ekam evadvitiyam brahma</span></td><td>Brahman is one, without a second</td><td>—</td></tr>
+              <tr><td>3</td><td><span class="mono">Prajnanam brahman</span></td><td>Brahman is supreme knowledge</td><td>Aitareya Upanishad, Rig Veda</td></tr>
+              <tr><td>4</td><td><span class="mono">Tat tvam asi</span></td><td>That is what you are</td><td>Chandogya Upanishad, Sama Veda</td></tr>
+              <tr><td>5</td><td><span class="mono">Ayam atma brahma</span></td><td>Atman and Brahman are the same</td><td>Mandukya Upanishad, Atharva Veda</td></tr>
+              <tr><td>6</td><td><span class="mono">Aham brahmasmi</span></td><td>I am Brahman</td><td>Brihadaranyaka Upanishad, Yajur Veda</td></tr>
+              <tr><td>7</td><td><span class="mono">Sarvam khalvidam brahma</span></td><td>All of this is Brahman</td><td>Chandogya Upanishad</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Four Koshas -->
+      <div class="card">
+        <h3>🧅 Five Koshas (Sheaths of Self)</h3>
+        <div class="kosha-list">
+          <div class="kosha-item" style="--k:1"><strong>Annamaya Kosha</strong> — Food body — physical existence</div>
+          <div class="kosha-item" style="--k:2"><strong>Pranamaya Kosha</strong> — Breath/energy body — vital force</div>
+          <div class="kosha-item" style="--k:3"><strong>Manomaya Kosha</strong> — Mind body — thoughts & emotions</div>
+          <div class="kosha-item" style="--k:4"><strong>Vijnanamaya Kosha</strong> — Wisdom body — intellect & knowledge</div>
+          <div class="kosha-item" style="--k:5"><strong>Anandamaya Kosha</strong> — Bliss body — innermost; characterized by blissfulness</div>
+        </div>
+      </div>
+
+      <!-- Key Vedic Concepts -->
+      <div class="card">
+        <h3>🔑 Key Vedic/Upanishadic Concepts</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Concept</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Atman</strong></td><td>Individual soul/self — stationary yet faster than mind; near yet far; inside & outside. Cannot be cut by weapons, burned, wetted, or dried.</td></tr>
+              <tr><td><strong>Brahman</strong></td><td>Absolute reality — eternal, not subject to death/decay. Omnipresent. Root word brha/brhi = knowledge, expansion, all-pervasiveness.</td></tr>
+              <tr><td><strong>Maya</strong></td><td>Illusion — the world appears material, temporary; in reality it is spiritual and eternal.</td></tr>
+              <tr><td><strong>Karma</strong></td><td>Most fundamental moral law — defines past and future incarnations</td></tr>
+              <tr><td><strong>Samsara</strong></td><td>Cycle of birth, death, and rebirth</td></tr>
+              <tr><td><strong>Moksha</strong></td><td>Liberation from Samsara — ultimate goal of human life</td></tr>
+              <tr><td><strong>Rita (ऋत)</strong></td><td>Cosmic order — eternal moral order that regulates natural phenomena</td></tr>
+              <tr><td><strong>Advaita</strong></td><td>Non-duality — "not-two" — the reality of oneness underlying apparent diversity</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Four Purushartha outcomes -->
+      <div class="card highlight-gold">
+        <h3>🎯 Vedic Outcomes for Human Life (Four Purusharthas)</h3>
+        <div class="two-col">
+          <div>
+            <p><strong>Dharma</strong> — righteousness and duty is FIRST</p>
+            <p><strong>Artha</strong> — wealth should be based on Dharma. Four forms: Knowledge, Health, Contentment, Material Wealth</p>
+          </div>
+          <div>
+            <p><strong>Kama</strong> — desire must be controlled; harmful desires must be curbed through wisdom (not suppression)</p>
+            <p><strong>Moksha</strong> — final goal; not instant; must first achieve Dharma, Artha & Kama</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 10: BUDDHISM ========== -->
+    <section class="chapter" id="ch10" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">10</div>
+        <div class="ch-meta">
+          <h2>Buddhism</h2>
+          <p>Tripitaka, Dhammapada, peace philosophy</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch10" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch10">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>☸️ Buddhist Literature Structure</h3>
+        <div class="two-col">
+          <div class="card-inner highlight-blue">
+            <h4>Canonical Texts</h4>
+            <p>Buddha's teachings (word of the Buddha). Main divisions = <strong>Pitakas</strong>. Together = <strong>Tripitakas</strong> ("Three Baskets" in Pali).</p>
+            <p>Also called <em>Sutras</em> (Sanskrit) or <em>Suttas</em> (Pali)</p>
+          </div>
+          <div class="card-inner highlight-green">
+            <h4>Non-Canonical Texts</h4>
+            <p>Observations and commentaries on canonical texts in Pali, Tibetan, Chinese, and other languages. Composed largely by Sri Lankan monks.</p>
+            <p>Includes historical chronicles like Dipavamsa, Mahavamsa, Culavamsa</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tripitaka -->
+      <div class="card">
+        <h3>📚 The Tripitaka (Three Baskets)</h3>
+        <div class="numbered-list">
+          <div class="num-item"><div class="num">1</div><div><strong>Vinaya Pitaka</strong> (Discipline Basket)<p>Rules & guidelines of monastic life. 227 regulations for monastic discipline. From basic moral principles to interaction guidelines between monks, nuns & ordinary people.</p></div></div>
+          <div class="num-item"><div class="num">2</div><div><strong>Sutta Pitaka</strong> (Discourse Basket)<p>Largest basket. Discourses of Buddha & close disciples. Also called <em>Buddhavacana</em> (word of the Buddha). Contains Dhammapada — most widely known Buddhist text.</p></div></div>
+          <div class="num-item"><div class="num">3</div><div><strong>Abhidharma Pitaka</strong> (Special Doctrines Basket)<p>Poetry, songs & stories about Buddha's life. 7 works on philosophy and doctrine. Some Buddhist schools don't consider it canonical.</p></div></div>
+        </div>
+      </div>
+
+      <!-- Theravada vs Mahayana -->
+      <div class="card">
+        <h3>🌏 Theravada vs Mahayana Buddhism</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Aspect</th><th>Theravada</th><th>Mahayana</th></tr></thead>
+            <tbody>
+              <tr><td>Meaning</td><td>"Doctrines of the elders"</td><td>"Great Vehicle"</td></tr>
+              <tr><td>Location</td><td>Sri Lanka & Southeast Asia</td><td>Himalayas & East Asia; Bangladesh, Nepal, Bhutan, China</td></tr>
+              <tr><td>Scripture</td><td>Pali canon (Tripitaka) only</td><td>Tripitaka + other holy texts</td></tr>
+              <tr><td>Enlightenment</td><td>Difficult; typically for monastics</td><td>Can be attained in one's lifetime, even by layperson</td></tr>
+              <tr><td>Practitioners</td><td>Minority</td><td>53% of all Buddhists (largest branch)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Dhammapada -->
+      <div class="card">
+        <h3>📖 Dhammapada — "The Buddha's Path to Wisdom"</h3>
+        <div class="def-block">
+          Most widely known Buddhist text. 26 chapters, 423 verses. Focuses on true nature of existence and the path to liberation. Teachings based on Buddha's understanding of reality. Translated by <strong>Max Muller in 1870</strong>.
+        </div>
+        <p><strong>Core Goal:</strong> Free people from the evils of hatred, passion and ignorance — to achieve "conquest of self."</p>
+      </div>
+
+      <!-- Key Buddhist Quotes -->
+      <div class="card">
+        <h3>💬 Important Buddhist Quotes & Explanations</h3>
+        <div class="quote-block">
+          <p>"All that we are, is the result of what we have thought... If one speaks or acts with an evil thought, pain follows one, as the wheel follows the foot of the ox."</p>
+          <cite>— Dhammapada, Verse 1</cite>
+          <p class="quote-explain">Every experience begins with a thought. Evil acts/thoughts follow us, causing unpleasant experiences. Good thoughts and deeds bring happiness like a shadow.</p>
+        </div>
+        <div class="quote-block">
+          <p>"Better than a thousand hollow words is one useful word, hearing which one attains peace."</p>
+          <cite>— Dhammapada</cite>
+          <p class="quote-explain">Minimalism: one meaningful thought is better than a thousand empty ones. Conquest of self is better than conquest of others.</p>
+        </div>
+      </div>
+
+      <!-- Buddhist Peace Philosophy -->
+      <div class="card">
+        <h3>🕊️ Buddhist Philosophical Solutions for Peace</h3>
+        <div class="skill-grid">
+          <div class="skill-item"><div class="skill-icon">🧘</div><strong>Meditation</strong><p>Controls mind; provides detachment, present-moment awareness, eliminates delusions & cravings</p></div>
+          <div class="skill-item"><div class="skill-icon">🌿</div><strong>Minimalist Life</strong><p>Material world shackles people; minimalism illuminates higher consciousness (Vimutti = spiritual freedom)</p></div>
+          <div class="skill-item"><div class="skill-icon">🙏</div><strong>Five Precepts</strong><p>Abstain from: destroying life, stealing, sexual misconduct, lying, and intoxicants</p></div>
+          <div class="skill-item"><div class="skill-icon">❤️</div><strong>Manifesto of Peace</strong><p>Hatred answered with love; patience & forgiveness; hatred → vengeance cycle only breeds more violence</p></div>
+        </div>
+      </div>
+
+      <!-- Mindfulness -->
+      <div class="card">
+        <h3>🧠 Mindfulness — Benefits</h3>
+        <div class="benefits-list">
+          <div class="benefit-item">✅ Decreases stress hormone cortisol</div>
+          <div class="benefit-item">✅ Better working memory (UC study on GRE performance)</div>
+          <div class="benefit-item">✅ Better pain & emotion processing</div>
+          <div class="benefit-item">✅ Lowers depression risk among teens & pregnant women</div>
+          <div class="benefit-item">✅ Helps achieve quality sleep</div>
+          <div class="benefit-item">✅ Helps with weight management</div>
+          <div class="benefit-item">✅ 4 elements: body-awareness, self-awareness, attention regulation, emotion regulation</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 11: JAINISM ========== -->
+    <section class="chapter" id="ch11" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">11</div>
+        <div class="ch-meta">
+          <h2>Jainism & Mahavira</h2>
+          <p>Ahimsa, five vows, three jewels, non-absolutism</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch11" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch11">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>👑 Lord Mahavira — Introduction</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Fact</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Birth Name</td><td>Vardhamana</td></tr>
+              <tr><td>Born</td><td>599 BC, Bihar</td></tr>
+              <tr><td>Status</td><td>24th (and last) Tirthankara of Jain religion</td></tr>
+              <tr><td>Background</td><td>Wealthy prince; left home at age 30 for spiritual quest</td></tr>
+              <tr><td>Name "Mahavira"</td><td>Meaning "brave and courageous" — given due to unbearable hardships endured</td></tr>
+              <tr><td>Enlightenment</td><td>12 intense years of silence, meditation, fasting</td></tr>
+              <tr><td>Core Teaching</td><td>Ahimsa — every living being has a soul and shouldn't be harmed</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Five Vows -->
+      <div class="card">
+        <h3>🙏 Five Main Principles (Mahavratas)</h3>
+        <div class="purusharth-grid">
+          <div class="p-card dharma"><div class="p-num">1</div><h4>☮️ Ahimsa</h4><p><strong>Non-violence</strong><br>Every creature has a soul; do not harm any living being in action, thought, or word</p></div>
+          <div class="p-card artha"><div class="p-num">2</div><h4>✓ Satya</h4><p><strong>Truthfulness</strong><br>Speaking truth at all times</p></div>
+          <div class="p-card kama"><div class="p-num">3</div><h4>🚫 Asteya</h4><p><strong>Non-stealing</strong><br>Not taking what does not belong to you</p></div>
+          <div class="p-card moksha"><div class="p-num">4</div><h4>🌸 Brahmacharya</h4><p><strong>Non-adultery/Celibacy</strong><br>Restraint of sensual pleasures</p></div>
+          <div class="p-card dharma" style="grid-column: span 2"><div class="p-num">5</div><h4>🍃 Aparigraha</h4><p><strong>Non-possession</strong><br>Freedom from material attachments; non-attachment is core to Jain practice</p></div>
+        </div>
+        <div class="mnemonic-box">
+          <strong>🧠 Mnemonic:</strong> <span class="mono">A-S-A-B-A</span> — "All Saints Are Blessed Always"
+        </div>
+      </div>
+
+      <!-- Five Principles -->
+      <div class="card">
+        <h3>🔑 Five Philosophical Beliefs of Mahavira</h3>
+        <div class="accordion">
+          <div class="acc-item">
+            <div class="acc-header">A. Belief in Soul & Karma <span>+</span></div>
+            <div class="acc-body">Every living creature has a soul. Soul is in bondage due to karma — can be liberated by disintegrating karmic force and freeing from worldly attachments. Soul (atma) becomes Parmatama when it attains infinite greatness.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">B. Nirvana (Salvation) <span>+</span></div>
+            <div class="acc-body">Ultimate objective of life is salvation. Avoid evil karmas; prevent new evil karmas. Follow five vows + right conduct, right knowledge, right faith.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">C. Non-belief in God <span>+</span></div>
+            <div class="acc-body">Universe has no start or end; no creator or destroyer. Universe simply changes form. Man is the maker and destroyer of his own destiny — liberation does not depend on any outside authority.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">D. Ahimsa (Non-violence) <span>+</span></div>
+            <div class="acc-body">Even animals, plants, stones and rocks have life and shouldn't be harmed. Jains put end to sacrifices by popularizing ahimsa.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-header">E. Freedom of Women <span>+</span></div>
+            <div class="acc-body">Right to attain nirvana is equally important for women. Mahavira believed in equality; was not a believer in the caste system.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Three Jewels -->
+      <div class="card">
+        <h3>💎 Three Jewels (Tri-Ratna) of Jainism</h3>
+        <div class="three-col">
+          <div class="mini-card highlight-blue"><strong>Right Belief</strong><p>Rational attitude; renouncing superstitious beliefs; understand true nature of substances in universe. Faith in Tirthankaras' teachings.</p></div>
+          <div class="mini-card highlight-green"><strong>Right Knowledge</strong><p>True & relevant knowledge of reality. Knowledge of 6 universal substances (soul, matter, motion, rest, space, time) and 9 tattvas.</p></div>
+          <div class="mini-card highlight-gold"><strong>Right Conduct</strong><p>Proper, appropriate, honest conduct. Attain state of perfect equanimity. Liberate from attachment, aversion, impure thoughts/words/deeds.</p></div>
+        </div>
+      </div>
+
+      <!-- Jain Literature -->
+      <div class="card">
+        <h3>📚 Jain Literature</h3>
+        <div class="two-col">
+          <div class="card-inner">
+            <h4>Agam Literature (Canonical)</h4>
+            <p>Written in Prakrit. Original scriptures compiled by Gandharas and elder monks (Srut-kevalis). Divided into: Ang Agams (direct teachings of Mahavira) & Angbahya Agams (commentaries).</p>
+          </div>
+          <div class="card-inner">
+            <h4>Non-Agam Literature (Non-Canonical)</h4>
+            <p>Written in Prakrit, Sanskrit, old Marathi, Gujarati, Hindi, Kannada, Tamil, German, English. Commentaries and independent works of scholars.</p>
+          </div>
+        </div>
+        <div class="alert-box">
+          📌 Digambar sect believes all 26 Agam sutras were lost. Shwetambar sect accepts the documented scriptures. These two sects have opposing views on canonical texts.
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <div class="exam-tag">⭐ Frequently Compared</div>
+        <p><strong>Similarities between Buddhism & Jainism:</strong> Both emphasize non-violence (ahimsa), both have Three Jewels/Eightfold Path, both emphasize liberation (Nirvana/Moksha), both reject the caste system, both founded by royal princes who renounced wealth.</p>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 12: PURUSHARTH DEEP DIVE ========== -->
+    <section class="chapter" id="ch12" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">12</div>
+        <div class="ch-meta">
+          <h2>Purusharth — Deep Dive</h2>
+          <p>Dharma, Artha, Kama, Moksha in detail</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch12" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch12">Mark Done</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>⚖️ Dharma — Ten Basic Principles</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>Principle</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Forbearance</td><td>Remain calm and composed in all circumstances</td></tr>
+              <tr><td>2</td><td>Control of Mind</td><td>Exercise full control over the restless, changing mind</td></tr>
+              <tr><td>3</td><td>Kshama (Forgiveness)</td><td>Virtue of the physically and morally strong. Don't forgive habitual wrongdoers.</td></tr>
+              <tr><td>4</td><td>Non-Stealing</td><td>Don't take anything belonging to others without permission</td></tr>
+              <tr><td>5</td><td>Shauch (Cleanliness)</td><td>Keep body, mind, and physical environment clean and pure</td></tr>
+              <tr><td>6</td><td>Wisdom</td><td>Gain wisdom through study, self-experience, and wise company</td></tr>
+              <tr><td>7</td><td>Control of Senses</td><td>Keep five senses of knowledge and five senses of action under control</td></tr>
+              <tr><td>8</td><td>Knowledge</td><td>Acquire knowledge of both physical and spiritual domain</td></tr>
+              <tr><td>9</td><td>Truth</td><td>Practice truth in thought, words, and deed</td></tr>
+              <tr><td>10</td><td>Non-Anger</td><td>Remain calm and balanced even in the face of provocation</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>💰 Artha — Four Forms of Wealth</h3>
+        <div class="def-grid">
+          <div class="def-item"><div class="def-icon">📚</div><div><strong>Knowledge</strong><p>Greatest wealth — both material (worldly life) and spiritual (self-realization)</p></div></div>
+          <div class="def-item"><div class="def-icon">💪</div><div><strong>Health</strong><p>Good food, proper exercise, good thoughts = physical, emotional, mental well-being</p></div></div>
+          <div class="def-item"><div class="def-icon">😌</div><div><strong>Contentment</strong><p>Abstinence from excessive desire; satisfaction with honest effort results</p></div></div>
+          <div class="def-item"><div class="def-icon">💎</div><div><strong>Material Wealth</strong><p>Acquired within Dharma; used for charitable purposes; not for greed/luxury</p></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>❤️ Kama — Understanding Desires</h3>
+        <div class="two-col">
+          <div class="card-inner highlight-green">
+            <h4>Controlled & Beneficial Desire ✅</h4>
+            <p>Acts as catalytic agent for actions. Personal and worldly progress results from desire to achieve and discover.</p>
+          </div>
+          <div class="card-inner highlight-red">
+            <h4>Uncontrolled/Harmful Desire ❌</h4>
+            <p>Can lead to destruction. Like fire to which fuel is added — grows more and more with indulgence.</p>
+          </div>
+        </div>
+        <div class="alert-box">
+          ⚠️ Desires arising from lust, greed, and anger should be curbed absolutely. Control through <em>wisdom & discrimination</em> — NOT suppression (suppressed desires bounce back).
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🕊️ Moksha — Final Liberation</h3>
+        <ul class="content-list">
+          <li>State of <em>Ananda</em> (perfect bliss) — nothing more remains to be attained</li>
+          <li>Extremely difficult — typically takes efforts on many births</li>
+          <li>Requires: arduous spiritual practice, constant & unselfish devotion, non-attachment</li>
+          <li><strong>No instant Moksha</strong> — must first go through Dharma, Artha & Kama</li>
+          <li>Only humans, with higher intelligence, can reach beyond animal level to spiritual goals</li>
+          <li>Sanyasa (renunciation from the beginning) is NOT recommended except in rare cases</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 13: QUICK REVISION ========== -->
+    <section class="chapter" id="ch13" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">13</div>
+        <div class="ch-meta">
+          <h2>Quick Revision</h2>
+          <p>Key points, mnemonics, common mistakes</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch13" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch13">Mark Done</button>
+        </div>
+      </div>
+
+      <!-- Flashcards -->
+      <div class="card">
+        <h3>🃏 Flashcards Mode</h3>
+        <div class="flashcard-wrap" id="flashcardWrap">
+          <div class="flashcard" id="flashcard">
+            <div class="fc-front" id="fcFront">What is Negative Peace?</div>
+            <div class="fc-back" id="fcBack" style="display:none">Absence of direct/physical violence — a temporary calm (like a ceasefire) that does NOT address underlying issues causing the conflict.</div>
+          </div>
+          <div class="fc-controls">
+            <button class="fc-btn" id="fcPrev">← Prev</button>
+            <button class="fc-btn" id="fcFlip">Flip Card</button>
+            <button class="fc-btn" id="fcNext">Next →</button>
+            <span id="fcCount" class="fc-count">1/20</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Common Mistakes -->
+      <div class="card">
+        <h3>⚠️ Common Exam Mistakes</h3>
+        <div class="mistake-list">
+          <div class="mistake-item">
+            <div class="mistake-wrong">❌ "Negative peace is bad peace"</div>
+            <div class="mistake-right">✅ Negative peace is the ABSENCE of direct violence. It is better than war, but not sufficient for true peace.</div>
+          </div>
+          <div class="mistake-item">
+            <div class="mistake-wrong">❌ Confusing Peacekeeping and Peacebuilding</div>
+            <div class="mistake-right">✅ Peacekeeping = immediate (stop fighting) | Peacemaking = diplomatic (negotiate) | Peacebuilding = long-term (address root causes)</div>
+          </div>
+          <div class="mistake-item">
+            <div class="mistake-wrong">❌ Saying Galtung said "war is the opposite of peace"</div>
+            <div class="mistake-right">✅ Galtung said VIOLENCE (not war) is the opposite of peace — like disease is opposite to health.</div>
+          </div>
+          <div class="mistake-item">
+            <div class="mistake-wrong">❌ Thinking Jainism believes in a creator God</div>
+            <div class="mistake-right">✅ Mahavira believed the universe has no creator or destroyer. Man is the maker of his own destiny.</div>
+          </div>
+          <div class="mistake-item">
+            <div class="mistake-wrong">❌ Confusing Atman and Brahman</div>
+            <div class="mistake-right">✅ Atman = individual soul (wave) | Brahman = universal absolute reality (ocean) | Ayam atma brahma = they are the same</div>
+          </div>
+          <div class="mistake-item">
+            <div class="mistake-wrong">❌ Forgetting who compiled the Vedas</div>
+            <div class="mistake-right">✅ Sage Krishna Dwaipayana Vyasa (Veda Vyasa) compiled the single mass of Veda into four Vedas.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Master Summary Table -->
+      <div class="card">
+        <h3>📋 Master Summary — All Key Thinkers</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Thinker</th><th>Key Contribution</th><th>Important Work/Concept</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Johan Galtung</strong></td><td>Father of Peace Science</td><td>Violence, Peace & Peace Research (1969); Negative/Positive Peace; Structural/Cultural Violence</td></tr>
+              <tr><td><strong>Betty Reardon</strong></td><td>Peace Education theorist</td><td>Comprehensive Peace Education (1988); peace education for social transformation</td></tr>
+              <tr><td><strong>Mahatma Gandhi</strong></td><td>Modern peace leader</td><td>Satyagraha (non-violent resistance); Ahimsa; Indian independence movement</td></tr>
+              <tr><td><strong>Veda Vyasa</strong></td><td>Compiler of Vedas</td><td>Divided single Veda into four; reason for Guru Purnima</td></tr>
+              <tr><td><strong>Siddhartha Gautama (Buddha)</strong></td><td>Founder of Buddhism</td><td>Four Noble Truths, Eightfold Path, Dhammapada</td></tr>
+              <tr><td><strong>Mahavira</strong></td><td>24th Tirthankara; key figure of Jainism</td><td>Ahimsa, five Mahavratas, Three Jewels, Syadvada</td></tr>
+              <tr><td><strong>Patanjali</strong></td><td>Yoga philosopher</td><td>Yoga Sutras; yamas & niyamas for well-being</td></tr>
+              <tr><td><strong>Rumi & Kabir</strong></td><td>Sufi saints</td><td>Love, tolerance, unity with divine; profound impact on Indian spirituality</td></tr>
+              <tr><td><strong>Max Muller</strong></td><td>Scholar</td><td>Translated Dhammapada into English (1870)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Final Checklist -->
+      <div class="card">
+        <h3>✅ Final Revision Checklist</h3>
+        <div class="checklist" id="revisionChecklist">
+          <label class="check-item"><input type="checkbox"> Definitions of Peace (Merriam-Webster + multilingual)</label>
+          <label class="check-item"><input type="checkbox"> Inner Peace vs Outer Peace formula</label>
+          <label class="check-item"><input type="checkbox"> 11 Types of Peace</label>
+          <label class="check-item"><input type="checkbox"> Betty Reardon's Peace Education (1988 & 2002)</label>
+          <label class="check-item"><input type="checkbox"> Purusharth — 4 goals: Dharma, Artha, Kama, Moksha</label>
+          <label class="check-item"><input type="checkbox"> Indian Lineage of Peace (8 sources)</label>
+          <label class="check-item"><input type="checkbox"> Negative Peace definition & limitations</label>
+          <label class="check-item"><input type="checkbox"> 3 Approaches: Peacekeeping, Peacemaking, Peacebuilding</label>
+          <label class="check-item"><input type="checkbox"> Positive Peace — 6 elements</label>
+          <label class="check-item"><input type="checkbox"> Galtung's Triangle of Violence (3 types)</label>
+          <label class="check-item"><input type="checkbox"> Structural Violence — 5 characteristics, 6 forms</label>
+          <label class="check-item"><input type="checkbox"> Cultural Violence — 4 tools & relationship to structural violence</label>
+          <label class="check-item"><input type="checkbox"> 4 Vedas — content, branches, Upavedas</label>
+          <label class="check-item"><input type="checkbox"> Structure of Vedas (Karma Kanda vs Jnyan Kanda)</label>
+          <label class="check-item"><input type="checkbox"> Rigveda 10-191-4 mantra on equality</label>
+          <label class="check-item"><input type="checkbox"> 9 Major Upanishads & their key teachings</label>
+          <label class="check-item"><input type="checkbox"> 7 Mahavakyas (Great Utterances)</label>
+          <label class="check-item"><input type="checkbox"> 5 Koshas (sheaths of self)</label>
+          <label class="check-item"><input type="checkbox"> Atman, Brahman, Maya, Karma, Samsara, Moksha</label>
+          <label class="check-item"><input type="checkbox"> Tripitaka — 3 Pitakas explained</label>
+          <label class="check-item"><input type="checkbox"> Theravada vs Mahayana Buddhism</label>
+          <label class="check-item"><input type="checkbox"> Dhammapada — structure & key quotes</label>
+          <label class="check-item"><input type="checkbox"> Buddhist Mindfulness — 7+ benefits</label>
+          <label class="check-item"><input type="checkbox"> Mahavira — birth, teachings, 5 Mahavratas</label>
+          <label class="check-item"><input type="checkbox"> Three Jewels of Jainism</label>
+          <label class="check-item"><input type="checkbox"> Dharma's 10 basic principles</label>
+          <label class="check-item"><input type="checkbox"> Story of Nachiketa (Katha Upanishad)</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHAPTER 14: PRACTICE & MCQs ========== -->
+    <section class="chapter" id="ch14" data-completed="false">
+      <div class="chapter-header">
+        <div class="ch-num">14</div>
+        <div class="ch-meta">
+          <h2>Practice & MCQs</h2>
+          <p>Test your knowledge with interactive quiz</p>
+        </div>
+        <div class="ch-actions">
+          <button class="bookmark-btn" data-id="ch14" title="Bookmark">☆</button>
+          <button class="complete-btn" data-id="ch14">Mark Done</button>
+        </div>
+      </div>
+
+      <!-- MCQ Quiz -->
+      <div class="card">
+        <h3>🎯 Interactive MCQ Quiz</h3>
+        <div id="quizArea">
+          <div id="quizQuestion" class="quiz-question"></div>
+          <div id="quizOptions" class="quiz-options"></div>
+          <div id="quizFeedback" class="quiz-feedback"></div>
+          <div class="quiz-nav">
+            <button id="quizNext" class="btn-primary" style="display:none">Next Question →</button>
+            <span id="quizScore" class="quiz-score"></span>
+          </div>
+        </div>
+        <div id="quizResult" class="quiz-result" style="display:none">
+          <h4>Quiz Complete! 🎉</h4>
+          <div id="finalScore" class="final-score"></div>
+          <button id="quizRetry" class="btn-primary">Try Again</button>
+        </div>
+      </div>
+
+      <!-- Important Questions -->
+      <div class="card">
+        <h3>📝 Important Long Answer Questions</h3>
+        <div class="iq-list">
+          <div class="iq-item"><span class="iq-mark">5M</span><p>Explain the concept of Negative Peace with examples. Why is it better than war but insufficient for true peace?</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>Differentiate between Peacekeeping, Peacemaking, and Peacebuilding with the help of Galtung's framework.</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>What is Positive Peace? Explain its components and how it addresses three types of violence.</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>Explain the Purusharth philosophy. How do Dharma, Artha, Kama & Moksha provide a balanced life?</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>Write a note on the Indian Lineage of Peace with reference to Vedic, Buddhist and Jain traditions.</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>Explain Structural Violence. What are its characteristics and forms? How does it differ from Direct Violence?</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>What is Cultural Violence? Explain its tools and its relationship with Structural Violence.</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>Explain the structure and philosophy of the Vedas. What are the four Vedas and their significance?</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>What are Mahavakyas? Explain any three with their source and meaning.</p></div>
+          <div class="iq-item"><span class="iq-mark">5M</span><p>Explain the five vows of Jainism. How are these relevant in the modern world?</p></div>
+        </div>
+      </div>
+
+      <!-- Short Questions -->
+      <div class="card">
+        <h3>📝 Short Answer Questions (2 Marks)</h3>
+        <div class="sq-list">
+          <div class="sq-item">1. What is the meaning of 'Shalom' and 'Salaam'?</div>
+          <div class="sq-item">2. Who is the "Father of Peace Science"?</div>
+          <div class="sq-item">3. What is Apaurusheya?</div>
+          <div class="sq-item">4. What are the Three Jewels of Jainism?</div>
+          <div class="sq-item">5. What does 'Tat tvam asi' mean and from which Upanishad?</div>
+          <div class="sq-item">6. What is Samsara?</div>
+          <div class="sq-item">7. Name the 4 types of priests in a Vedic yajnya.</div>
+          <div class="sq-item">8. Who translated Dhammapada and when?</div>
+          <div class="sq-item">9. What are the Five Koshas?</div>
+          <div class="sq-item">10. What is the Rigveda 10-191-4 mantra about?</div>
+          <div class="sq-item">11. What is Negative Peace (Inner world)?</div>
+          <div class="sq-item">12. Who was Betty Reardon and what did she say about Peace Education?</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-logo">☮ PCE10010 — Foundation of Peace</div>
+        <p>MIT World Peace University, Pune | Study Notes for Examination</p>
+        <p class="footer-motto">"Transform Your Life, Transform the World Around"</p>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<!-- Back to Top -->
+<button id="backToTop" class="back-top">↑</button>
+
+<script src="script.js"></script>
+</body>
+</html>

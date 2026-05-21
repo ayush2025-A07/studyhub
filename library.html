@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuDrive // Personal PDF Notes Library</title>
+  <style>/* --- Core Properties Setup --- */
+:root {
+  --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  
+  /* Light Mode Token Architecture */
+  --bg-app: #f8f9fa;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-surface-hover: rgba(0, 0, 0, 0.04);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  
+  --text-main: #1f1f1f;
+  --text-muted: #5f6368;
+  --primary-accent: #1a73e8;
+  --shadow-sm: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  --shadow-md: 0 4px 12px 0 rgba(0,0,0,0.05), 0 1px 3px 0 rgba(0,0,0,0.1);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+
+  /* Theme Color Arrays */
+  --folder-cs: #ea4335;
+  --folder-math: #1a73e8;
+  --folder-phys: #fbbc05;
+  --folder-chem: #34a853;
+  --folder-os: #a142f4;
+  --folder-ds: #00bac6;
+  --folder-micro: #ff6d00;
+  --folder-dbms: #e91e63;
+  --folder-default: #78909c;
+}
+
+[data-theme="dark"] {
+  /* Dark Mode Token Architecture */
+  --bg-app: #0f1115;
+  --bg-sidebar: #161920;
+  --bg-card: #1e2330;
+  --bg-surface-hover: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(30, 35, 48, 0.7);
+  
+  --text-main: #e8eaed;
+  --text-muted: #9aa0a6;
+  --primary-accent: #8ab4f8;
+  --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.5);
+  --shadow-md: 0 10px 20px -5px rgba(0,0,0,0.6);
+}
+
+/* --- Document Setup Base --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* --- Framework Layout Structure --- */
+.app-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 256px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  z-index: 10;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  color: var(--primary-accent);
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-menu {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  border: none;
+  background: none;
+  border-radius: 24px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-main);
+}
+
+.nav-item.active {
+  background-color: rgba(26, 115, 232, 0.15);
+  color: var(--primary-accent);
+}
+
+[data-theme="dark"] .nav-item.active {
+  background-color: rgba(138, 180, 248, 0.15);
+}
+
+/* --- Main Work Arena --- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.top-navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background-color: var(--bg-app);
+  border-bottom: 1px solid var(--glass-border);
+  transition: background-color 0.3s ease;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-sidebar);
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+  border: 1px solid var(--glass-border);
+  gap: 12px;
+}
+
+.search-icon {
+  color: var(--text-muted);
+}
+
+#global-search {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 15px;
+  color: var(--text-main);
+  outline: none;
+}
+
+.theme-btn {
+  background: var(--bg-sidebar);
+  border: 1px solid var(--glass-border);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+.theme-btn:hover {
+  transform: rotate(15deg) scale(1.05);
+  color: var(--text-main);
+}
+
+/* --- Content Views Configurations --- */
+.content-pane {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+}
+
+.view-section {
+  display: none;
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.view-section.active-view {
+  display: block;
+}
+
+.view-title {
+  font-size: 26px;
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+
+/* --- Interface Component Grids --- */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.metric-card {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.metric-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.metric-value {
+  font-size: 32px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.metric-icon-bg {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+/* --- Folders Architectural Style --- */
+.folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.folder-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s;
+}
+
+.folder-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background-color: var(--bg-surface-hover);
+}
+
+.folder-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folder-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.folder-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.folder-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* --- Document Cards Layout System --- */
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.doc-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.doc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.doc-preview-strip {
+  height: 8px;
+}
+
+.doc-body {
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.doc-icon-wrapper {
+  color: #ea4335; /* Classic PDF Identity Red */
+  flex-shrink: 0;
+}
+
+.doc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.doc-subject-tag {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.doc-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: flex-end;
+  background-color: rgba(0,0,0,0.01);
+}
+
+.open-btn {
+  background: transparent;
+  border: 1px solid var(--primary-accent);
+  color: var(--primary-accent);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.open-btn:hover {
+  background-color: var(--primary-accent);
+  color: #fff;
+}
+
+/* --- Typography / UI Utilities --- */
+.section-group {
+  margin-top: 40px;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.group-header h3 {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.text-link-btn {
+  background: none;
+  border: none;
+  color: var(--primary-accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--glass-border);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+/* --- Glassmorphism Layer Architecture --- */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+/* --- Dynamic Global Theme Utility Colors --- */
+.color-cs { background-color: var(--folder-cs); color: #fff; }
+.color-math { background-color: var(--folder-math); color: #fff; }
+.color-phys { background-color: var(--folder-phys); color: #fff; }
+.color-chem { background-color: var(--folder-chem); color: #fff; }
+.color-os { background-color: var(--folder-os); color: #fff; }
+.color-ds { background-color: var(--folder-ds); color: #fff; }
+.color-micro { background-color: var(--folder-micro); color: #fff; }
+.color-dbms { background-color: var(--folder-dbms); color: #fff; }
+
+/* --- Presentation Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive Viewport Matrix --- */
+@media (max-width: 820px) {
+  .app-container { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--glass-border); }
+  .sidebar-menu { flex-direction: row; overflow-x: auto; padding-bottom: 8px; }
+  .nav-item { padding: 8px 16px; white-space: nowrap; }
+  .content-pane { padding: 20px; }
+}</style>
+</head>
+<body>
+
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <svg class="logo-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14H7v-2h3v2zm3-4H7v-2h6v2zm3-4H7V7h9v2z"/></svg>
+        <span class="brand-name">DocuDrive</span>
+      </div>
+      
+      <nav class="sidebar-menu">
+        <button class="nav-item active" data-target="dashboard">
+          <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="nav-item" data-target="folders">
+          <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+          <span>All Subjects</span>
+        </button>
+        <button class="nav-item" data-target="recent">
+          <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm3.3 14.3L11 12.8V7h1.5v4.9l3.7 2.2-.7 1.2z"/></svg>
+          <span>Recent PDFs</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Navbar Header -->
+      <header class="top-navbar">
+        <div class="search-container">
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="global-search" placeholder="Search across all files and notes...">
+        </div>
+        
+        <button id="theme-toggle" aria-label="Toggle dark mode" class="theme-btn">
+          <svg class="sun-icon" viewBox="0 0 24 24"><path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+        </button>
+      </header>
+
+      <!-- Dynamic Content Wrapper -->
+      <div id="content-pane" class="content-pane">
+        
+        <!-- Dashboard Section View -->
+        <section id="dashboard-view" class="view-section active-view">
+          <h1 class="view-title">Welcome to DocuDrive</h1>
+          
+          <!-- Metric Cards -->
+          <div class="metrics-grid">
+            <div class="metric-card glass">
+              <div class="metric-info">
+                <span class="metric-label">Total Subjects</span>
+                <h2 id="metric-subjects" class="metric-value">0</h2>
+              </div>
+              <div class="metric-icon-bg color-cs">
+                <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+              </div>
+            </div>
+            <div class="metric-card glass">
+              <div class="metric-info">
+                <span class="metric-label">Total Documents</span>
+                <h2 id="metric-pdfs" class="metric-value">0</h2>
+              </div>
+              <div class="metric-icon-bg color-math">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subject Folders Row Component -->
+          <div class="section-group">
+            <div class="group-header">
+              <h3>Subject Folders</h3>
+              <button class="text-link-btn view-all-trigger">View All</button>
+            </div>
+            <div id="dashboard-folders-grid" class="folders-grid"></div>
+          </div>
+
+          <!-- Recent Files List Component -->
+          <div class="section-group">
+            <div class="group-header">
+              <h3>Recent Documents</h3>
+            </div>
+            <div id="dashboard-recent-grid" class="documents-grid"></div>
+          </div>
+        </section>
+
+        <!-- Folder Detailed Section View -->
+        <section id="folder-view" class="view-section">
+          <div class="breadcrumb-nav">
+            <button id="back-to-folders-btn" class="back-btn">
+              <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+              <span>Back to Subjects</span>
+            </button>
+            <h2 id="current-folder-title" class="current-folder-title">Subject Name</h2>
+          </div>
+          <div id="folder-docs-grid" class="documents-grid"></div>
+        </section>
+
+        <!-- All Folders Standalone View -->
+        <section id="folders-view" class="view-section">
+          <h1 class="view-title">All Subject Folders</h1>
+          <div id="all-folders-grid" class="folders-grid"></div>
+        </section>
+
+        <!-- Recent PDFs Standalone View -->
+        <section id="recent-view" class="view-section">
+          <h1 class="view-title">Recent Uploaded Material</h1>
+          <div id="all-recent-grid" class="documents-grid"></div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script>// 1. Centralized Library Repository Array
+const library = {
+  "Applied Science": [
+    { title: "AS Notes", link: "study units/SEM 1/AS/AS Notes.pdf" }
+  ],
+  "C Programming": [
+    { title: "Syllabus - C Programming", link: "study units/SEM 1/C programming/Syllabus - C Programming.pdf" },
+    { title: "Unit 1.1", link: "study units/SEM 1/C programming/Unit 1.1.pdf" },
+    { title: "Unit 1.2", link: "study units/SEM 1/C programming/Unit 1.2.pdf" },
+    { title: "Unit 1.3", link: "study units/SEM 1/C programming/Unit 1.3.pdf" },
+    { title: "Unit 1.4", link: "study units/SEM 1/C programming/Unit 1.4.pdf" },
+    { title: "Unit 2.1", link: "study units/SEM 1/C programming/Unit 2.1.pdf" },
+    { title: "Unit 2.2", link: "study units/SEM 1/C programming/Unit 2.2.pdf" },
+    { title: "Unit 2.3", link: "study units/SEM 1/C programming/Unit 2.3.pdf" },
+    { title: "Unit 2.4", link: "study units/SEM 1/C programming/Unit 2.4.pdf" },
+    { title: "Unit 2.5", link: "study units/SEM 1/C programming/Unit 2.5.pdf" },
+    { title: "Unit 3.1", link: "study units/SEM 1/C programming/Unit 3.1.pdf" },
+    { title: "Unit 3.2", link: "study units/SEM 1/C programming/Unit 3.2.pdf" },
+    { title: "Unit 3.3", link: "study units/SEM 1/C programming/Unit 3.3.pdf" },
+    { title: "Unit 3.4", link: "study units/SEM 1/C programming/Unit 3.4.pdf" },
+    { title: "Unit 3.5", link: "study units/SEM 1/C programming/Unit 3.5.pdf" },
+    { title: "Unit 3.6", link: "study units/SEM 1/C programming/Unit 3.6.pdf" },
+    { title: "Unit 3.7", link: "study units/SEM 1/C programming/Unit 3.7.pdf" },
+    { title: "Unit 4.1", link: "study units/SEM 1/C programming/Unit 4.1.pdf" },
+    { title: "Unit 4.2", link: "study units/SEM 1/C programming/Unit 4.2.pdf" },
+    { title: "Unit 4.3", link: "study units/SEM 1/C programming/Unit 4.3.pdf" },
+    { title: "Unit 4.4", link: "study units/SEM 1/C programming/Unit 4.4.pdf" },
+    { title: "Unit 5.1", link: "study units/SEM 1/C programming/Unit 5.1.pdf" },
+    { title: "Arrays and Functions Exam Notes", link: "study units/SEM 1/C programming/Compress notes/Unit_3_Arrays_and_Functions_Exam_Notes.pdf" },
+    { title: "C Programming Complete Notes", link: "study units/SEM 1/C programming/Compress notes/C programming.pdf" }
+  ],
+  "Computer Organization": [
+    { title: "COA", link: "study units/SEM 1/CO/COA.pdf" },
+    { title: "CO Notes", link: "study units/SEM 1/CO/CO.pdf" },
+    { title: "Computer Organization", link: "study units/SEM 1/CO/Computer organization.pdf" },
+    { title: "CO Practice Questions", link: "study units/SEM 1/CO/CO practice (4-sets + ans + numericals).pdf" },
+    { title: "Unit 2 CO Notes", link: "study units/SEM 1/CO/Sumit sir notes/Unit 2 CO for students.pdf" },
+    { title: "Unit 3 CO Notes", link: "study units/SEM 1/CO/Sumit sir notes/Unit 3 CO for students.pdf" },
+    { title: "Unit 4 CO Notes", link: "study units/SEM 1/CO/Sumit sir notes/Unit 4 CO for students.pdf" }
+  ],
+  "Digital Electronics": [
+    { title: "Unit 1", link: "study units/SEM 1/DE/Unit-1.pdf" },
+    { title: "Unit 2", link: "study units/SEM 1/DE/Unit-2.pdf" },
+    { title: "Unit 3", link: "study units/SEM 1/DE/Unit-3.pdf" },
+    { title: "Unit 4", link: "study units/SEM 1/DE/Unit-4.pdf" },
+    { title: "Sequential Circuits Notes", link: "study units/SEM 1/DE/Unit4_Sequential_Circuits_Notes.pdf" }
+  ],
+  "Discrete Mathematics": [
+    { title: "DM Notes", link: "study units/SEM 1/DM/DM notes.pdf" },
+    { title: "Graph and Tree", link: "study units/SEM 1/DM/Graph and Tree.pdf" },
+    { title: "Unit 2 — Sets, Relations & Functions", link: "study units/SEM 1/DM/Unit 2 – Sets, Relations & Functions (discrete Mathematics – Mit-wpu).pdf" },
+    { title: "Unit 3 Notes", link: "study units/SEM 1/DM/unit3_notes.pdf" },
+    { title: "Unit 3 Detailed Notes", link: "study units/SEM 1/DM/unit3_detailed_notes.pdf" },
+    { title: "Unit 3 Sample Questions", link: "study units/SEM 1/DM/unit3_sample_questions.pdf" }
+  ],
+  "Data Structure using C": [
+    { title: "Algorithm & Flowchart Notes", link: "study units/SEM 2/Data structure using C/Chapter 1_ Algorithm and Flowchart (Problem Solving Startegy).pdf" },
+    { title: "Searching and Sorting", link: "study units/SEM 2/Data structure using C/Chapter 2_ Searching and Sorting.pdf" },
+    { title: "Linked List Program", link: "study units/SEM 2/Data structure using C/Linked list Program.pdf" },
+    { title: "Chapter 3 Linked List", link: "study units/SEM 2/Data structure using C/Chapter 3 Linked list.pdf" },
+    { title: "What is an Algorithm", link: "study units/SEM 2/Data structure using C/What is an algorithm.docx.pdf" }
+  ],
+  "Database Management Systems": [
+    { title: "DBMS Introduction", link: "study units/SEM 2/DBMS/Chapter 1_Introduction to DBMS.pdf" },
+    { title: "DBMS ERD Notes", link: "study units/SEM 2/DBMS/Chapter2_DBMS_ERD.pdf" },
+    { title: "Data Collection & Pre-Processing", link: "study units/SEM 2/DBMS/Chapter 2 Data Collection and Data Pre-Processing Strategies.pdf" },
+    { title: "SQL Queries Complete Guide", link: "study units/SEM 2/DBMS/NOTES/SQL_Queries_Complete_Guide.pdf" },
+    { title: "DBMS Units 1,2,5 Master Exam Guide", link: "study units/SEM 2/DBMS/NOTES/DBMS_Units_1_2_5_Master_Exam_Guide.pdf" }
+  ],
+  "Microprocessors": [
+    { title: "MP Unit I", link: "study units/SEM 2/Microprocesssor/MP Unit I.pdf" },
+    { title: "MP Unit II", link: "study units/SEM 2/Microprocesssor/MP Unit II.pdf" },
+    { title: "MP Unit III", link: "study units/SEM 2/Microprocesssor/MP Unit III.pdf" },
+    { title: "MP Unit IV", link: "study units/SEM 2/Microprocesssor/MP Unit IV.pdf" }
+  ],
+  "Semester 2 Syllabus": [
+    { title: "SEM 2 Syllabus", link: "study units/SEM 2/Syllabus.pdf" }
+  ]
+};
+
+// Map Folders to Distinctive Branding Styles
+const folderThemes = {
+  "Applied Science": "var(--folder-phys)",
+  "C Programming": "var(--folder-cs)",
+  "Computer Organization": "var(--folder-os)",
+  "Digital Electronics": "var(--folder-ds)",
+  "Discrete Mathematics": "var(--folder-math)",
+  "Data Structure using C": "var(--folder-ds)",
+  "Database Management Systems": "var(--folder-dbms)",
+  "Microprocessors": "var(--folder-micro)",
+  "Semester 2 Syllabus": "var(--folder-default)"
+};
+
+// 2. Application Engine Initialization
+document.addEventListener("DOMContentLoaded", () => {
+  initTheme();
+  renderAppMetrics();
+  renderDashboardComponents();
+  setupNavigationHandlers();
+  setupSearchEngine();
+});
+
+// 3. System Theme Controller
+function initTheme() {
+  const toggleBtn = document.getElementById("theme-toggle");
+  
+  // Check local storage or defaults to dark mode natively
+  const activeTheme = localStorage.getItem("drive-theme") || "light";
+  document.documentElement.setAttribute("data-theme", activeTheme);
+
+  toggleBtn.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const nextTheme = currentTheme === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    localStorage.setItem("drive-theme", nextTheme);
+  });
+}
+
+// 4. Operational Metric Computations
+function renderAppMetrics() {
+  const totalSubjects = Object.keys(library).length;
+  let totalPDFs = 0;
+
+  Object.values(library).forEach(arr => {
+    totalPDFs += arr.length;
+  });
+
+  document.getElementById("metric-subjects").innerText = totalSubjects;
+  document.getElementById("metric-pdfs").innerText = totalPDFs;
+}
+
+// 5. Interface Rendering Processors
+function renderDashboardComponents() {
+  const dashFolderGrid = document.getElementById("dashboard-folders-grid");
+  const allFoldersGrid = document.getElementById("all-folders-grid");
+  const dashRecentGrid = document.getElementById("dashboard-recent-grid");
+  const allRecentGrid = document.getElementById("all-recent-grid");
+
+  dashFolderGrid.innerHTML = "";
+  allFoldersGrid.innerHTML = "";
+  dashRecentGrid.innerHTML = "";
+  allRecentGrid.innerHTML = "";
+
+  let recentCollected = [];
+
+  // Generate Structural Folder Framework Components
+  Object.keys(library).forEach(subject => {
+    const docCount = library[subject].length;
+    const themeColor = folderThemes[subject] || "var(--folder-default)";
+
+    const folderHTML = `
+      <div class="folder-card" onclick="openFolderView('${escapeHtml(subject)}')">
+        <div class="folder-icon" style="color: ${themeColor}">
+          <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+        </div>
+        <div class="folder-details">
+          <span class="folder-name">${subject}</span>
+          <span class="folder-count">${docCount} ${docCount === 1 ? 'file' : 'files'}</span>
+        </div>
+      </div>
+    `;
+
+    // Populate Both Dedicated Grid Panes
+    dashFolderGrid.insertAdjacentHTML("beforeend", folderHTML);
+    allFoldersGrid.insertAdjacentHTML("beforeend", folderHTML);
+
+    // Track Files into Central Storage Arrays
+    library[subject].forEach(doc => {
+      recentCollected.push({ ...doc, subjectName: subject, color: themeColor });
+    });
+  });
+
+  // Render Files Ordered Inverse (Simulating a real-time 'Recent Documents' chronological queue)
+  const structuralRecent = [...recentCollected].reverse();
+  
+  structuralRecent.forEach((doc, idx) => {
+    const cardHTML = createDocumentCardHTML(doc);
+    if(idx < 4) { // Cap Dashboard Recent limits to 4 items
+      dashRecentGrid.insertAdjacentHTML("beforeend", cardHTML);
+    }
+    allRecentGrid.insertAdjacentHTML("beforeend", cardHTML);
+  });
+}
+
+// Card Blueprint Generator Helper
+function createDocumentCardHTML(doc) {
+  return `
+    <div class="doc-card">
+      <div class="doc-preview-strip" style="background: ${doc.color || 'var(--primary-accent)'}"></div>
+      <div class="doc-body">
+        <div class="doc-icon-wrapper">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        </div>
+        <div class="doc-info">
+          <h4 class="doc-title" title="${escapeHtml(doc.title)}">${doc.title}</h4>
+          <span class="doc-subject-tag">${escapeHtml(doc.subjectName)}</span>
+        </div>
+      </div>
+      <div class="doc-footer">
+        <button class="open-btn" onclick="launchDocument('${escapeHtml(doc.link)}')">View Document</button>
+      </div>
+    </div>
+  `;
+}
+
+// 6. Navigation Actions & Switch Routines
+function setupNavigationHandlers() {
+  const items = document.querySelectorAll(".nav-item");
+  
+  items.forEach(btn => {
+    btn.addEventListener("click", () => {
+      items.forEach(i => i.classList.remove("active"));
+      btn.classList.add("active");
+      
+      const targetView = btn.getAttribute("data-target");
+      switchView(targetView + "-view");
+    });
+  });
+
+  // Map Quick View Triggers
+  document.querySelector(".view-all-trigger").addEventListener("click", () => {
+    switchView("folders-view");
+    document.querySelectorAll(".nav-item").forEach(i => {
+      if(i.getAttribute("data-target") === "folders") i.classList.add("active");
+      else i.classList.remove("active");
+    });
+  });
+
+  document.getElementById("back-to-folders-btn").addEventListener("click", () => {
+    switchView("folders-view");
+  });
+}
+
+function switchView(viewId) {
+  document.querySelectorAll(".view-section").forEach(sec => {
+    sec.classList.remove("active-view");
+  });
+  const targeted = document.getElementById(viewId);
+  if (targeted) targeted.classList.add("active-view");
+}
+
+// 7. Folder Drill-down View System
+window.openFolderView = function(subjectKey) {
+  const targetFolderTitle = document.getElementById("current-folder-title");
+  const targetFolderGrid = document.getElementById("folder-docs-grid");
+  
+  targetFolderTitle.innerText = subjectKey;
+  targetFolderGrid.innerHTML = "";
+
+  const files = library[subjectKey] || [];
+  const colorCode = folderThemes[subjectKey] || "var(--folder-default)";
+
+  if(files.length === 0) {
+    targetFolderGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted);">This folder is currently empty.</p>`;
+  } else {
+    files.forEach(file => {
+      const compiledHTML = createDocumentCardHTML({
+        ...file,
+        subjectName: subjectKey,
+        color: colorCode
+      });
+      targetFolderGrid.insertAdjacentHTML("beforeend", compiledHTML);
+    });
+  }
+
+  switchView("folder-view");
+};
+
+// 8. Core Filter Engine Subsystem
+function setupSearchEngine() {
+  const input = document.getElementById("global-search");
+  
+  input.addEventListener("input", (e) => {
+    const rawVal = e.target.value.toLowerCase().trim();
+    
+    // Fall back completely to normal dashboard state if filter parameters are cleared
+    if(rawVal === "") {
+      renderDashboardComponents();
+      return;
+    }
+
+    // Capture matches anywhere across any category path
+    let searchMatches = [];
+    Object.keys(library).forEach(subject => {
+      const colorCode = folderThemes[subject] || "var(--folder-default)";
+      library[subject].forEach(file => {
+        if(file.title.toLowerCase().includes(rawVal) || subject.toLowerCase().includes(rawVal)) {
+          searchMatches.push({...file, subjectName: subject, color: colorCode});
+        }
+      });
+    });
+
+    // Override the active view display directly to output raw matches seamlessly
+    switchView("dashboard-view");
+    document.getElementById("dashboard-folders-grid").parentElement.style.display = "none";
+    
+    const recentHeading = document.querySelector("#dashboard-recent-grid").parentElement.querySelector(".group-header h3");
+    recentHeading.innerText = `Search Matches (${searchMatches.length})`;
+
+    const targetGrid = document.getElementById("dashboard-recent-grid");
+    targetGrid.innerHTML = "";
+
+    if(searchMatches.length === 0) {
+      targetGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); padding: 20px 0;">No matching files or subject material found.</p>`;
+    } else {
+      searchMatches.forEach(match => {
+        targetGrid.insertAdjacentHTML("beforeend", createDocumentCardHTML(match));
+      });
+    }
+  });
+
+  // Restore dashboard layout when user focus leaves an empty search input box
+  input.addEventListener("blur", (e) => {
+    if(e.target.value === "") {
+      document.getElementById("dashboard-folders-grid").parentElement.style.display = "block";
+      document.querySelector("#dashboard-recent-grid").parentElement.querySelector(".group-header h3").innerText = "Recent Documents";
+    }
+  });
+}
+
+// 9. Document View Launch Controller
+window.launchDocument = function(targetLink) {
+  window.open(encodeURI(targetLink), "_blank");
+};
+
+// Injection String Data Scrubber Escape Sanitizer 
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}</script>
+</body>
+</html>
