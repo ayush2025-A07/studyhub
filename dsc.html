@@ -1,0 +1,3373 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DS Notes — MIT WPU · Data Structures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+   DS Notes — Premium Study Platform
+   Design: Dark-primary, editorial, refined academic
+   ========================================================= */
+
+/* ─── CSS Variables ─── */
+:root {
+  --bg: #0d0f14;
+  --bg-2: #13161e;
+  --bg-3: #1a1e28;
+  --bg-4: #222739;
+  --surface: #1e2230;
+  --surface-2: #252a3a;
+  --border: rgba(255,255,255,0.06);
+  --border-2: rgba(255,255,255,0.10);
+  --text: #e8eaf2;
+  --text-2: #9ca3c0;
+  --text-3: #5c6480;
+  --accent: #7c6af7;
+  --accent-2: #5b4dd6;
+  --accent-glow: rgba(124,106,247,0.18);
+  --teal: #4fc7b0;
+  --gold: #f5a623;
+  --red: #e86c6c;
+  --green: #5bb98c;
+  --sidebar-w: 260px;
+  --topbar-h: 56px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,0.5);
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', 'Fira Code', monospace;
+  --transition: 0.2s ease;
+  --transition-med: 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="light"] {
+  --bg: #f5f5f8;
+  --bg-2: #eeeef3;
+  --bg-3: #e6e6ed;
+  --bg-4: #dedee8;
+  --surface: #ffffff;
+  --surface-2: #f0f0f5;
+  --border: rgba(0,0,0,0.06);
+  --border-2: rgba(0,0,0,0.10);
+  --text: #1a1c2e;
+  --text-2: #4a4f6a;
+  --text-3: #9099bb;
+  --accent-glow: rgba(124,106,247,0.12);
+  --shadow: 0 4px 24px rgba(100,100,140,0.12);
+  --shadow-lg: 0 12px 48px rgba(100,100,140,0.18);
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background var(--transition-med), color var(--transition-med);
+}
+
+/* ─── Progress Bar ─── */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--border);
+  z-index: 1000;
+}
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  width: 0%;
+  transition: width 0.2s ease;
+  box-shadow: 0 0 10px var(--accent);
+}
+
+/* ─── Sidebar ─── */
+#sidebar {
+  width: var(--sidebar-w);
+  height: 100vh;
+  position: fixed;
+  left: 0; top: 0;
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: transform var(--transition-med), background var(--transition-med);
+}
+
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-2);
+  z-index: 10;
+}
+
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-icon { font-size: 22px; color: var(--accent); filter: drop-shadow(0 0 8px var(--accent)); }
+.logo-text { font-family: var(--font-display); font-size: 19px; color: var(--text); }
+
+#theme-toggle {
+  background: none; border: 1px solid var(--border-2);
+  color: var(--text-2); cursor: pointer;
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+#theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+.sidebar-search {
+  padding: 12px 14px;
+  position: relative;
+}
+.sidebar-search input {
+  width: 100%;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 32px 8px 10px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.sidebar-search input:focus { border-color: var(--accent); }
+.sidebar-search input::placeholder { color: var(--text-3); }
+.search-icon {
+  position: absolute;
+  right: 22px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.sidebar-nav { padding: 8px 10px; flex: 1; }
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  padding: 12px 8px 4px;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 13.5px;
+  transition: all var(--transition);
+  cursor: pointer;
+  margin-bottom: 1px;
+}
+.nav-item:hover { background: var(--bg-3); color: var(--text); }
+.nav-item.active { background: var(--accent-glow); color: var(--accent); font-weight: 500; }
+.nav-item .nav-icon { font-size: 14px; opacity: 0.8; min-width: 18px; text-align: center; }
+
+.sidebar-streak {
+  padding: 16px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-2);
+}
+.streak-label { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+.streak-days { font-size: 20px; font-weight: 600; color: var(--gold); margin-top: 4px; }
+#streak-count { font-size: 28px; font-family: var(--font-display); }
+
+/* ─── Sidebar Overlay (mobile) ─── */
+#sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 190;
+  backdrop-filter: blur(2px);
+}
+
+/* ─── Main ─── */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: margin var(--transition-med);
+}
+
+/* ─── Topbar ─── */
+#topbar {
+  position: sticky;
+  top: 0;
+  height: var(--topbar-h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 12px;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  transition: background var(--transition-med);
+}
+
+#menu-toggle {
+  display: none;
+  background: none; border: none;
+  color: var(--text); cursor: pointer;
+  font-size: 20px; padding: 4px;
+}
+
+.topbar-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--text);
+  flex: 1;
+}
+
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+.btn-icon {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 5px;
+}
+.btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ─── Content ─── */
+#content { padding: 32px 40px 80px; max-width: 900px; width: 100%; }
+
+/* ─── Pages ─── */
+.page { display: none; animation: pageIn 0.3s ease; }
+.page.active { display: block; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Page Hero (Dashboard) ─── */
+.page-hero {
+  margin-bottom: 40px;
+  padding: 40px 48px;
+  background: linear-gradient(135deg, var(--surface), var(--bg-3));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.hero-title em { color: var(--accent); font-style: normal; }
+.hero-sub { font-size: 14px; color: var(--text-2); }
+
+/* ─── Stats Grid ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+}
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 38px;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label { font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.stat-bar {
+  margin-top: 12px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.stat-bar div {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 1.5s ease;
+}
+
+/* ─── Topics Grid ─── */
+.section-heading {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.topic-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+}
+.topic-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(124,106,247,0.15);
+}
+.topic-icon { font-size: 26px; margin-bottom: 8px; }
+.topic-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.topic-tag { font-size: 11px; color: var(--text-3); background: var(--bg-3); display: inline-block; padding: 2px 8px; border-radius: 10px; }
+
+/* ─── Page Header ─── */
+.page-header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.unit-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background: var(--accent-glow);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+.practice-badge { color: var(--teal); background: rgba(79,199,176,0.12); }
+.page-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 36px);
+  color: var(--text);
+  line-height: 1.2;
+}
+.page-intro { color: var(--text-2); font-size: 14px; margin-bottom: 28px; }
+
+/* ─── Callouts ─── */
+.callout {
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  border-left: 3px solid;
+}
+.callout-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.callout p { font-size: 14.5px; line-height: 1.7; color: var(--text-2); }
+.callout ul, .callout ol { padding-left: 20px; }
+.callout li { font-size: 14px; line-height: 1.8; color: var(--text-2); }
+
+.callout-def { background: rgba(124,106,247,0.07); border-color: var(--accent); }
+.callout-def .callout-title { color: var(--accent); }
+
+.callout-key { background: rgba(245,166,35,0.07); border-color: var(--gold); }
+.callout-key .callout-title { color: var(--gold); }
+
+.callout-tip { background: rgba(79,199,176,0.07); border-color: var(--teal); }
+.callout-tip .callout-title { color: var(--teal); }
+
+/* ─── Collapsible Sections ─── */
+.collapsible {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+.collapsible:hover { box-shadow: var(--shadow); }
+
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14.5px;
+  color: var(--text);
+  user-select: none;
+  transition: background var(--transition);
+}
+.collapsible-header:hover { background: var(--surface-2); }
+
+.caret {
+  color: var(--text-3);
+  font-size: 18px;
+  transition: transform var(--transition);
+}
+.collapsible.open .caret { transform: rotate(180deg); }
+
+.collapsible-body {
+  display: none;
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+}
+.collapsible.open .collapsible-body { display: block; }
+
+/* ─── Two-Column Layout ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+.col-card {
+  background: var(--bg-3);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+.col-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+.col-card p, .col-card li { font-size: 13.5px; color: var(--text-2); line-height: 1.7; }
+.col-card ul { padding-left: 16px; }
+.col-card.green-border { border-left: 3px solid var(--green); }
+.col-card.red-border { border-left: 3px solid var(--red); }
+
+/* ─── Concept Cards ─── */
+.concept-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  padding-top: 12px;
+}
+.concept-card {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  transition: border-color var(--transition);
+}
+.concept-card:hover { border-color: var(--accent); }
+.cc-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.concept-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+/* ─── Array Visualization ─── */
+.array-vis {
+  display: flex;
+  gap: 4px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.array-cell {
+  background: var(--bg-4);
+  border: 1px solid var(--border-2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-2);
+}
+.array-cell.hl {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── Formula Box ─── */
+.formula-box {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin-top: 12px;
+  text-align: center;
+}
+.formula-box.small { padding: 12px 16px; }
+.formula-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 8px; }
+.formula {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--teal);
+  margin: 8px 0;
+}
+.formula-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.formula-legend span {
+  font-size: 12px;
+  color: var(--text-3);
+  background: var(--bg-4);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+.formula-legend code { font-family: var(--font-mono); color: var(--accent); }
+
+/* ─── Code Block ─── */
+.code-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-top: 12px;
+}
+.code-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.code-block pre {
+  padding: 14px 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--teal);
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--accent);
+  background: var(--accent-glow);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* ─── Comparison Table ─── */
+.comparison-table { overflow-x: auto; margin-top: 12px; }
+.comparison-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.comparison-table th {
+  background: var(--bg-3);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.comparison-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.comparison-table tr:last-child td { border-bottom: none; }
+.comparison-table tr:hover td { background: var(--surface-2); }
+td.good { color: var(--green); font-weight: 500; }
+td.ok   { color: var(--gold); }
+td.bad  { color: var(--red); }
+.table-note { font-size: 12px; color: var(--text-3); margin-top: 8px; font-style: italic; }
+
+/* ─── Operations List ─── */
+.ops-list { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; }
+.op-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-3);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent);
+}
+.op-name { font-size: 13px; font-weight: 600; color: var(--text); min-width: 100px; }
+.op-desc { font-size: 13px; color: var(--text-2); }
+
+/* ─── Ops Accordion ─── */
+.ops-accordion { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; }
+.op-tab { background: var(--bg-3); border-radius: var(--radius-sm); overflow: hidden; }
+.op-tab-header {
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text);
+  transition: background var(--transition);
+}
+.op-tab-header:hover { background: var(--bg-4); }
+.op-tab-body { display: none; padding: 10px 14px; border-top: 1px solid var(--border); }
+.op-tab.open .op-tab-body { display: block; }
+.op-tab-body ol { padding-left: 18px; }
+.op-tab-body li { font-size: 13px; color: var(--text-2); line-height: 1.9; }
+.op-tab-body p { font-size: 13px; color: var(--text-2); line-height: 1.7; }
+
+/* ─── Node Visual ─── */
+.node-visual {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.node-box {
+  display: flex;
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.node-data {
+  background: var(--accent-glow);
+  color: var(--accent);
+  padding: 8px 12px;
+}
+.node-ptr {
+  background: var(--bg-4);
+  color: var(--text-3);
+  padding: 8px 10px;
+}
+.node-arrow { color: var(--text-3); font-size: 18px; padding: 0 4px; align-self: center; }
+.mt { margin-top: 12px; }
+
+/* ─── Stack Visualization ─── */
+.stack-vis {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding-top: 12px;
+}
+.stack-label { font-size: 12px; color: var(--accent); font-weight: 600; padding: 2px 0; }
+.stack-frame {
+  background: var(--bg-4);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 32px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-2);
+  width: 140px;
+  text-align: center;
+  transition: background var(--transition);
+}
+.stack-frame.top-frame { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+.stack-frame.bot-frame { opacity: 0.6; }
+.vis-caption { font-size: 12px; color: var(--text-3); margin-top: 10px; font-style: italic; }
+
+/* ─── Queue Visualization ─── */
+.queue-vis {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-top: 12px;
+  flex-wrap: wrap;
+}
+.q-label { font-size: 12px; color: var(--accent); font-weight: 600; }
+.q-frame {
+  background: var(--bg-4);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-2);
+}
+.q-frame.hl { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+
+/* ─── Complexity Ladder ─── */
+.complexity-ladder { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; }
+.cl-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border-left: 4px solid;
+}
+.cl-item.best  { background: rgba(91,185,140,0.08); border-color: var(--green); }
+.cl-item.good  { background: rgba(79,199,176,0.08); border-color: var(--teal); }
+.cl-item.ok    { background: rgba(245,166,35,0.08); border-color: var(--gold); }
+.cl-item.warn  { background: rgba(232,108,108,0.08); border-color: var(--red); }
+.cl-item.bad   { background: rgba(200,50,50,0.1);   border-color: #cc3333; }
+.cl-code { font-family: var(--font-mono); font-size: 14px; color: var(--text); min-width: 110px; }
+.cl-name { font-size: 13px; font-weight: 500; color: var(--text-2); min-width: 100px; }
+.cl-eg   { font-size: 12px; color: var(--text-3); }
+
+/* ─── Notation Cards ─── */
+.notation-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; padding-top: 12px; }
+.notation-card {
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.notation-sym {
+  font-family: var(--font-display);
+  font-size: 42px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.notation-name { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.notation-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+.big-o { background: rgba(124,106,247,0.07); border-color: var(--accent); }
+.big-o .notation-sym { color: var(--accent); }
+.big-o .notation-name { color: var(--accent); }
+.omega { background: rgba(79,199,176,0.07); border-color: var(--teal); }
+.omega .notation-sym { color: var(--teal); }
+.omega .notation-name { color: var(--teal); }
+.theta { background: rgba(245,166,35,0.07); border-color: var(--gold); }
+.theta .notation-sym { color: var(--gold); }
+.theta .notation-name { color: var(--gold); }
+
+/* ─── AVL Rotation Cards ─── */
+.rotation-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; padding-top: 12px; }
+.rot-card {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  transition: border-color var(--transition);
+}
+.rot-card:hover { border-color: var(--accent); }
+.rot-type { font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 6px; font-family: var(--font-mono); }
+.rot-trigger { font-size: 12.5px; color: var(--text-2); margin-bottom: 6px; line-height: 1.5; }
+.rot-fix { font-size: 12.5px; color: var(--teal); font-style: italic; }
+
+/* ─── Related Topics ─── */
+.related-topics {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.related-topics span { font-size: 12px; color: var(--text-3); }
+.related-topics button {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 12.5px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all var(--transition);
+}
+.related-topics button:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+/* ─── Practice Page ─── */
+.practice-filter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.filter-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all var(--transition);
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* ─── MCQ ─── */
+.mcq-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: border-color var(--transition);
+}
+.mcq-card[data-answered] { border-color: var(--border-2); }
+.mcq-question {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.mcq-num {
+  font-size: 11px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.mcq-options { display: flex; flex-direction: column; gap: 8px; }
+.mcq-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 14px;
+  color: var(--text-2);
+}
+.mcq-option:hover { border-color: var(--accent); background: var(--accent-glow); color: var(--text); }
+.mcq-option.correct { background: rgba(91,185,140,0.12); border-color: var(--green); color: var(--green); }
+.mcq-option.wrong   { background: rgba(232,108,108,0.12); border-color: var(--red); color: var(--red); }
+.opt-label {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--bg-3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ─── Solved Problems ─── */
+.solved-problem {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.problem-header {
+  padding: 14px 20px;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--text);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.problem-body { padding: 16px 20px; }
+.problem-body p { font-size: 14px; color: var(--text-2); margin-bottom: 12px; }
+.solution { display: flex; flex-direction: column; gap: 6px; }
+.solution-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px 12px;
+  background: var(--bg-3);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  color: var(--text-2);
+}
+.step-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-glow);
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── Flashcards ─── */
+.flashcard-deck { max-width: 500px; margin: 0 auto; }
+.fc-progress { text-align: center; font-size: 12px; color: var(--text-3); margin-bottom: 16px; }
+
+.flashcard {
+  perspective: 1000px;
+  height: 240px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.fc-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+}
+.flashcard.flipped .fc-inner { transform: rotateY(180deg); }
+
+.fc-front, .fc-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  text-align: center;
+}
+.fc-front {
+  background: linear-gradient(135deg, var(--surface), var(--bg-3));
+}
+.fc-back {
+  background: linear-gradient(135deg, var(--accent-glow), var(--bg-3));
+  border-color: var(--accent);
+  transform: rotateY(180deg);
+}
+.fc-q-label, .fc-a-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+.fc-q-label { color: var(--text-3); background: var(--bg-4); }
+.fc-a-label { color: var(--accent); background: var(--accent-glow); }
+#fc-question { font-size: 15px; color: var(--text); line-height: 1.6; }
+#fc-answer { font-size: 14.5px; color: var(--text); line-height: 1.7; }
+
+.fc-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.fc-btn {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  transition: all var(--transition);
+}
+.fc-btn:hover { border-color: var(--accent); color: var(--accent); }
+.fc-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+.fc-btn.primary:hover { background: var(--accent-2); }
+
+/* ─── Formula Sheet ─── */
+.formula-sheet { display: flex; flex-direction: column; gap: 20px; }
+.fs-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.fs-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.fs-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.fs-item:last-child { border-bottom: none; }
+.fs-label { font-size: 13px; color: var(--text-2); min-width: 180px; }
+.fs-item code { font-family: var(--font-mono); font-size: 13.5px; color: var(--teal); background: none; padding: 0; }
+
+/* ─── My Notes ─── */
+.notes-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.notes-toolbar input, .notes-toolbar select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.notes-toolbar input { flex: 1; min-width: 150px; }
+.notes-toolbar input:focus, .notes-toolbar select:focus { border-color: var(--accent); }
+.notes-toolbar input::placeholder { color: var(--text-3); }
+.notes-toolbar select option { background: var(--surface); }
+
+#note-content {
+  width: 100%;
+  min-height: 180px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--transition);
+  margin-bottom: 20px;
+}
+#note-content:focus { border-color: var(--accent); }
+#note-content::placeholder { color: var(--text-3); }
+
+.btn-primary {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: white;
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 500;
+  transition: all var(--transition);
+}
+.btn-primary:hover { background: var(--accent-2); }
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+.note-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  position: relative;
+  transition: all var(--transition);
+  animation: pageIn 0.25s ease;
+}
+.note-card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.note-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.note-card-subject {
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-glow);
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.note-card-preview {
+  font-size: 12.5px;
+  color: var(--text-3);
+  line-height: 1.5;
+  max-height: 48px;
+  overflow: hidden;
+}
+.note-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.note-action-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all var(--transition);
+}
+.note-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.note-action-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-3);
+  grid-column: 1/-1;
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+.empty-state p { font-size: 14px; }
+
+/* ─── Pomodoro ─── */
+.pomo-container { max-width: 380px; margin: 0 auto; text-align: center; }
+.pomo-mode-btns {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.pomo-mode {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all var(--transition);
+}
+.pomo-mode:hover { border-color: var(--accent); color: var(--accent); }
+.pomo-mode.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+.pomo-clock {
+  position: relative;
+  width: 200px; height: 200px;
+  margin: 0 auto 28px;
+}
+.pomo-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.pomo-ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
+.pomo-ring-fill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 553;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s;
+  filter: drop-shadow(0 0 8px var(--accent));
+}
+.pomo-time {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 46px;
+  color: var(--text);
+}
+
+.pomo-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 32px; }
+.btn-pomo {
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all var(--transition);
+}
+.btn-pomo:hover { border-color: var(--accent); color: var(--accent); }
+.btn-pomo:first-child { background: var(--accent); border-color: var(--accent); color: white; }
+.btn-pomo:first-child:hover { background: var(--accent-2); }
+
+.pomo-stats { display: flex; gap: 24px; justify-content: center; }
+.pomo-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.pomo-stat span { font-size: 28px; font-family: var(--font-display); color: var(--accent); }
+.pomo-stat small { font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ─── Toast ─── */
+#toast-container {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 9999;
+}
+.toast {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  font-size: 13.5px;
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.3s ease;
+  max-width: 280px;
+}
+.toast.success { border-color: var(--green); }
+.toast.error   { border-color: var(--red); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(20px); }
+}
+
+/* ─── Search Results ─── */
+.search-result {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+.search-result:hover { border-color: var(--accent); }
+.sr-title { font-size: 14px; font-weight: 500; color: var(--text); }
+.sr-preview { font-size: 12.5px; color: var(--text-3); margin-top: 4px; }
+.sr-highlight { color: var(--accent); font-weight: 600; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  #sidebar {
+    transform: translateX(-100%);
+  }
+  #sidebar.open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+  #sidebar-overlay.visible { display: block; }
+  #main { margin-left: 0; }
+  #menu-toggle { display: block; }
+  #content { padding: 20px 18px 60px; }
+  .page-hero { padding: 24px 20px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .hero-title { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .fc-controls { flex-direction: column; }
+  .notes-toolbar { flex-direction: column; }
+  .notes-toolbar input { min-width: unset; }
+}
+
+/* ─── Utilities ─── */
+.hidden { display: none !important; }
+strong { color: var(--text); }
+em { color: var(--accent); font-style: normal; }
+</style>
+</head>
+<body>
+
+<!-- READING PROGRESS BAR -->
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">DS Notes</span>
+    </div>
+    <button id="theme-toggle" title="Toggle theme">☽</button>
+  </div>
+
+  <div class="sidebar-search">
+    <input type="text" id="search-input" placeholder="Search topics…" autocomplete="off" />
+    <span class="search-icon">⌕</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">COURSE</div>
+    <a href="#dashboard" class="nav-item active" data-section="dashboard">
+      <span class="nav-icon">⬡</span> Dashboard
+    </a>
+
+    <div class="nav-section-label">UNITS</div>
+    <a href="#unit1" class="nav-item" data-section="unit1">
+      <span class="nav-icon">①</span> Data Structures Intro
+    </a>
+    <a href="#unit1b" class="nav-item" data-section="unit1b">
+      <span class="nav-icon">①</span> Arrays
+    </a>
+    <a href="#unit1c" class="nav-item" data-section="unit1c">
+      <span class="nav-icon">①</span> Algorithms & Complexity
+    </a>
+    <a href="#unit2" class="nav-item" data-section="unit2">
+      <span class="nav-icon">②</span> Linked Lists
+    </a>
+    <a href="#unit3a" class="nav-item" data-section="unit3a">
+      <span class="nav-icon">③</span> Stacks
+    </a>
+    <a href="#unit3b" class="nav-item" data-section="unit3b">
+      <span class="nav-icon">③</span> Queues
+    </a>
+    <a href="#unit4" class="nav-item" data-section="unit4">
+      <span class="nav-icon">④</span> Trees & BST
+    </a>
+    <a href="#unit4b" class="nav-item" data-section="unit4b">
+      <span class="nav-icon">④</span> AVL Trees
+    </a>
+    <a href="#unit5" class="nav-item" data-section="unit5">
+      <span class="nav-icon">⑤</span> Graphs
+    </a>
+    <a href="#unit5b" class="nav-item" data-section="unit5b">
+      <span class="nav-icon">⑤</span> Dijkstra's Algorithm
+    </a>
+
+    <div class="nav-section-label">PRACTICE</div>
+    <a href="#practice" class="nav-item" data-section="practice">
+      <span class="nav-icon">✦</span> Practice & MCQs
+    </a>
+    <a href="#flashcards" class="nav-item" data-section="flashcards">
+      <span class="nav-icon">◧</span> Flashcards
+    </a>
+    <a href="#formulas" class="nav-item" data-section="formulas">
+      <span class="nav-icon">∑</span> Formulas
+    </a>
+
+    <div class="nav-section-label">TOOLS</div>
+    <a href="#my-notes" class="nav-item" data-section="my-notes">
+      <span class="nav-icon">✎</span> My Notes
+    </a>
+    <a href="#pomodoro" class="nav-item" data-section="pomodoro">
+      <span class="nav-icon">◉</span> Pomodoro
+    </a>
+  </nav>
+
+  <div class="sidebar-streak">
+    <div class="streak-label">Study Streak</div>
+    <div class="streak-days"><span id="streak-count">0</span> days 🔥</div>
+  </div>
+</aside>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div id="sidebar-overlay"></div>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+  <!-- TOP BAR -->
+  <header id="topbar">
+    <button id="menu-toggle" aria-label="Toggle menu">☰</button>
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-actions">
+      <button class="btn-icon" id="pomodoro-mini" title="Pomodoro Timer">⏱ <span id="mini-timer">25:00</span></button>
+      <button class="btn-icon" onclick="showSection('my-notes')" title="New Note">+ Note</button>
+    </div>
+  </header>
+
+  <!-- CONTENT AREA -->
+  <div id="content">
+
+    <!-- ========= DASHBOARD ========= -->
+    <section id="dashboard" class="page active">
+      <div class="page-hero">
+        <div class="hero-label">MIT World Peace University · Pune</div>
+        <h1 class="hero-title">Data Structures<br><em>Complete Notes</em></h1>
+        <p class="hero-sub">Dr. Anu Singha · School of Computer Science & Engineering</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" style="--accent:#7c6af7">
+          <div class="stat-num" data-target="10">0</div>
+          <div class="stat-label">Topics Covered</div>
+          <div class="stat-bar"><div style="width:100%"></div></div>
+        </div>
+        <div class="stat-card" style="--accent:#4fc7b0">
+          <div class="stat-num" data-target="5">0</div>
+          <div class="stat-label">Units</div>
+          <div class="stat-bar"><div style="width:100%"></div></div>
+        </div>
+        <div class="stat-card" style="--accent:#f5a623">
+          <div class="stat-num" id="notes-count-stat" data-target="0">0</div>
+          <div class="stat-label">My Notes</div>
+          <div class="stat-bar"><div id="notes-bar" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card" style="--accent:#e86c6c">
+          <div class="stat-num" id="study-time-stat">0</div>
+          <div class="stat-label">Study Minutes</div>
+          <div class="stat-bar"><div id="time-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="section-heading">Quick Access</div>
+      <div class="topics-grid">
+        <div class="topic-card" onclick="showSection('unit1')">
+          <div class="topic-icon">🗂</div>
+          <div class="topic-name">DS Intro</div>
+          <div class="topic-tag">Unit 1</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit1b')">
+          <div class="topic-icon">▤</div>
+          <div class="topic-name">Arrays</div>
+          <div class="topic-tag">Unit 1</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit1c')">
+          <div class="topic-icon">Ω</div>
+          <div class="topic-name">Complexity</div>
+          <div class="topic-tag">Unit 1</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit2')">
+          <div class="topic-icon">⛓</div>
+          <div class="topic-name">Linked Lists</div>
+          <div class="topic-tag">Unit 2</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit3a')">
+          <div class="topic-icon">▥</div>
+          <div class="topic-name">Stacks</div>
+          <div class="topic-tag">Unit 3</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit3b')">
+          <div class="topic-icon">▦</div>
+          <div class="topic-name">Queues</div>
+          <div class="topic-tag">Unit 3</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit4')">
+          <div class="topic-icon">🌳</div>
+          <div class="topic-name">Trees & BST</div>
+          <div class="topic-tag">Unit 4</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit4b')">
+          <div class="topic-icon">⚖</div>
+          <div class="topic-name">AVL Trees</div>
+          <div class="topic-tag">Unit 4</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit5')">
+          <div class="topic-icon">◬</div>
+          <div class="topic-name">Graphs</div>
+          <div class="topic-tag">Unit 5</div>
+        </div>
+        <div class="topic-card" onclick="showSection('unit5b')">
+          <div class="topic-icon">🗺</div>
+          <div class="topic-name">Dijkstra</div>
+          <div class="topic-tag">Unit 5</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 1: DS INTRO ========= -->
+    <section id="unit1" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 1</span>
+        <h2>Introduction to Data Structures</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p><strong>Data Structure</strong> is a set of procedures to <em>define, store, access, and manipulate data</em>. It is the logical or mathematical model of a particular organization of data.</p>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header">Types of Data Structures <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="two-col">
+            <div class="col-card">
+              <h4>Primitive (Elementary)</h4>
+              <p>Processed as a single whole unit. Also called <em>built-in data types</em>.</p>
+              <ul>
+                <li>Integer</li>
+                <li>Real / Float</li>
+                <li>Character</li>
+                <li>Boolean</li>
+              </ul>
+            </div>
+            <div class="col-card">
+              <h4>Non-Primitive (Structured)</h4>
+              <p>Collection of other data structures. More than one value combined under a single name.</p>
+              <ul>
+                <li>Arrays</li>
+                <li>Stacks, Queues</li>
+                <li>Trees, Graphs</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Linear vs Non-Linear DS <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="comparison-table">
+            <table>
+              <thead><tr><th>Feature</th><th>Linear DS</th><th>Non-Linear DS</th></tr></thead>
+              <tbody>
+                <tr><td>Order</td><td>Sequential, fixed order</td><td>No fixed order</td></tr>
+                <tr><td>Traversal</td><td>Single run (one pass)</td><td>Multiple passes needed</td></tr>
+                <tr><td>Memory</td><td>Usually contiguous</td><td>Random allocation</td></tr>
+                <tr><td>Examples</td><td>Array, Stack, Queue, LL</td><td>Tree, Graph</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-key">
+        <div class="callout-title">🔑 Key Insight</div>
+        <p>In <strong>linear</strong> data structures, each element has a <em>predecessor</em> and a <em>successor</em> (except the first and last). In <strong>non-linear</strong> structures, elements can have multiple successors (e.g., tree nodes have children).</p>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit1b')">Arrays</button>
+        <button onclick="showSection('unit2')">Linked Lists</button>
+        <button onclick="showSection('unit3a')">Stacks</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 1B: ARRAYS ========= -->
+    <section id="unit1b" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 1</span>
+        <h2>Arrays</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p>An <strong>array</strong> is a collection of elements of the <em>same data type</em> stored in <em>contiguous memory locations</em>, accessed using an index.</p>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Types of Arrays <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card">
+              <div class="cc-title">1D Array (Vector)</div>
+              <p>Single row of elements. Declared as <code>int A[20]</code>.</p>
+              <div class="array-vis">
+                <div class="array-cell">A[0]</div><div class="array-cell">A[1]</div><div class="array-cell">A[2]</div><div class="array-cell hl">A[i]</div><div class="array-cell">…</div><div class="array-cell">A[n-1]</div>
+              </div>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">2D Array (Matrix)</div>
+              <p>Rows × Columns. Declared as <code>int M[3][4]</code>. Stored in row-major order.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Multi-dimensional</div>
+              <p>Arrays with 3 or more dimensions. Used in scientific computing, image processing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Address Formula — 1D Array <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="formula-box">
+            <div class="formula-title">Address of A[i]</div>
+            <div class="formula">A(i) = BA + (i − lb) × S</div>
+            <div class="formula-legend">
+              <span><code>BA</code> = Base Address</span>
+              <span><code>i</code> = Index</span>
+              <span><code>lb</code> = Lower Bound (0 or 1)</span>
+              <span><code>S</code> = Size of each element (bytes)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Array Operations & Algorithms <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="ops-list">
+            <div class="op-item">
+              <div class="op-name">Traverse</div>
+              <div class="op-desc">Visit every element once. Time: O(n)</div>
+            </div>
+            <div class="op-item">
+              <div class="op-name">Insertion</div>
+              <div class="op-desc">Shift elements right, insert at Pos. Time: O(n)</div>
+            </div>
+            <div class="op-item">
+              <div class="op-name">Deletion</div>
+              <div class="op-desc">Remove element, shift left. Time: O(n)</div>
+            </div>
+            <div class="op-item">
+              <div class="op-name">Search</div>
+              <div class="op-desc">Linear: O(n) · Binary: O(log n)</div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-title">Insert Algorithm</div>
+            <pre>Insert(A, N, ITEM, Pos):
+  Step 1: for i = N downto Pos
+             A[i+1] = A[i]   // shift right
+          [end for]
+  Step 2: A[Pos] = ITEM      // place item
+  Step 3: N = N + 1          // increment count
+  Step 4: Exit</pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-title">Delete Algorithm</div>
+            <pre>Delete(A, N, ITEM, Pos):
+  Step 1: ITEM = A[Pos]
+  Step 2: for i = Pos to N-1
+             A[i] = A[i+1]   // shift left
+          [end for]
+  Step 3: N = N - 1
+  Step 4: Exit</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible-header">Advantages & Disadvantages <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="two-col">
+            <div class="col-card green-border">
+              <h4>✅ Advantages</h4>
+              <ul>
+                <li>O(1) random access by index</li>
+                <li>Cache-friendly (contiguous memory)</li>
+                <li>Simple to implement</li>
+                <li>Good for sorted data (binary search)</li>
+              </ul>
+            </div>
+            <div class="col-card red-border">
+              <h4>❌ Disadvantages</h4>
+              <ul>
+                <li>Fixed size (static allocation)</li>
+                <li>Insertion/deletion costly — O(n)</li>
+                <li>Memory wasted if unused</li>
+                <li>Homogeneous data only</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit1c')">Algorithm Complexity</button>
+        <button onclick="showSection('unit2')">Linked Lists</button>
+        <button onclick="showSection('practice')">Practice Questions</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 1C: ALGORITHMS & COMPLEXITY ========= -->
+    <section id="unit1c" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 1</span>
+        <h2>Algorithms & Complexity</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p>An <strong>algorithm</strong> is a finite, well-defined sequence of steps to solve a problem. Analysis of algorithms helps us predict performance <em>before</em> implementation.</p>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Characteristics of a Good Algorithm <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card"><div class="cc-title">Input</div><p>Zero or more well-defined inputs</p></div>
+            <div class="concept-card"><div class="cc-title">Output</div><p>At least one output produced</p></div>
+            <div class="concept-card"><div class="cc-title">Definiteness</div><p>Each step must be clear &amp; unambiguous</p></div>
+            <div class="concept-card"><div class="cc-title">Finiteness</div><p>Must terminate after finite steps</p></div>
+            <div class="concept-card"><div class="cc-title">Effectiveness</div><p>Steps must be basic &amp; feasible</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Asymptotic Notations <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="notation-cards">
+            <div class="notation-card big-o">
+              <div class="notation-sym">O</div>
+              <div class="notation-name">Big-O (Upper Bound)</div>
+              <p>f(n) = O(g(n)) — worst case. The function never grows faster than g(n) beyond some n₀.</p>
+            </div>
+            <div class="notation-card omega">
+              <div class="notation-sym">Ω</div>
+              <div class="notation-name">Omega (Lower Bound)</div>
+              <p>f(n) = Ω(g(n)) — best case. The function always grows at least as fast as g(n).</p>
+            </div>
+            <div class="notation-card theta">
+              <div class="notation-sym">Θ</div>
+              <div class="notation-name">Theta (Tight Bound)</div>
+              <p>f(n) = Θ(g(n)) — average case. Both upper and lower bounds are g(n).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Order of Growth (Best → Worst) <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="complexity-ladder">
+            <div class="cl-item best"><span class="cl-code">O(1)</span><span class="cl-name">Constant</span><span class="cl-eg">Array access</span></div>
+            <div class="cl-item good"><span class="cl-code">O(log n)</span><span class="cl-name">Logarithmic</span><span class="cl-eg">Binary search</span></div>
+            <div class="cl-item ok"><span class="cl-code">O(n)</span><span class="cl-name">Linear</span><span class="cl-eg">Linear search</span></div>
+            <div class="cl-item ok"><span class="cl-code">O(n log n)</span><span class="cl-name">Log-linear</span><span class="cl-eg">Merge sort</span></div>
+            <div class="cl-item warn"><span class="cl-code">O(n²)</span><span class="cl-name">Quadratic</span><span class="cl-eg">Bubble sort</span></div>
+            <div class="cl-item warn"><span class="cl-code">O(n² log n)</span><span class="cl-name">Poly-log</span><span class="cl-eg">Complex loops</span></div>
+            <div class="cl-item bad"><span class="cl-code">O(2ⁿ)</span><span class="cl-name">Exponential</span><span class="cl-eg">Brute-force TSP</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">💡 Tip — How to Calculate T(n)</div>
+        <p>Count each type of operation separately, then take the <strong>dominant term</strong>:</p>
+        <div class="code-block">
+          <pre>T(n) = O(1) + O(n) + O(n) + O(log n) + O(n² log n)
+     ≈ O(n² log n)   ← dominant term wins</pre>
+        </div>
+      </div>
+
+      <div class="callout callout-key">
+        <div class="callout-title">🔑 Key Summations</div>
+        <div class="formula-box small">
+          <div class="formula">Σi = n(n+1)/2</div>
+          <div class="formula">Σi² = n(n+1)(2n+1)/6</div>
+          <div class="formula">Σ2ⁱ = 2ⁿ⁺¹ − 1</div>
+        </div>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('formulas')">Formula Sheet</button>
+        <button onclick="showSection('practice')">Practice MCQs</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 2: LINKED LISTS ========= -->
+    <section id="unit2" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 2</span>
+        <h2>Linked Lists</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p>A <strong>linked list</strong> is a dynamic data structure where each element (node) contains <em>data</em> and a <em>pointer to the next node</em>. Nodes need not be contiguous in memory.</p>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Node Structure <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="node-visual">
+            <div class="node-box"><div class="node-data">DATA</div><div class="node-ptr">NEXT →</div></div>
+            <div class="node-arrow">→</div>
+            <div class="node-box"><div class="node-data">DATA</div><div class="node-ptr">NEXT →</div></div>
+            <div class="node-arrow">→</div>
+            <div class="node-box"><div class="node-data">DATA</div><div class="node-ptr">NULL</div></div>
+          </div>
+          <div class="code-block mt">
+            <div class="code-title">C Structure</div>
+            <pre>struct stud {
+  int roll;
+  char name[30];
+  int age;
+  struct stud *next;  // self-referential
+};</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Linked List vs. Array (Comparison) <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="comparison-table">
+            <table>
+              <thead><tr><th>Operation</th><th>Array</th><th>Linked List</th></tr></thead>
+              <tbody>
+                <tr><td>Access by index</td><td class="good">O(1)</td><td class="bad">O(n)</td></tr>
+                <tr><td>Insert at beginning</td><td class="bad">O(n)</td><td class="good">O(1)</td></tr>
+                <tr><td>Insert at end</td><td class="good">O(1)*</td><td class="ok">O(n)</td></tr>
+                <tr><td>Delete any element</td><td class="bad">O(n)</td><td class="ok">O(n)**</td></tr>
+                <tr><td>Memory allocation</td><td class="ok">Static (fixed)</td><td class="good">Dynamic (flexible)</td></tr>
+                <tr><td>Search</td><td class="ok">O(n) linear</td><td class="bad">O(n) sequential</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">* If array isn't full. ** O(1) if pointer to node given.</p>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Operations <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="ops-accordion">
+            <div class="op-tab">
+              <div class="op-tab-header">Insertion at Beginning</div>
+              <div class="op-tab-body">
+                <ol>
+                  <li>Create new node</li>
+                  <li>Set new_node→next = head</li>
+                  <li>Set head = new_node</li>
+                </ol>
+                <div class="code-block"><pre>newNode->next = head;
+head = newNode;</pre></div>
+              </div>
+            </div>
+            <div class="op-tab">
+              <div class="op-tab-header">Insertion at End</div>
+              <div class="op-tab-body">
+                <ol>
+                  <li>Create new node, set next = NULL</li>
+                  <li>Traverse to last node (temp→next == NULL)</li>
+                  <li>Set last_node→next = new_node</li>
+                </ol>
+              </div>
+            </div>
+            <div class="op-tab">
+              <div class="op-tab-header">Deletion at Beginning</div>
+              <div class="op-tab-body">
+                <ol>
+                  <li>Check if list is empty</li>
+                  <li>Store head in temp</li>
+                  <li>Move head = head→next</li>
+                  <li>Free(temp)</li>
+                </ol>
+              </div>
+            </div>
+            <div class="op-tab">
+              <div class="op-tab-header">Search (Linear)</div>
+              <div class="op-tab-body">
+                <p>Traverse from head; compare each node's data with key. Return node if found, NULL otherwise. Time: O(n).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Types of Linked Lists <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card">
+              <div class="cc-title">Singly Linked List</div>
+              <p>Each node has one pointer (next). Traversal only forward. Most basic type.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Doubly Linked List</div>
+              <p>Each node has two pointers: <code>prev</code> and <code>next</code>. Can traverse both directions.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Circular Linked List</div>
+              <p>Last node points back to first node. Useful for looping/round-robin applications (media players, OS scheduling).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">💡 Real-World Applications</div>
+        <ul>
+          <li>Browser history (Back/Forward buttons)</li>
+          <li>Music player playlists</li>
+          <li>Image viewer (previous/next)</li>
+          <li>Implementation of stacks and queues</li>
+          <li>Dynamic memory allocation free blocks</li>
+          <li>Polynomial manipulation</li>
+        </ul>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit3a')">Stacks (LL impl.)</button>
+        <button onclick="showSection('unit3b')">Queues (LL impl.)</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 3A: STACKS ========= -->
+    <section id="unit3a" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 3</span>
+        <h2>Stacks</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p>A <strong>stack</strong> is a linear data structure that follows the <em>LIFO (Last In, First Out)</em> principle. The element inserted last is the first to be removed.</p>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Stack Visualization <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="stack-vis">
+            <div class="stack-label">TOP →</div>
+            <div class="stack-frame top-frame">40 ← Last In</div>
+            <div class="stack-frame">30</div>
+            <div class="stack-frame">20</div>
+            <div class="stack-frame bot-frame">10 ← First In</div>
+          </div>
+          <p class="vis-caption">PUSH adds to TOP · POP removes from TOP</p>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Operations & Algorithms <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="two-col">
+            <div class="code-block">
+              <div class="code-title">PUSH (Insert)</div>
+              <pre>Push(S, Top, X, N):
+  If Top = N-1 then
+    write "Stack FULL"
+    exit
+  Top = Top + 1
+  S[Top] = X
+  Exit</pre>
+            </div>
+            <div class="code-block">
+              <div class="code-title">POP (Delete)</div>
+              <pre>Pop(S, Top):
+  If Top = -1 then
+    write "Stack EMPTY"
+    exit
+  X = S[Top]
+  Top = Top - 1
+  return X</pre>
+            </div>
+          </div>
+          <div class="callout callout-key mt">
+            <div class="callout-title">Boundary Conditions</div>
+            <p><strong>Overflow:</strong> Top = N−1 (push on full stack) &nbsp;|&nbsp; <strong>Underflow:</strong> Top = −1 (pop on empty stack)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Applications of Stack <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card">
+              <div class="cc-title">Expression Evaluation</div>
+              <p>Postfix expression evaluation. No need for parentheses or operator precedence rules during execution.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Infix → Postfix Conversion</div>
+              <p>Operator precedence: <code>^ &gt; * / &gt; + -</code>. Use stack to hold operators until appropriate.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Function Call Stack</div>
+              <p>OS uses stack for function calls, recursion, return addresses.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Undo/Redo</div>
+              <p>Text editors use two stacks — one for undo operations, one for redo.</p>
+            </div>
+          </div>
+
+          <div class="callout callout-tip mt">
+            <div class="callout-title">💡 Postfix Evaluation Algorithm</div>
+            <ol>
+              <li>Scan expression left-to-right</li>
+              <li>If operand → PUSH onto stack</li>
+              <li>If operator → POP two operands (A = top, B = second)</li>
+              <li>Evaluate B <em>operator</em> A, PUSH result</li>
+              <li>Final result = POP</li>
+            </ol>
+            <p><strong>Example:</strong> <code>2 3 1 * + 9 -</code> → 2 + (3×1) − 9 = <strong>−4</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit3b')">Queues</button>
+        <button onclick="showSection('practice')">Practice Problems</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 3B: QUEUES ========= -->
+    <section id="unit3b" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 3</span>
+        <h2>Queues</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p>A <strong>queue</strong> is a linear data structure that follows the <em>FIFO (First In, First Out)</em> principle. It is open at <em>both ends</em>: insertion at REAR, deletion at FRONT.</p>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Queue Visualization <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="queue-vis">
+            <div class="q-label">FRONT</div>
+            <div class="q-frame">10</div>
+            <div class="q-frame">20</div>
+            <div class="q-frame">30</div>
+            <div class="q-frame hl">40</div>
+            <div class="q-label">REAR</div>
+          </div>
+          <p class="vis-caption">ENQUEUE at REAR · DEQUEUE from FRONT</p>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Operations <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="two-col">
+            <div class="code-block">
+              <div class="code-title">ENQUEUE</div>
+              <pre>Enqueue(Q, REAR, X, N):
+  If REAR = N-1 then
+    write "Queue FULL"
+    exit
+  If FRONT = -1 then
+    FRONT = 0
+  REAR = REAR + 1
+  Q[REAR] = X</pre>
+            </div>
+            <div class="code-block">
+              <div class="code-title">DEQUEUE</div>
+              <pre>Dequeue(Q, FRONT, REAR):
+  If FRONT = -1 OR
+     FRONT > REAR then
+    write "Queue EMPTY"
+    exit
+  X = Q[FRONT]
+  FRONT = FRONT + 1
+  return X</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Types of Queues <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card">
+              <div class="cc-title">Simple Queue</div>
+              <p>Basic FIFO. Linear array. Problem: front pointer never resets → wasted space.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Circular Queue</div>
+              <p>Front and rear wrap around. Solves wasted-space problem. <code>REAR = (REAR+1) % N</code></p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Double-Ended Queue (Deque)</div>
+              <p>Insertion and deletion at <em>both</em> ends. More flexible than simple queue.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Priority Queue</div>
+              <p>Each element has priority. Higher-priority element dequeued first regardless of insertion order.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">💡 Stack vs Queue</div>
+        <div class="comparison-table">
+          <table>
+            <thead><tr><th>Feature</th><th>Stack</th><th>Queue</th></tr></thead>
+            <tbody>
+              <tr><td>Order</td><td>LIFO</td><td>FIFO</td></tr>
+              <tr><td>Insert end</td><td>TOP (one end)</td><td>REAR</td></tr>
+              <tr><td>Remove end</td><td>TOP (one end)</td><td>FRONT</td></tr>
+              <tr><td>Pointers</td><td>1 (TOP)</td><td>2 (FRONT, REAR)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit3a')">Stacks</button>
+        <button onclick="showSection('unit4')">Trees</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 4: TREES & BST ========= -->
+    <section id="unit4" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 4</span>
+        <h2>Trees & Binary Search Trees</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p>A <strong>tree</strong> is a non-linear, hierarchical data structure with a root node and subtrees of children nodes. A <strong>Binary Search Tree (BST)</strong> satisfies: <em>left child &lt; parent &lt; right child</em>.</p>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Key Terminology <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card"><div class="cc-title">Root</div><p>Topmost node, no parent. Entry point of the tree.</p></div>
+            <div class="concept-card"><div class="cc-title">Leaf Node</div><p>Node with no children. Also called external node.</p></div>
+            <div class="concept-card"><div class="cc-title">Height</div><p>Longest path from root to a leaf. Empty tree height = −1.</p></div>
+            <div class="concept-card"><div class="cc-title">Depth</div><p>Distance from root to that node.</p></div>
+            <div class="concept-card"><div class="cc-title">Degree</div><p>Number of children a node has.</p></div>
+            <div class="concept-card"><div class="cc-title">Subtree</div><p>Any node with its descendants forms a subtree.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">BST Operations <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="ops-list">
+            <div class="op-item">
+              <div class="op-name">Search</div>
+              <div class="op-desc">Compare with root → go left if smaller, right if larger. Best: O(log n), Worst: O(n)</div>
+            </div>
+            <div class="op-item">
+              <div class="op-name">Insert</div>
+              <div class="op-desc">Like search, find correct leaf position, insert new node. O(h) where h = height.</div>
+            </div>
+            <div class="op-item">
+              <div class="op-name">Delete</div>
+              <div class="op-desc">3 cases: leaf node (just remove), one child (bypass), two children (replace with inorder successor).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Tree Traversals <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card">
+              <div class="cc-title">Inorder (L → Root → R)</div>
+              <p>Visits BST nodes in <em>sorted ascending order</em>. Used to verify BST property.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Preorder (Root → L → R)</div>
+              <p>Root visited first. Used to <em>copy/serialize</em> a tree structure.</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Postorder (L → R → Root)</div>
+              <p>Root visited last. Used to <em>delete</em> a tree (children first).</p>
+            </div>
+            <div class="concept-card">
+              <div class="cc-title">Level-order (BFS)</div>
+              <p>Visit level by level. Uses a <em>queue</em>. Used for level-wise operations.</p>
+            </div>
+          </div>
+
+          <div class="callout callout-key mt">
+            <div class="callout-title">🔑 Memory Aid</div>
+            <p><strong>In</strong>order → <strong>In</strong>creasing (sorted) · <strong>Pre</strong>order → <strong>Pre</strong>serves structure · <strong>Post</strong>order → <strong>Post</strong>-mortem (delete)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit4b')">AVL Trees</button>
+        <button onclick="showSection('unit5')">Graphs</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 4B: AVL TREES ========= -->
+    <section id="unit4b" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 4</span>
+        <h2>AVL Trees</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p>An <strong>AVL Tree</strong> (Adelson-Velsky and Landis, 1962) is a <em>self-balancing BST</em> where the <strong>Balance Factor</strong> of every node must be <code>−1, 0, or +1</code>.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-title">Balance Factor</div>
+        <div class="formula">BF = Height(Left Subtree) − Height(Right Subtree)</div>
+        <div class="formula-legend">
+          <span>BF = 0 → Balanced</span>
+          <span>BF = ±1 → Acceptable</span>
+          <span>BF = ±2 → UNBALANCED → Rotate</span>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">4 Rotation Cases <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="rotation-cards">
+            <div class="rot-card">
+              <div class="rot-type">LL Rotation</div>
+              <div class="rot-trigger">Imbalance in <strong>left</strong> subtree of <strong>left</strong> child</div>
+              <div class="rot-fix">→ Single <em>Right</em> rotation at pivot</div>
+            </div>
+            <div class="rot-card">
+              <div class="rot-type">RR Rotation</div>
+              <div class="rot-trigger">Imbalance in <strong>right</strong> subtree of <strong>right</strong> child</div>
+              <div class="rot-fix">→ Single <em>Left</em> rotation at pivot</div>
+            </div>
+            <div class="rot-card">
+              <div class="rot-type">LR Rotation</div>
+              <div class="rot-trigger">Imbalance in <strong>right</strong> subtree of <strong>left</strong> child</div>
+              <div class="rot-fix">→ Left rotation on child, then Right rotation at pivot</div>
+            </div>
+            <div class="rot-card">
+              <div class="rot-type">RL Rotation</div>
+              <div class="rot-trigger">Imbalance in <strong>left</strong> subtree of <strong>right</strong> child</div>
+              <div class="rot-fix">→ Right rotation on child, then Left rotation at pivot</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">AVL vs BST Performance <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="comparison-table">
+            <table>
+              <thead><tr><th>Operation</th><th>BST (worst)</th><th>AVL Tree</th></tr></thead>
+              <tbody>
+                <tr><td>Search</td><td class="bad">O(n)</td><td class="good">O(log n)</td></tr>
+                <tr><td>Insert</td><td class="bad">O(n)</td><td class="good">O(log n)</td></tr>
+                <tr><td>Delete</td><td class="bad">O(n)</td><td class="good">O(log n)</td></tr>
+                <tr><td>Space</td><td class="ok">O(n)</td><td class="ok">O(n)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">💡 Practice Sequence</div>
+        <p>Build AVL tree for: <strong>5, 7, 19, 12, 10, 15, 18, 20, 25, 23</strong> — apply rotations step by step. Check balance factor after each insertion.</p>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit4')">BST Basics</button>
+        <button onclick="showSection('flashcards')">Flashcards</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 5: GRAPHS ========= -->
+    <section id="unit5" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 5</span>
+        <h2>Graphs</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p>A <strong>graph</strong> G = (V, E) consists of a set of <em>vertices V</em> and <em>edges E</em>. Edges represent relationships between vertices. Graphs model networks, maps, social connections, etc.</p>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Graph Terminology <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card"><div class="cc-title">Directed Graph (Digraph)</div><p>Edges have direction (arrows). Edge (u,v) ≠ Edge (v,u).</p></div>
+            <div class="concept-card"><div class="cc-title">Undirected Graph</div><p>Edges have no direction. Edge (u,v) = Edge (v,u).</p></div>
+            <div class="concept-card"><div class="cc-title">Weighted Graph</div><p>Each edge carries a numerical value (weight/cost).</p></div>
+            <div class="concept-card"><div class="cc-title">Degree of Vertex</div><p><em>Undirected:</em> number of edges incident. <em>Directed:</em> in-degree + out-degree.</p></div>
+            <div class="concept-card"><div class="cc-title">Path</div><p>Sequence of vertices where consecutive pairs are connected by edges.</p></div>
+            <div class="concept-card"><div class="cc-title">Cycle</div><p>A path that starts and ends at the same vertex. A tree has no cycles.</p></div>
+            <div class="concept-card"><div class="cc-title">Connected Graph</div><p>Every vertex is reachable from every other vertex (undirected).</p></div>
+            <div class="concept-card"><div class="cc-title">Complete Graph</div><p>Every vertex is directly connected to every other vertex. Edges = n(n-1)/2.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Graph Representations <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="two-col">
+            <div class="col-card">
+              <h4>Adjacency Matrix</h4>
+              <p>n×n matrix where M[i][j] = 1 if edge (i,j) exists, 0 otherwise.</p>
+              <p><strong>Space:</strong> O(n²) · <strong>Edge check:</strong> O(1)</p>
+              <p>✅ Fast lookup · ❌ Wastes space for sparse graphs</p>
+            </div>
+            <div class="col-card">
+              <h4>Adjacency List</h4>
+              <p>Array of linked lists. Each vertex has a list of its neighbors.</p>
+              <p><strong>Space:</strong> O(V+E) · <strong>Edge check:</strong> O(degree)</p>
+              <p>✅ Efficient for sparse graphs · ❌ Slower edge lookup</p>
+            </div>
+          </div>
+
+          <div class="formula-box mt">
+            <div class="formula-title">Number of Edges</div>
+            <div class="formula">Undirected: max edges = n(n−1)/2</div>
+            <div class="formula">Directed: max edges = n(n−1)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Graph Traversals <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="two-col">
+            <div class="col-card">
+              <h4>BFS — Breadth First Search</h4>
+              <p>Explores all neighbors at current depth before going deeper. Uses a <strong>Queue</strong>.</p>
+              <p>Time: O(V+E) · Use: shortest path, level-order, connected components</p>
+            </div>
+            <div class="col-card">
+              <h4>DFS — Depth First Search</h4>
+              <p>Explores as far as possible before backtracking. Uses a <strong>Stack</strong> (or recursion).</p>
+              <p>Time: O(V+E) · Use: topological sort, cycle detection, maze solving</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit5b')">Dijkstra's Algorithm</button>
+        <button onclick="showSection('unit4')">Trees</button>
+      </div>
+    </section>
+
+    <!-- ========= UNIT 5B: DIJKSTRA ========= -->
+    <section id="unit5b" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Unit 5</span>
+        <h2>Dijkstra's Algorithm</h2>
+      </div>
+
+      <div class="callout callout-def">
+        <div class="callout-title">📖 Definition</div>
+        <p><strong>Dijkstra's algorithm</strong> solves the <em>Single-Source Shortest Path</em> problem on a weighted graph with <em>non-negative</em> edge weights. It finds shortest paths from source vertex v to all other vertices.</p>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Algorithm Pseudocode <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="code-block">
+            <div class="code-title">Dijkstra(G, source)</div>
+            <pre>for each vertex v:
+    v.distance = ∞
+    v.previous = NONE
+source.distance = 0
+List = {all vertices}       // unvisited set
+
+while List is not empty:
+    v = vertex in List with min distance
+    mark v as known (remove from List)
+
+    for each unknown neighbor n of v:
+        dist = v.distance + weight(v, n)
+        if dist &lt; n.distance:
+            n.distance = dist
+            n.previous = v
+
+return distances and path via previous pointers</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Key Properties <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="concept-cards">
+            <div class="concept-card"><div class="cc-title">Greedy Approach</div><p>Always picks the unvisited vertex with the minimum known distance.</p></div>
+            <div class="concept-card"><div class="cc-title">Works On</div><p>Both directed and undirected graphs. <strong>Requires non-negative weights.</strong></p></div>
+            <div class="concept-card"><div class="cc-title">Output</div><p>Shortest distances from source to all vertices + path reconstruction via previous pointers.</p></div>
+            <div class="concept-card"><div class="cc-title">Applications</div><p>Google Maps, GPS routing, network packet routing (OSPF protocol).</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsible open">
+        <div class="collapsible-header">Time Complexity <span class="caret">▾</span></div>
+        <div class="collapsible-body">
+          <div class="comparison-table">
+            <table>
+              <thead><tr><th>Implementation</th><th>Time Complexity</th></tr></thead>
+              <tbody>
+                <tr><td>Array / Linked List (simple)</td><td>O(V²)</td></tr>
+                <tr><td>Binary Heap + Adjacency List</td><td>O((V + E) log V)</td></tr>
+                <tr><td>Fibonacci Heap</td><td>O(E + V log V)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">💡 Why Non-Negative Weights?</div>
+        <p>If negative edges exist, a previously "finalized" vertex might get a shorter path discovered later, breaking the greedy guarantee. Use <strong>Bellman-Ford</strong> for negative weights.</p>
+      </div>
+
+      <div class="related-topics">
+        <span>Related →</span>
+        <button onclick="showSection('unit5')">Graph Basics</button>
+        <button onclick="showSection('practice')">Practice Problems</button>
+      </div>
+    </section>
+
+    <!-- ========= PRACTICE & MCQs ========= -->
+    <section id="practice" class="page">
+      <div class="page-header">
+        <span class="unit-badge practice-badge">Practice</span>
+        <h2>Practice Questions & MCQs</h2>
+      </div>
+
+      <div class="practice-filter">
+        <button class="filter-btn active" data-topic="all">All</button>
+        <button class="filter-btn" data-topic="arrays">Arrays</button>
+        <button class="filter-btn" data-topic="ll">Linked Lists</button>
+        <button class="filter-btn" data-topic="stack">Stacks</button>
+        <button class="filter-btn" data-topic="tree">Trees</button>
+        <button class="filter-btn" data-topic="graph">Graphs</button>
+      </div>
+
+      <div id="mcq-container">
+        <!-- MCQs injected by JS -->
+      </div>
+
+      <div class="section-heading mt">Solved Problems</div>
+
+      <div class="solved-problem">
+        <div class="problem-header">Problem 1 — Postfix Evaluation</div>
+        <div class="problem-body">
+          <p><strong>Q:</strong> Evaluate the postfix expression: <code>2 3 1 * + 9 -</code></p>
+          <div class="solution">
+            <div class="solution-step"><span class="step-num">1</span> Scan 2 → Push → Stack: [2]</div>
+            <div class="solution-step"><span class="step-num">2</span> Scan 3 → Push → Stack: [2, 3]</div>
+            <div class="solution-step"><span class="step-num">3</span> Scan 1 → Push → Stack: [2, 3, 1]</div>
+            <div class="solution-step"><span class="step-num">4</span> Scan * → Pop 1, Pop 3 → 3×1=3 → Push → Stack: [2, 3]</div>
+            <div class="solution-step"><span class="step-num">5</span> Scan + → Pop 3, Pop 2 → 2+3=5 → Push → Stack: [5]</div>
+            <div class="solution-step"><span class="step-num">6</span> Scan 9 → Push → Stack: [5, 9]</div>
+            <div class="solution-step"><span class="step-num">7</span> Scan - → Pop 9, Pop 5 → 5−9=<strong>−4</strong> → Result: <strong>−4</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="solved-problem">
+        <div class="problem-header">Problem 2 — Array Address Calculation</div>
+        <div class="problem-body">
+          <p><strong>Q:</strong> Array A starts at address 200. Each element is 4 bytes. Find address of A[6], with lower bound = 0.</p>
+          <div class="solution">
+            <div class="solution-step"><span class="step-num">Formula</span> A(i) = BA + (i − lb) × S</div>
+            <div class="solution-step"><span class="step-num">Apply</span> A(6) = 200 + (6 − 0) × 4 = 200 + 24 = <strong>224</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="solved-problem">
+        <div class="problem-header">Problem 3 — AVL Insertion</div>
+        <div class="problem-body">
+          <p><strong>Q:</strong> Insert 30, 20, 10 into an empty AVL tree.</p>
+          <div class="solution">
+            <div class="solution-step"><span class="step-num">1</span> Insert 30 → Root. BF=0 ✓</div>
+            <div class="solution-step"><span class="step-num">2</span> Insert 20 → Left of 30. BF(30)=1 ✓</div>
+            <div class="solution-step"><span class="step-num">3</span> Insert 10 → Left of 20. BF(30)=2 ✗ → LL Case!</div>
+            <div class="solution-step"><span class="step-num">Fix</span> Right rotate at 30 → 20 becomes root, 10=left, 30=right. All BF=0 ✓</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= FLASHCARDS ========= -->
+    <section id="flashcards" class="page">
+      <div class="page-header">
+        <span class="unit-badge practice-badge">Revision</span>
+        <h2>Flashcards</h2>
+      </div>
+      <p class="page-intro">Click a card to reveal the answer. Use arrow buttons to navigate.</p>
+
+      <div class="flashcard-deck">
+        <div class="fc-progress">Card <span id="fc-current">1</span> of <span id="fc-total">1</span></div>
+        <div id="flashcard" class="flashcard">
+          <div class="fc-inner">
+            <div class="fc-front"><span class="fc-q-label">Q</span><div id="fc-question"></div></div>
+            <div class="fc-back"><span class="fc-a-label">A</span><div id="fc-answer"></div></div>
+          </div>
+        </div>
+        <div class="fc-controls">
+          <button class="fc-btn" id="fc-prev">← Prev</button>
+          <button class="fc-btn primary" id="fc-flip">Flip Card</button>
+          <button class="fc-btn" id="fc-next">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= FORMULAS ========= -->
+    <section id="formulas" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Reference</span>
+        <h2>Formula Sheet</h2>
+      </div>
+
+      <div class="formula-sheet">
+        <div class="fs-group">
+          <div class="fs-title">Arrays</div>
+          <div class="fs-item"><span class="fs-label">1D Address:</span><code>A(i) = BA + (i − lb) × S</code></div>
+          <div class="fs-item"><span class="fs-label">2D Row-Major:</span><code>A(i,j) = BA + [(i−r1)×(c2−c1+1) + (j−c1)] × S</code></div>
+        </div>
+        <div class="fs-group">
+          <div class="fs-title">Complexity</div>
+          <div class="fs-item"><span class="fs-label">Σi =</span><code>n(n+1)/2</code></div>
+          <div class="fs-item"><span class="fs-label">Σi² =</span><code>n(n+1)(2n+1)/6</code></div>
+          <div class="fs-item"><span class="fs-label">log₂n levels =</span><code>Binary search / tree height</code></div>
+        </div>
+        <div class="fs-group">
+          <div class="fs-title">Graphs</div>
+          <div class="fs-item"><span class="fs-label">Max edges (undirected):</span><code>n(n−1)/2</code></div>
+          <div class="fs-item"><span class="fs-label">Max edges (directed):</span><code>n(n−1)</code></div>
+          <div class="fs-item"><span class="fs-label">BFS/DFS time:</span><code>O(V + E)</code></div>
+        </div>
+        <div class="fs-group">
+          <div class="fs-title">AVL Trees</div>
+          <div class="fs-item"><span class="fs-label">Balance Factor:</span><code>BF = h(Left) − h(Right) ∈ {−1, 0, 1}</code></div>
+          <div class="fs-item"><span class="fs-label">Height (balanced):</span><code>h ≈ 1.44 log₂(n+2)</code></div>
+        </div>
+        <div class="fs-group">
+          <div class="fs-title">Complexity Cheat Sheet</div>
+          <div class="fs-item"><span class="fs-label">O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= MY NOTES ========= -->
+    <section id="my-notes" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Notes</span>
+        <h2>My Notes</h2>
+      </div>
+
+      <div class="notes-toolbar">
+        <input type="text" id="note-title" placeholder="Note title…" />
+        <select id="note-subject">
+          <option value="ds">Data Structures</option>
+          <option value="arrays">Arrays</option>
+          <option value="linked-list">Linked Lists</option>
+          <option value="trees">Trees</option>
+          <option value="graphs">Graphs</option>
+          <option value="other">Other</option>
+        </select>
+        <button class="btn-primary" id="save-note-btn">Save Note</button>
+      </div>
+
+      <textarea id="note-content" placeholder="Write your notes here… Supports markdown-like formatting.
+
+Tips:
+• Use ## for headings
+• Use ** for bold
+• Use - for bullet points"></textarea>
+
+      <div class="notes-grid" id="notes-grid">
+        <!-- Notes rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ========= POMODORO ========= -->
+    <section id="pomodoro" class="page">
+      <div class="page-header">
+        <span class="unit-badge">Focus</span>
+        <h2>Pomodoro Timer</h2>
+      </div>
+
+      <div class="pomo-container">
+        <div class="pomo-mode-btns">
+          <button class="pomo-mode active" data-mins="25">Study (25m)</button>
+          <button class="pomo-mode" data-mins="5">Short Break (5m)</button>
+          <button class="pomo-mode" data-mins="15">Long Break (15m)</button>
+        </div>
+
+        <div class="pomo-clock">
+          <svg class="pomo-ring" viewBox="0 0 200 200">
+            <circle class="pomo-ring-bg" cx="100" cy="100" r="88"/>
+            <circle class="pomo-ring-fill" id="pomo-circle" cx="100" cy="100" r="88"/>
+          </svg>
+          <div class="pomo-time" id="pomo-display">25:00</div>
+        </div>
+
+        <div class="pomo-controls">
+          <button class="btn-pomo" id="pomo-start">▶ Start</button>
+          <button class="btn-pomo" id="pomo-pause">⏸ Pause</button>
+          <button class="btn-pomo" id="pomo-reset">↺ Reset</button>
+        </div>
+
+        <div class="pomo-stats">
+          <div class="pomo-stat"><span id="pomo-sessions">0</span><small>Sessions Today</small></div>
+          <div class="pomo-stat"><span id="pomo-total-time">0</span><small>Minutes Focused</small></div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /content -->
+</main>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<script>
+  /* =========================================================
+   DS Notes — script.js
+   All interactivity: navigation, collapsibles, flashcards,
+   MCQs, notes CRUD, Pomodoro, theme, search, streak
+   ========================================================= */
+
+// ─── State ───────────────────────────────────────────────
+const State = {
+  currentSection: 'dashboard',
+  notes: [],
+  pomodoroTimer: null,
+  pomodoroRunning: false,
+  pomodoroSeconds: 25 * 60,
+  pomodoroTotal: 25 * 60,
+  pomodoroSessions: 0,
+  pomodoroFocusedMinutes: 0,
+  fcIndex: 0,
+  studyMinutes: 0,
+  studyTimer: null,
+};
+
+// ─── Flashcard Data ──────────────────────────────────────
+const flashcards = [
+  { q: "What does LIFO stand for and which DS uses it?", a: "Last In First Out — used by Stacks." },
+  { q: "What is the time complexity of binary search?", a: "O(log n) — halves search space each step." },
+  { q: "What is the Balance Factor in an AVL tree?", a: "BF = Height(Left) − Height(Right). Must be −1, 0, or +1." },
+  { q: "Which rotation is applied for an LL imbalance in AVL?", a: "Single Right Rotation at the pivot node." },
+  { q: "What is the address formula for a 1D array element?", a: "A(i) = BA + (i − lb) × S, where BA = base address, lb = lower bound, S = size." },
+  { q: "What is Dijkstra's algorithm used for?", a: "Finding shortest paths from a single source to all vertices in a non-negative weighted graph." },
+  { q: "State the key difference between Stack and Queue.", a: "Stack is LIFO (one end); Queue is FIFO (two ends: FRONT for deletion, REAR for insertion)." },
+  { q: "What is the time complexity of BFS and DFS?", a: "O(V + E) for both, where V = vertices, E = edges." },
+  { q: "What are the three tree traversal orders?", a: "Inorder (L-Root-R), Preorder (Root-L-R), Postorder (L-R-Root)." },
+  { q: "What is the advantage of a doubly linked list over singly?", a: "Can traverse in both forward and backward directions." },
+  { q: "Evaluate postfix: 5 1 2 + 4 * + 3 −", a: "5 + ((1+2)×4) − 3 = 5 + 12 − 3 = 14" },
+  { q: "What are the 4 AVL rotation types?", a: "LL (right rotation), RR (left rotation), LR (left then right), RL (right then left)." },
+  { q: "What is the maximum number of edges in an undirected graph with n vertices?", a: "n(n−1)/2" },
+  { q: "What data structure does BFS use internally?", a: "Queue — explores neighbors level by level." },
+  { q: "What is a self-referential structure?", a: "A struct that contains a pointer to itself (e.g., a linked list node with a *next pointer)." },
+];
+
+// ─── MCQ Data ────────────────────────────────────────────
+const mcqs = [
+  { q: "What is the time complexity of accessing an element in an array by index?", opts: ["O(n)", "O(log n)", "O(1)", "O(n²)"], ans: 2, topic: "arrays", diff: "easy" },
+  { q: "Which data structure follows the FIFO principle?", opts: ["Stack", "Queue", "Tree", "Graph"], ans: 1, topic: "ll", diff: "easy" },
+  { q: "In a singly linked list with n nodes, what is the time complexity of insertion at the beginning?", opts: ["O(n)", "O(log n)", "O(n²)", "O(1)"], ans: 3, topic: "ll", diff: "easy" },
+  { q: "If a stack has elements [10, 20, 30] (30 on top), what does POP return?", opts: ["10", "20", "30", "Nothing"], ans: 2, topic: "stack", diff: "easy" },
+  { q: "Which traversal of a BST gives nodes in sorted order?", opts: ["Preorder", "Postorder", "Inorder", "Level-order"], ans: 2, topic: "tree", diff: "medium" },
+  { q: "An AVL tree with balance factor +2 requires:", opts: ["No action", "A rotation to rebalance", "Deletion of a node", "Insertion of a node"], ans: 1, topic: "tree", diff: "medium" },
+  { q: "Maximum edges in an undirected graph with 5 vertices:", opts: ["10", "20", "15", "25"], ans: 0, topic: "graph", diff: "medium" },
+  { q: "Dijkstra's algorithm CANNOT handle:", opts: ["Directed graphs", "Undirected graphs", "Negative weight edges", "Weighted graphs"], ans: 2, topic: "graph", diff: "medium" },
+  { q: "For an LR imbalance in an AVL tree, the fix is:", opts: ["Single right rotation", "Single left rotation", "Left then right rotation", "Right then left rotation"], ans: 2, topic: "tree", diff: "hard" },
+  { q: "T(n) = O(1) + O(n) + O(n²) simplifies to:", opts: ["O(n)", "O(n²)", "O(n³)", "O(1)"], ans: 1, topic: "arrays", diff: "medium" },
+  { q: "Which is NOT a type of linked list?", opts: ["Singly linked", "Doubly linked", "Circular linked", "Rectangular linked"], ans: 3, topic: "ll", diff: "easy" },
+  { q: "A complete graph with n=4 vertices has how many edges?", opts: ["4", "6", "8", "12"], ans: 1, topic: "graph", diff: "medium" },
+];
+
+// ─── Section Index for Search ────────────────────────────
+const sectionContent = {
+  unit1:  { title: "Introduction to Data Structures", keywords: ["data structure", "primitive", "non-primitive", "linear", "non-linear", "definition"] },
+  unit1b: { title: "Arrays", keywords: ["array", "1d", "2d", "insertion", "deletion", "base address", "address formula", "traverse"] },
+  unit1c: { title: "Algorithms & Complexity", keywords: ["algorithm", "complexity", "big-o", "omega", "theta", "asymptotic", "notation", "time", "order of growth"] },
+  unit2:  { title: "Linked Lists", keywords: ["linked list", "node", "pointer", "singly", "doubly", "circular", "insert", "delete", "traverse", "head"] },
+  unit3a: { title: "Stacks", keywords: ["stack", "lifo", "push", "pop", "overflow", "underflow", "postfix", "infix", "expression"] },
+  unit3b: { title: "Queues", keywords: ["queue", "fifo", "enqueue", "dequeue", "front", "rear", "circular queue", "priority queue", "deque"] },
+  unit4:  { title: "Trees & BST", keywords: ["tree", "bst", "binary search tree", "root", "leaf", "height", "inorder", "preorder", "postorder", "traversal"] },
+  unit4b: { title: "AVL Trees", keywords: ["avl", "balance factor", "rotation", "ll", "rr", "lr", "rl", "self-balancing"] },
+  unit5:  { title: "Graphs", keywords: ["graph", "vertex", "edge", "directed", "undirected", "weighted", "bfs", "dfs", "adjacency", "matrix", "path", "cycle"] },
+  unit5b: { title: "Dijkstra's Algorithm", keywords: ["dijkstra", "shortest path", "single source", "greedy", "weighted", "routing", "non-negative"] },
+};
+
+// ─── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadFromStorage();
+  initTheme();
+  initNavigation();
+  initCollapsibles();
+  initOpsTabs();
+  initFlashcards();
+  initMCQs();
+  initPomodoro();
+  initNotes();
+  initSearch();
+  initReadingProgress();
+  initStreak();
+  animateStats();
+  startStudyTimer();
+  // Keyboard shortcuts
+  document.addEventListener('keydown', handleKeyboard);
+});
+
+// ─── Storage ──────────────────────────────────────────────
+function loadFromStorage() {
+  State.notes = JSON.parse(localStorage.getItem('ds_notes') || '[]');
+  State.pomodoroSessions = parseInt(localStorage.getItem('ds_pomo_sessions') || '0');
+  State.pomodoroFocusedMinutes = parseInt(localStorage.getItem('ds_pomo_minutes') || '0');
+  State.studyMinutes = parseInt(localStorage.getItem('ds_study_minutes') || '0');
+}
+
+function saveNotes() {
+  localStorage.setItem('ds_notes', JSON.stringify(State.notes));
+}
+
+// ─── Theme ────────────────────────────────────────────────
+function initTheme() {
+  const saved = localStorage.getItem('ds_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeIcon(saved);
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('ds_theme', next);
+  updateThemeIcon(next);
+  showToast(next === 'dark' ? '🌙 Dark mode' : '☀️ Light mode');
+}
+
+function updateThemeIcon(theme) {
+  document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☽' : '☀';
+}
+
+// ─── Navigation ───────────────────────────────────────────
+function initNavigation() {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const section = item.dataset.section;
+      showSection(section);
+      if (window.innerWidth < 768) closeSidebar();
+    });
+  });
+
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('visible');
+  });
+  document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('visible');
+}
+
+window.showSection = function(id) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show target
+  const target = document.getElementById(id);
+  if (!target) return;
+  target.classList.add('active');
+  State.currentSection = id;
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.section === id);
+  });
+  // Update topbar title
+  const sectionTitles = {
+    dashboard: 'Dashboard',
+    unit1: 'DS Introduction',
+    unit1b: 'Arrays',
+    unit1c: 'Algorithms & Complexity',
+    unit2: 'Linked Lists',
+    unit3a: 'Stacks',
+    unit3b: 'Queues',
+    unit4: 'Trees & BST',
+    unit4b: 'AVL Trees',
+    unit5: 'Graphs',
+    unit5b: "Dijkstra's Algorithm",
+    practice: 'Practice & MCQs',
+    flashcards: 'Flashcards',
+    formulas: 'Formula Sheet',
+    'my-notes': 'My Notes',
+    pomodoro: 'Pomodoro Timer',
+  };
+  document.getElementById('topbar-title').textContent = sectionTitles[id] || id;
+  // Scroll to top
+  document.getElementById('content').scrollTop = 0;
+  window.scrollTo(0, 0);
+};
+
+// ─── Collapsibles ─────────────────────────────────────────
+function initCollapsibles() {
+  document.querySelectorAll('.collapsible-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const parent = header.parentElement;
+      parent.classList.toggle('open');
+    });
+  });
+}
+
+// ─── Ops Accordion Tabs ───────────────────────────────────
+function initOpsTabs() {
+  document.querySelectorAll('.op-tab-header').forEach(h => {
+    h.addEventListener('click', () => {
+      h.parentElement.classList.toggle('open');
+    });
+  });
+}
+
+// ─── Flashcards ───────────────────────────────────────────
+function initFlashcards() {
+  State.fcIndex = 0;
+  renderFlashcard();
+  document.getElementById('fc-total').textContent = flashcards.length;
+
+  document.getElementById('flashcard').addEventListener('click', flipCard);
+  document.getElementById('fc-flip').addEventListener('click', flipCard);
+  document.getElementById('fc-prev').addEventListener('click', () => {
+    State.fcIndex = (State.fcIndex - 1 + flashcards.length) % flashcards.length;
+    renderFlashcard();
+  });
+  document.getElementById('fc-next').addEventListener('click', () => {
+    State.fcIndex = (State.fcIndex + 1) % flashcards.length;
+    renderFlashcard();
+  });
+}
+
+function renderFlashcard() {
+  const card = flashcards[State.fcIndex];
+  document.getElementById('fc-question').textContent = card.q;
+  document.getElementById('fc-answer').textContent = card.a;
+  document.getElementById('fc-current').textContent = State.fcIndex + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+
+function flipCard() {
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+
+// ─── MCQs ─────────────────────────────────────────────────
+function initMCQs() {
+  renderMCQs('all');
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMCQs(btn.dataset.topic);
+    });
+  });
+}
+
+function renderMCQs(filter) {
+  const container = document.getElementById('mcq-container');
+  const filtered = filter === 'all' ? mcqs : mcqs.filter(m => m.topic === filter);
+  container.innerHTML = '';
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<p style="color:var(--text-3);font-size:14px;text-align:center;padding:24px">No questions for this filter.</p>';
+    return;
+  }
+
+  filtered.forEach((mcq, i) => {
+    const card = document.createElement('div');
+    card.className = 'mcq-card';
+    const diffColor = { easy: 'var(--green)', medium: 'var(--gold)', hard: 'var(--red)' }[mcq.diff];
+    card.innerHTML = `
+      <div class="mcq-num">Q${i + 1} · <span style="color:${diffColor}">${mcq.diff.toUpperCase()}</span></div>
+      <div class="mcq-question">${mcq.q}</div>
+      <div class="mcq-options">
+        ${mcq.opts.map((opt, j) => `
+          <div class="mcq-option" data-idx="${j}">
+            <span class="opt-label">${String.fromCharCode(65 + j)}</span>
+            ${opt}
+          </div>
+        `).join('')}
+      </div>
+    `;
+    // Attach click handlers
+    card.querySelectorAll('.mcq-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (card.dataset.answered) return;
+        card.dataset.answered = '1';
+        const chosen = parseInt(opt.dataset.idx);
+        card.querySelectorAll('.mcq-option').forEach((o, j) => {
+          if (j === mcq.ans) o.classList.add('correct');
+          else if (j === chosen && chosen !== mcq.ans) o.classList.add('wrong');
+        });
+        if (chosen === mcq.ans) showToast('✅ Correct!', 'success');
+        else showToast(`❌ Wrong — Answer: ${String.fromCharCode(65 + mcq.ans)}`, 'error');
+      });
+    });
+    container.appendChild(card);
+  });
+}
+
+// ─── Pomodoro ─────────────────────────────────────────────
+function initPomodoro() {
+  const sessions = parseInt(localStorage.getItem('ds_pomo_sessions_today') || '0');
+  const minutes = parseInt(localStorage.getItem('ds_pomo_minutes_today') || '0');
+  document.getElementById('pomo-sessions').textContent = sessions;
+  document.getElementById('pomo-total-time').textContent = minutes;
+
+  document.querySelectorAll('.pomo-mode').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pomo-mode').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mins = parseInt(btn.dataset.mins);
+      setPomodoro(mins);
+    });
+  });
+
+  document.getElementById('pomo-start').addEventListener('click', startPomodoro);
+  document.getElementById('pomo-pause').addEventListener('click', pausePomodoro);
+  document.getElementById('pomo-reset').addEventListener('click', resetPomodoro);
+
+  updatePomoDisplay();
+}
+
+function setPomodoro(mins) {
+  pausePomodoro();
+  State.pomodoroSeconds = mins * 60;
+  State.pomodoroTotal = mins * 60;
+  updatePomoDisplay();
+}
+
+function startPomodoro() {
+  if (State.pomodoroRunning) return;
+  State.pomodoroRunning = true;
+  State.pomodoroTimer = setInterval(() => {
+    State.pomodoroSeconds--;
+    updatePomoDisplay();
+    if (State.pomodoroSeconds <= 0) {
+      pausePomodoro();
+      pomodoroComplete();
+    }
+  }, 1000);
+}
+
+function pausePomodoro() {
+  State.pomodoroRunning = false;
+  clearInterval(State.pomodoroTimer);
+}
+
+function resetPomodoro() {
+  pausePomodoro();
+  State.pomodoroSeconds = State.pomodoroTotal;
+  updatePomoDisplay();
+}
+
+function pomodoroComplete() {
+  const isFocus = State.pomodoroTotal === 25 * 60;
+  if (isFocus) {
+    State.pomodoroSessions++;
+    State.pomodoroFocusedMinutes += 25;
+    const s = parseInt(localStorage.getItem('ds_pomo_sessions_today') || '0') + 1;
+    const m = parseInt(localStorage.getItem('ds_pomo_minutes_today') || '0') + 25;
+    localStorage.setItem('ds_pomo_sessions_today', s);
+    localStorage.setItem('ds_pomo_minutes_today', m);
+    document.getElementById('pomo-sessions').textContent = s;
+    document.getElementById('pomo-total-time').textContent = m;
+    // Update study time stat
+    const studyMins = parseInt(localStorage.getItem('ds_study_minutes') || '0') + 25;
+    localStorage.setItem('ds_study_minutes', studyMins);
+    updateStudyTimeStat(studyMins);
+  }
+  showToast(isFocus ? '🍅 Session complete! Take a break.' : '⚡ Break over! Time to study.', 'success');
+  // Also update mini timer
+  document.getElementById('mini-timer').textContent = isFocus ? '✓' : '▶';
+}
+
+function updatePomoDisplay() {
+  const m = Math.floor(State.pomodoroSeconds / 60);
+  const s = State.pomodoroSeconds % 60;
+  const timeStr = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  document.getElementById('pomo-display').textContent = timeStr;
+  document.getElementById('mini-timer').textContent = timeStr;
+
+  // Ring
+  const circumference = 2 * Math.PI * 88;
+  const progress = State.pomodoroSeconds / State.pomodoroTotal;
+  const offset = circumference * (1 - progress);
+  document.getElementById('pomo-circle').style.strokeDasharray = circumference;
+  document.getElementById('pomo-circle').style.strokeDashoffset = offset;
+
+  // Ring color changes at 25% time left
+  const circle = document.getElementById('pomo-circle');
+  if (progress < 0.1) circle.style.stroke = 'var(--red)';
+  else if (progress < 0.25) circle.style.stroke = 'var(--gold)';
+  else circle.style.stroke = 'var(--accent)';
+}
+
+// ─── Notes ────────────────────────────────────────────────
+function initNotes() {
+  renderNotes();
+  document.getElementById('save-note-btn').addEventListener('click', saveNote);
+  // Keyboard shortcut: Ctrl+S while in note textarea
+  document.getElementById('note-content').addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveNote(); }
+  });
+}
+
+function saveNote() {
+  const title = document.getElementById('note-title').value.trim();
+  const content = document.getElementById('note-content').value.trim();
+  const subject = document.getElementById('note-subject').value;
+  if (!title || !content) { showToast('Please add a title and content', 'error'); return; }
+
+  const note = {
+    id: Date.now(),
+    title,
+    content,
+    subject,
+    created: new Date().toLocaleDateString(),
+    pinned: false,
+  };
+  State.notes.unshift(note);
+  saveNotes();
+  renderNotes();
+  document.getElementById('note-title').value = '';
+  document.getElementById('note-content').value = '';
+  showToast('📝 Note saved!', 'success');
+  updateNotesCountStat();
+}
+
+function deleteNote(id) {
+  State.notes = State.notes.filter(n => n.id !== id);
+  saveNotes();
+  renderNotes();
+  showToast('🗑 Note deleted');
+  updateNotesCountStat();
+}
+
+function renderNotes() {
+  const grid = document.getElementById('notes-grid');
+  if (State.notes.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <p>No notes yet. Write something above!</p>
+      </div>`;
+    return;
+  }
+  grid.innerHTML = State.notes.map(note => `
+    <div class="note-card" id="note-${note.id}">
+      <div class="note-card-title">${escHtml(note.title)}</div>
+      <div class="note-card-subject">${escHtml(note.subject)}</div>
+      <div class="note-card-preview">${escHtml(note.content.substring(0, 80))}${note.content.length > 80 ? '…' : ''}</div>
+      <div class="note-card-actions">
+        <button class="note-action-btn" onclick="editNote(${note.id})">Edit</button>
+        <button class="note-action-btn del" onclick="deleteNote(${note.id})">Delete</button>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-3)">${note.created}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.editNote = function(id) {
+  const note = State.notes.find(n => n.id === id);
+  if (!note) return;
+  document.getElementById('note-title').value = note.title;
+  document.getElementById('note-content').value = note.content;
+  document.getElementById('note-subject').value = note.subject;
+  deleteNote(id);
+  document.getElementById('note-title').focus();
+  showToast('✏️ Note loaded for editing');
+};
+
+window.deleteNote = deleteNote;
+
+function updateNotesCountStat() {
+  document.getElementById('notes-count-stat').textContent = State.notes.length;
+  const pct = Math.min(State.notes.length * 10, 100);
+  document.getElementById('notes-bar').style.width = pct + '%';
+}
+
+function updateStudyTimeStat(mins) {
+  const el = document.getElementById('study-time-stat');
+  if (el) el.textContent = mins;
+  const pct = Math.min(mins, 100);
+  const bar = document.getElementById('time-bar');
+  if (bar) bar.style.width = pct + '%';
+}
+
+// ─── Search ───────────────────────────────────────────────
+function initSearch() {
+  const input = document.getElementById('search-input');
+  let debounce;
+  input.addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => doSearch(input.value.trim()), 250);
+  });
+}
+
+function doSearch(query) {
+  if (!query) { renderSidebarNav(); return; }
+  const q = query.toLowerCase();
+  const results = [];
+  Object.entries(sectionContent).forEach(([id, data]) => {
+    if (data.title.toLowerCase().includes(q) ||
+        data.keywords.some(k => k.includes(q))) {
+      results.push({ id, title: data.title });
+    }
+  });
+  // Also search user notes
+  State.notes.forEach(note => {
+    if (note.title.toLowerCase().includes(q) || note.content.toLowerCase().includes(q)) {
+      results.push({ id: 'my-notes', title: `Note: ${note.title}` });
+    }
+  });
+  renderSearchResults(results, query);
+}
+
+function renderSearchResults(results, query) {
+  const nav = document.querySelector('.sidebar-nav');
+  if (results.length === 0) {
+    nav.innerHTML = `<div class="nav-section-label" style="margin-top:8px">No results for "${query}"</div>`;
+    const restoreBtn = document.createElement('a');
+    restoreBtn.className = 'nav-item';
+    restoreBtn.textContent = '← Clear search';
+    restoreBtn.style.color = 'var(--accent)';
+    restoreBtn.addEventListener('click', () => {
+      document.getElementById('search-input').value = '';
+      renderSidebarNav();
+    });
+    nav.appendChild(restoreBtn);
+    return;
+  }
+  nav.innerHTML = `<div class="nav-section-label">Results for "${query}"</div>`;
+  results.forEach(r => {
+    const a = document.createElement('a');
+    a.className = 'nav-item';
+    a.innerHTML = `<span class="nav-icon">▸</span> ${r.title}`;
+    a.addEventListener('click', () => showSection(r.id));
+    nav.appendChild(a);
+  });
+  const clear = document.createElement('a');
+  clear.className = 'nav-item';
+  clear.style.color = 'var(--text-3)';
+  clear.style.fontSize = '12px';
+  clear.textContent = '← Clear search';
+  clear.addEventListener('click', () => {
+    document.getElementById('search-input').value = '';
+    renderSidebarNav();
+  });
+  nav.appendChild(clear);
+}
+
+function renderSidebarNav() {
+  // Re-init nav from HTML (just reload inner)
+  location.reload(); // Simple: full reload restores nav state. In prod you'd re-render selectively.
+  // Note: for a SPA this should re-render the nav properly; reload is simplest here.
+}
+
+// Actually let's not reload - just rebuild nav manually
+(function patchSearch() {
+  const origSearch = doSearch;
+  window.doSearch = origSearch;
+  // Override renderSidebarNav to not reload
+  renderSidebarNav = function() {
+    // Just rebuild nav links
+    const nav = document.querySelector('.sidebar-nav');
+    nav.innerHTML = `
+      <div class="nav-section-label">COURSE</div>
+      <a href="#dashboard" class="nav-item" data-section="dashboard"><span class="nav-icon">⬡</span> Dashboard</a>
+      <div class="nav-section-label">UNITS</div>
+      <a href="#unit1"  class="nav-item" data-section="unit1"><span class="nav-icon">①</span> Data Structures Intro</a>
+      <a href="#unit1b" class="nav-item" data-section="unit1b"><span class="nav-icon">①</span> Arrays</a>
+      <a href="#unit1c" class="nav-item" data-section="unit1c"><span class="nav-icon">①</span> Algorithms & Complexity</a>
+      <a href="#unit2"  class="nav-item" data-section="unit2"><span class="nav-icon">②</span> Linked Lists</a>
+      <a href="#unit3a" class="nav-item" data-section="unit3a"><span class="nav-icon">③</span> Stacks</a>
+      <a href="#unit3b" class="nav-item" data-section="unit3b"><span class="nav-icon">③</span> Queues</a>
+      <a href="#unit4"  class="nav-item" data-section="unit4"><span class="nav-icon">④</span> Trees & BST</a>
+      <a href="#unit4b" class="nav-item" data-section="unit4b"><span class="nav-icon">④</span> AVL Trees</a>
+      <a href="#unit5"  class="nav-item" data-section="unit5"><span class="nav-icon">⑤</span> Graphs</a>
+      <a href="#unit5b" class="nav-item" data-section="unit5b"><span class="nav-icon">⑤</span> Dijkstra's Algorithm</a>
+      <div class="nav-section-label">PRACTICE</div>
+      <a href="#practice"   class="nav-item" data-section="practice"><span class="nav-icon">✦</span> Practice & MCQs</a>
+      <a href="#flashcards" class="nav-item" data-section="flashcards"><span class="nav-icon">◧</span> Flashcards</a>
+      <a href="#formulas"   class="nav-item" data-section="formulas"><span class="nav-icon">∑</span> Formulas</a>
+      <div class="nav-section-label">TOOLS</div>
+      <a href="#my-notes"  class="nav-item" data-section="my-notes"><span class="nav-icon">✎</span> My Notes</a>
+      <a href="#pomodoro"  class="nav-item" data-section="pomodoro"><span class="nav-icon">◉</span> Pomodoro</a>
+    `;
+    // Re-bind nav clicks
+    nav.querySelectorAll('.nav-item[data-section]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection(item.dataset.section);
+        if (window.innerWidth < 768) closeSidebar();
+      });
+    });
+    // Mark current active
+    nav.querySelectorAll('.nav-item').forEach(n => {
+      n.classList.toggle('active', n.dataset.section === State.currentSection);
+    });
+  };
+})();
+
+// ─── Reading Progress ─────────────────────────────────────
+function initReadingProgress() {
+  window.addEventListener('scroll', updateProgress);
+  document.addEventListener('scroll', updateProgress);
+}
+
+function updateProgress() {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  document.getElementById('progress-fill').style.width = Math.min(pct, 100) + '%';
+}
+
+// ─── Study Streak ─────────────────────────────────────────
+function initStreak() {
+  const today = new Date().toDateString();
+  const lastVisit = localStorage.getItem('ds_last_visit');
+  let streak = parseInt(localStorage.getItem('ds_streak') || '0');
+
+  if (lastVisit === today) {
+    // Same day, streak unchanged
+  } else if (lastVisit === new Date(Date.now() - 86400000).toDateString()) {
+    streak++;
+    localStorage.setItem('ds_streak', streak);
+  } else if (!lastVisit) {
+    streak = 1;
+    localStorage.setItem('ds_streak', streak);
+  } else {
+    streak = 1;
+    localStorage.setItem('ds_streak', streak);
+  }
+  localStorage.setItem('ds_last_visit', today);
+  document.getElementById('streak-count').textContent = streak;
+}
+
+// ─── Study Time Tracker ───────────────────────────────────
+function startStudyTimer() {
+  State.studyTimer = setInterval(() => {
+    const prev = parseInt(localStorage.getItem('ds_study_minutes') || '0');
+    // Increment every 60s
+  }, 60000);
+  // Actually track in seconds
+  let seconds = 0;
+  setInterval(() => {
+    seconds++;
+    if (seconds % 60 === 0) {
+      const prev = parseInt(localStorage.getItem('ds_study_minutes') || '0');
+      const newVal = prev + 1;
+      localStorage.setItem('ds_study_minutes', newVal);
+      updateStudyTimeStat(newVal);
+    }
+  }, 1000);
+}
+
+// ─── Stat Animation ───────────────────────────────────────
+function animateStats() {
+  document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    let current = 0;
+    const step = Math.max(1, Math.ceil(target / 40));
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = current;
+      if (current >= target) clearInterval(timer);
+    }, 40);
+  });
+  // Load actual notes count
+  setTimeout(updateNotesCountStat, 200);
+  setTimeout(() => {
+    const mins = parseInt(localStorage.getItem('ds_study_minutes') || '0');
+    updateStudyTimeStat(mins);
+  }, 200);
+}
+
+// ─── Keyboard Shortcuts ───────────────────────────────────
+function handleKeyboard(e) {
+  // Escape: go to dashboard
+  if (e.key === 'Escape') showSection('dashboard');
+  // Ctrl/Cmd + K: focus search
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('search-input').focus();
+  }
+  // Arrow keys for flashcards (when on flashcard page)
+  if (State.currentSection === 'flashcards') {
+    if (e.key === 'ArrowLeft') { State.fcIndex = (State.fcIndex - 1 + flashcards.length) % flashcards.length; renderFlashcard(); }
+    if (e.key === 'ArrowRight') { State.fcIndex = (State.fcIndex + 1) % flashcards.length; renderFlashcard(); }
+    if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  }
+}
+
+// ─── Toast ────────────────────────────────────────────────
+window.showToast = function(message, type = '') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'toastOut 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
+};
+
+// ─── Utility ──────────────────────────────────────────────
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+</script>
+</body>
+</html>
