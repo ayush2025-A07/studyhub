@@ -1,624 +1,2613 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DBMS Learning Hub</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- AOS Animation CSS -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Prism.js (Syntax Highlighting) CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DBMS MasterNotes — Database Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 
-    <style>
-        :root {
-            /* Dark Mode (Default) */
-            --bg-color: #0f172a;
-            --text-color: #e2e8f0;
-            --text-muted: #94a3b8;
-            --primary-color: #0ea5e9;
-            --secondary-color: #6366f1;
-            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
+  <style>
+    /* ===================================================
+   DBMS MasterNotes — style.css
+   Theme: Academic Dark with Amber accents
+   =================================================== */
 
-        .light-mode {
-            --bg-color: #f8fafc;
-            --text-color: #0f172a;
-            --text-muted: #475569;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-        }
+/* ---- CSS Variables ---- */
+:root {
+  --bg: #0c0e14;
+  --bg2: #12151e;
+  --bg3: #191c29;
+  --surface: #1e2233;
+  --surface2: #252a3d;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            scroll-behavior: smooth;
-        }
+  --accent: #f5a623;
+  --accent2: #ff7849;
+  --accent-dim: rgba(245,166,35,0.12);
+  --green: #3ecf8e;
+  --red: #f04438;
+  --blue: #3b82f6;
+  --purple: #a855f7;
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-            overflow-x: hidden;
-        }
+  --text: #e8eaf2;
+  --text2: #9ba3c0;
+  --text3: #5c6488;
 
-        /* Progress Bar */
-        #progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: var(--gradient);
-            z-index: 1000;
-            width: 0%;
-        }
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-        /* Navbar */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            z-index: 999;
-        }
+  --radius: 14px;
+  --radius-sm: 8px;
+  --sidebar-w: 280px;
+  --nav-h: 64px;
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            margin: 0 1rem;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .search-bar {
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-            outline: none;
-        }
-
-        button.theme-toggle {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        /* Header / Hero Section */
-        header {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            position: relative;
-        }
-
-        header h1 {
-            font-size: 4rem;
-            margin-bottom: 10px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            margin-bottom: 30px;
-        }
-
-        .quick-access {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .btn-glass {
-            padding: 12px 24px;
-            border-radius: 30px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 600;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            box-shadow: var(--glass-shadow);
-        }
-
-        .btn-glass:hover {
-            background: var(--gradient);
-            transform: translateY(-3px);
-            color: #fff;
-        }
-
-        /* Container & Sections */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        section {
-            margin-bottom: 100px;
-            padding-top: 80px; /* Offset for sticky nav */
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--primary-color);
-            display: inline-block;
-            padding-bottom: 10px;
-        }
-
-        /* Glass Cards */
-        .glass-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 25px;
-            backdrop-filter: blur(10px);
-            box-shadow: var(--glass-shadow);
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Grid Layouts */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-
-        /* Accordions */
-        .accordion {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            overflow: hidden;
-        }
-
-        .accordion-header {
-            padding: 15px 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .accordion-content {
-            padding: 0 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.4s ease;
-        }
-
-        .accordion.active .accordion-content {
-            padding: 20px;
-            max-height: 1000px; /* arbitrary large number */
-        }
-
-        .accordion.active .accordion-header i {
-            transform: rotate(180deg);
-            transition: transform 0.3s;
-        }
-
-        ul { margin-left: 20px; line-height: 1.8; color: var(--text-muted); }
-        h3 { margin-bottom: 15px; color: var(--primary-color); }
-        
-        /* Floating Nav Button */
-        .floating-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--gradient);
-            color: #fff;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.5);
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        .floating-btn.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            header h1 { font-size: 2.5rem; }
-            .grid-2 { grid-template-columns: 1fr; }
-        }
-
-        /* Navbar Buttons */
-.nav-btn {
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    display: inline-block;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.6);
+  --glow: 0 0 30px rgba(245,166,35,0.15);
 }
 
-.nav-btn-solid {
-    background-color: var(--primary-color);
-    color: #fff;
-    border: none;
-    box-shadow: 0 2px 10px rgba(14, 165, 233, 0.2);
+[data-theme="light"] {
+  --bg: #f4f5fa;
+  --bg2: #eaecf5;
+  --bg3: #dde0ef;
+  --surface: #ffffff;
+  --surface2: #f0f2fd;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+  --accent-dim: rgba(245,166,35,0.1);
+  --text: #1a1d2e;
+  --text2: #4a5078;
+  --text3: #8890b0;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.12);
+  --glow: 0 0 30px rgba(245,166,35,0.08);
 }
 
-.nav-btn-solid:hover {
-    background-color: #0284c7;
-    transform: translateY(-1px);
+/* ---- Reset & Base ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
 }
 
-.nav-btn-outline {
-    background-color: transparent;
-    color: var(--text-color);
-    border: 1.5px solid var(--primary-color);
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+h1, h2, h3, h4, h5 { font-family: var(--font-display); line-height: 1.2; }
+
+code, pre {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
 }
 
-.nav-btn-outline:hover {
-    background-color: rgba(14, 165, 233, 0.1);
-    transform: translateY(-1px);
+/* ---- Reading Progress Bar ---- */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  width: 0%; z-index: 9999;
+  transition: width 0.1s;
+  box-shadow: 0 0 8px var(--accent);
 }
 
-    </style>
+/* ===================================================
+   NAVBAR
+   =================================================== */
+#navbar {
+  position: sticky; top: 0; z-index: 500;
+  background: rgba(12,14,20,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  height: var(--nav-h);
+}
+
+[data-theme="light"] #navbar { background: rgba(244,245,250,0.9); }
+
+.nav-inner {
+  display: flex; align-items: center; gap: 16px;
+  max-width: 1600px; margin: 0 auto;
+  height: 100%; padding: 0 20px;
+}
+
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
+  white-space: nowrap; color: var(--text);
+}
+.brand-icon { font-size: 1.4rem; color: var(--accent); }
+.nav-brand em { color: var(--accent); font-style: normal; }
+
+.nav-center { flex: 1; max-width: 480px; margin: 0 auto; }
+
+.search-wrap {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 8px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+.search-icon { color: var(--text3); font-size: 1.1rem; }
+#search-input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--font-body); font-size: 0.9rem;
+}
+#search-input::placeholder { color: var(--text3); }
+.search-wrap kbd {
+  background: var(--bg3); color: var(--text3);
+  font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;
+  border: 1px solid var(--border2); font-family: var(--font-mono);
+}
+
+.nav-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+#navbar button {
+  background: var(--surface); border: 1px solid var(--border2);
+  color: var(--text2); cursor: pointer; border-radius: 9px;
+  padding: 8px 12px; font-size: 1rem; transition: all 0.2s;
+}
+#navbar button:hover { background: var(--surface2); color: var(--accent); border-color: var(--accent); }
+
+#hamburger { display: none; }
+
+/* Search Dropdown */
+.search-dropdown {
+  position: absolute; top: var(--nav-h); left: 50%; transform: translateX(-50%);
+  width: 480px; background: var(--surface);
+  border: 1px solid var(--border2); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); z-index: 600; display: none;
+  max-height: 360px; overflow-y: auto;
+}
+.search-dropdown.open { display: block; animation: fadeDown 0.2s ease; }
+
+.search-result-item {
+  padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.search-result-item:hover { background: var(--surface2); }
+.sri-title { font-weight: 600; font-size: 0.9rem; }
+.sri-chapter { font-size: 0.75rem; color: var(--accent); margin-top: 2px; }
+.sri-excerpt { font-size: 0.78rem; color: var(--text2); margin-top: 4px; }
+.sri-match { color: var(--accent); font-weight: 700; }
+
+.no-results { padding: 24px; text-align: center; color: var(--text3); }
+
+/* ===================================================
+   HERO
+   =================================================== */
+#hero {
+  position: relative; overflow: hidden;
+  background: var(--bg2);
+  padding: 80px 24px 100px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(245,166,35,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,166,35,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-glow {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); pointer-events: none;
+}
+.g1 {
+  width: 500px; height: 500px;
+  background: rgba(245,166,35,0.08);
+  top: -150px; left: 10%;
+}
+.g2 {
+  width: 400px; height: 400px;
+  background: rgba(255,120,73,0.06);
+  bottom: -100px; right: 15%;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+
+.hero-badge {
+  display: inline-block; padding: 6px 16px;
+  background: var(--accent-dim); color: var(--accent);
+  border: 1px solid rgba(245,166,35,0.3);
+  border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.5px; margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+#hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 800; line-height: 1.1;
+  color: var(--text); margin-bottom: 20px;
+}
+#hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1.1rem; color: var(--text2); max-width: 520px; margin: 0 auto 32px;
+}
+
+.hero-stats {
+  display: flex; justify-content: center; gap: 32px;
+  margin-bottom: 36px;
+}
+.stat {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.stat span {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+  color: var(--accent);
+}
+.stat small { color: var(--text3); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.hero-cta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #000; font-weight: 700; font-family: var(--font-display);
+  padding: 14px 28px; border-radius: 12px; border: none; cursor: pointer;
+  font-size: 0.95rem; transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(245,166,35,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(245,166,35,0.4); text-decoration: none; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center;
+  background: var(--surface); color: var(--text2);
+  border: 1px solid var(--border2); cursor: pointer;
+  padding: 14px 28px; border-radius: 12px;
+  font-family: var(--font-body); font-size: 0.95rem;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+
+.hero-badge-float {
+  position: absolute; top: 24px; right: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 10px; padding: 8px 16px;
+  font-size: 0.85rem; color: var(--text2);
+  font-weight: 500;
+}
+
+/* ===================================================
+   LAYOUT
+   =================================================== */
+.layout {
+  display: flex; max-width: 1600px; margin: 0 auto;
+  min-height: calc(100vh - var(--nav-h));
+}
+
+/* ===================================================
+   SIDEBAR
+   =================================================== */
+#sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--nav-h);
+  height: calc(100vh - var(--nav-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  scrollbar-width: thin; scrollbar-color: var(--surface2) transparent;
+}
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 4px; }
+
+.sidebar-inner { padding: 20px 0 40px; }
+
+/* Progress panel */
+.progress-panel {
+  margin: 0 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+.progress-header {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.82rem; font-weight: 600; color: var(--text2);
+  margin-bottom: 10px;
+}
+#progress-pct { color: var(--accent); font-family: var(--font-display); }
+.progress-track {
+  background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; width: 0%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 0.5s ease;
+}
+.progress-meta { font-size: 0.75rem; color: var(--text3); margin-top: 8px; }
+
+/* Sidebar nav */
+.sidebar-nav { padding: 0; }
+
+.nav-section { border-bottom: 1px solid var(--border); }
+
+.nav-chapter-btn {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: none; border: none;
+  color: var(--text2); cursor: pointer;
+  text-align: left; font-family: var(--font-body);
+  transition: all 0.2s; position: relative;
+}
+.nav-chapter-btn:hover, .nav-chapter-btn.active {
+  background: var(--surface); color: var(--text);
+}
+.nav-chapter-btn.active { color: var(--accent); }
+.nav-chapter-btn.active::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--accent); border-radius: 0 3px 3px 0;
+}
+
+.ch-num {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--accent); background: var(--accent-dim);
+  border-radius: 4px; padding: 2px 6px; flex-shrink: 0;
+}
+.ch-title { flex: 1; font-size: 0.83rem; font-weight: 500; }
+.ch-arrow {
+  color: var(--text3); font-size: 1rem; transition: transform 0.2s;
+}
+.nav-chapter-btn.open .ch-arrow { transform: rotate(90deg); }
+
+.nav-topics {
+  display: none; list-style: none;
+  padding: 4px 0 8px 0;
+  background: var(--surface);
+}
+.nav-topics.open { display: block; animation: fadeDown 0.2s ease; }
+
+.nav-topics li a {
+  display: block; padding: 7px 16px 7px 40px;
+  font-size: 0.8rem; color: var(--text2);
+  transition: color 0.15s, background 0.15s;
+  border-radius: 0;
+}
+.nav-topics li a:hover { color: var(--accent); background: var(--accent-dim); text-decoration: none; }
+.nav-topics li a.active { color: var(--accent); font-weight: 600; }
+
+/* Bookmarks panel */
+.bookmark-panel {
+  margin: 20px 16px 0;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.bm-header {
+  padding: 10px 14px; font-size: 0.82rem;
+  font-weight: 600; color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+#bm-count {
+  background: var(--accent-dim); color: var(--accent);
+  border-radius: 999px; padding: 1px 8px; font-size: 0.75rem;
+}
+#bookmark-list { list-style: none; max-height: 200px; overflow-y: auto; }
+#bookmark-list li a {
+  display: block; padding: 8px 14px;
+  font-size: 0.78rem; color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+#bookmark-list li a:hover { background: var(--surface2); text-decoration: none; }
+.bm-empty { padding: 12px 14px; font-size: 0.78rem; color: var(--text3); }
+
+/* ===================================================
+   MAIN CONTENT
+   =================================================== */
+#main-content {
+  flex: 1; min-width: 0;
+  padding: 0 0 60px;
+}
+
+/* ---- Chapter Section ---- */
+.chapter-section {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 60px;
+  scroll-margin-top: calc(var(--nav-h) + 20px);
+}
+
+.chapter-header {
+  padding: 48px 40px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  position: relative; overflow: hidden;
+}
+.chapter-header::before {
+  content: '';
+  position: absolute; right: -60px; top: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, var(--accent-dim), transparent 70%);
+  pointer-events: none;
+}
+
+.ch-badge {
+  display: inline-block; font-family: var(--font-mono);
+  font-size: 0.7rem; font-weight: 500;
+  color: var(--accent); letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.chapter-header h2 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 800; color: var(--text); margin-bottom: 8px;
+}
+.chapter-header p { color: var(--text2); font-size: 1rem; }
+.chapter-meta {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 20px; flex-wrap: wrap;
+}
+.chapter-meta span { font-size: 0.82rem; color: var(--text3); }
+
+/* ---- Topic Block ---- */
+.topic-block {
+  padding: 36px 40px;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+
+.topic-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 12px; margin-bottom: 20px;
+}
+.topic-header h3 {
+  font-size: 1.3rem; font-weight: 700; color: var(--text);
+}
+.topic-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ---- Buttons ---- */
+.bookmark-btn, .complete-btn {
+  border: 1px solid var(--border2); background: var(--surface);
+  color: var(--text2); cursor: pointer; border-radius: 8px;
+  padding: 6px 12px; font-size: 0.78rem; transition: all 0.2s;
+  font-family: var(--font-body);
+}
+.bookmark-btn:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+.bookmark-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+.complete-btn:hover { background: rgba(62,207,142,0.1); color: var(--green); border-color: var(--green); }
+.complete-btn.done { background: rgba(62,207,142,0.1); color: var(--green); border-color: var(--green); }
+
+/* ---- Highlight Boxes ---- */
+.highlight-box {
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  font-size: 0.88rem; margin-bottom: 20px; border-left: 4px solid;
+}
+.highlight-box.exam {
+  background: rgba(245,166,35,0.08); border-color: var(--accent); color: var(--text2);
+}
+.highlight-box.vip {
+  background: rgba(240,68,56,0.08); border-color: var(--red); color: var(--text2);
+}
+.highlight-box.info {
+  background: rgba(59,130,246,0.08); border-color: var(--blue); color: var(--text2);
+}
+
+/* ---- Definition Card ---- */
+.definition-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 16px;
+}
+.def-label {
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500;
+  color: var(--accent); text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+/* ---- Tip Card ---- */
+.tip-card {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--surface2); border-radius: var(--radius-sm);
+  padding: 14px 16px; margin-bottom: 16px;
+  border-left: 3px solid var(--accent);
+}
+.tip-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+/* ---- Example Card ---- */
+.example-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 16px;
+}
+.example-card.neg-card { border-color: rgba(240,68,56,0.3); background: rgba(240,68,56,0.04); }
+.example-card.pos-card { border-color: rgba(62,207,142,0.3); background: rgba(62,207,142,0.04); }
+.ex-label {
+  font-size: 0.75rem; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+}
+
+/* ---- Code Block ---- */
+.code-block {
+  background: #0a0b10; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm); padding: 20px;
+  overflow-x: auto; margin-bottom: 16px;
+  font-size: 0.85rem; line-height: 1.8;
+}
+[data-theme="light"] .code-block {
+  background: #1a1d2e; border-color: rgba(255,255,255,0.1);
+}
+pre { white-space: pre; }
+
+/* SQL Syntax Highlighting */
+.sql-kw  { color: #7dd3fc; font-weight: 600; }   /* keywords */
+.sql-fn  { color: var(--accent); }                /* functions */
+.sql-type{ color: #a78bfa; }                      /* data types */
+.sql-str { color: #86efac; }                      /* strings */
+.sql-cmt { color: #4b5568; font-style: italic; }  /* comments */
+
+/* ---- Card Grid ---- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px; margin-bottom: 20px;
+}
+.card-grid.g3 { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+
+.concept-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 18px 16px;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.concept-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent); box-shadow: var(--glow);
+}
+.concept-card.accent { border-color: rgba(245,166,35,0.4); background: var(--accent-dim); }
+.concept-card.neg-card { border-color: rgba(240,68,56,0.2); background: rgba(240,68,56,0.04); }
+.cc-icon { font-size: 1.5rem; margin-bottom: 10px; }
+.concept-card h5 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.concept-card p { font-size: 0.82rem; color: var(--text2); line-height: 1.5; }
+
+/* ---- Table ---- */
+.table-wrap { overflow-x: auto; margin-bottom: 16px; }
+.table-title {
+  font-size: 0.8rem; font-weight: 600; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;
+}
+
+table {
+  width: 100%; border-collapse: collapse; font-size: 0.85rem;
+  background: var(--surface);
+}
+th {
+  background: var(--surface2); color: var(--text);
+  padding: 10px 14px; text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border2); white-space: nowrap;
+}
+td {
+  padding: 9px 14px; color: var(--text2);
+  border-bottom: 1px solid var(--border);
+}
+tr:hover td { background: var(--surface2); }
+.pos { color: var(--green); font-weight: 600; }
+.neg { color: var(--red); font-weight: 600; }
+
+/* ---- Flow Diagram ---- */
+.flow-diagram {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 0; margin-bottom: 14px; overflow-x: auto;
+}
+.flow-step {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 10px 16px; font-size: 0.82rem;
+  text-align: center; white-space: nowrap; color: var(--text2);
+}
+.flow-step.highlight { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.flow-arrow { padding: 0 8px; color: var(--accent); font-size: 1rem; }
+
+/* ---- Architecture Diagram ---- */
+.arch-diagram { display: flex; flex-direction: column; gap: 0; }
+.arch-level {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border2);
+}
+.arch-level.ext { background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.3); }
+.arch-level.con { background: rgba(245,166,35,0.08); border-color: rgba(245,166,35,0.3); }
+.arch-level.int { background: rgba(62,207,142,0.08); border-color: rgba(62,207,142,0.3); }
+.arch-num {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface2); font-family: var(--font-display);
+  font-weight: 800; font-size: 0.9rem; color: var(--accent);
+}
+.arch-level strong { display: block; font-size: 0.95rem; color: var(--text); }
+.arch-level em { font-style: normal; font-size: 0.82rem; color: var(--text2); }
+.arch-arrow {
+  text-align: center; color: var(--text3); font-size: 0.78rem;
+  padding: 6px 0; letter-spacing: 0.5px;
+}
+
+/* ---- Two Column ---- */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.def-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 16px; font-size: 0.88rem;
+  color: var(--text2);
+}
+.def-card strong { color: var(--text); display: block; margin-bottom: 6px; }
+
+/* ---- Steps ---- */
+.steps-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.step {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 16px;
+}
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: var(--accent-dim); color: var(--accent);
+  font-family: var(--font-display); font-weight: 800; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.step > div { font-size: 0.88rem; color: var(--text2); padding-top: 4px; }
+.step > div strong { color: var(--text); }
+
+/* ---- Styled List ---- */
+.styled-list {
+  padding-left: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;
+}
+.styled-list li {
+  padding: 10px 14px 10px 38px; position: relative;
+  background: var(--surface); border-radius: var(--radius-sm);
+  font-size: 0.88rem; color: var(--text2); border: 1px solid var(--border);
+}
+.styled-list li::before {
+  content: counter(list-counter);
+  counter-increment: list-counter;
+  position: absolute; left: 12px; top: 10px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent-dim); color: var(--accent);
+  font-size: 0.7rem; font-weight: 700; font-family: var(--font-mono);
+  display: flex; align-items: center; justify-content: center;
+}
+.styled-list { counter-reset: list-counter; }
+.styled-list li strong { color: var(--text); }
+
+/* ---- Case Study Card ---- */
+.case-study-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 14px;
+}
+.cs-header {
+  padding: 12px 16px; background: var(--surface2);
+  font-weight: 700; font-size: 0.9rem; color: var(--text);
+  border-bottom: 1px solid var(--border2);
+}
+.cs-body {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  padding: 16px;
+}
+.cs-col { font-size: 0.85rem; color: var(--text2); line-height: 1.7; }
+.cs-col strong { color: var(--text); }
+
+/* ---- FAQ Section ---- */
+.faq-section { margin-bottom: 16px; }
+.faq-section h4 { margin-bottom: 12px; font-size: 1rem; color: var(--text); }
+
+.faq-item { border: 1px solid var(--border2); border-radius: var(--radius-sm); margin-bottom: 8px; overflow: hidden; }
+.faq-q {
+  width: 100%; text-align: left; background: var(--surface);
+  color: var(--text2); border: none; padding: 12px 16px;
+  font-family: var(--font-body); font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.faq-q::after { content: '+'; color: var(--accent); font-size: 1.2rem; }
+.faq-q.open { background: var(--surface2); color: var(--accent); }
+.faq-q.open::after { content: '−'; }
+.faq-a {
+  display: none; padding: 14px 16px;
+  background: var(--bg2); font-size: 0.85rem;
+  color: var(--text2); border-top: 1px solid var(--border);
+  line-height: 1.7;
+}
+.faq-a.open { display: block; animation: fadeDown 0.2s ease; }
+.faq-a strong { color: var(--text); }
+
+/* ---- Question Bank ---- */
+.qbank {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); overflow: hidden;
+}
+.qbank h4 {
+  padding: 12px 16px; background: var(--surface2);
+  font-size: 0.9rem; color: var(--text);
+  border-bottom: 1px solid var(--border2);
+}
+.q-group { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start; }
+.q-group:last-child { border-bottom: none; }
+.q-badge {
+  flex-shrink: 0; font-family: var(--font-mono);
+  font-size: 0.7rem; font-weight: 700; padding: 4px 8px;
+  border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.q2  { background: rgba(59,130,246,0.15); color: var(--blue); }
+.q5  { background: rgba(245,166,35,0.15); color: var(--accent); }
+.q10 { background: rgba(240,68,56,0.15);  color: var(--red); }
+.q-group ul { list-style: none; flex: 1; }
+.q-group ul li {
+  font-size: 0.84rem; color: var(--text2);
+  padding: 4px 0; border-bottom: 1px solid var(--border);
+}
+.q-group ul li:last-child { border-bottom: none; }
+.q-group ul li::before { content: '▸  '; color: var(--accent); }
+
+/* ---- Utility ---- */
+.mt { margin-top: 20px; }
+.mt-sm { margin-top: 8px; }
+.text-muted { color: var(--text3); font-size: 0.85rem; }
+
+/* ===================================================
+   SCROLL TO TOP
+   =================================================== */
+#scroll-top {
+  position: fixed; bottom: 28px; right: 28px; z-index: 400;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--accent); color: #000;
+  border: none; cursor: pointer; font-size: 1.1rem; font-weight: 700;
+  box-shadow: 0 4px 20px rgba(245,166,35,0.4);
+  display: none; align-items: center; justify-content: center;
+  transition: transform 0.2s;
+}
+#scroll-top.visible { display: flex; animation: fadeIn 0.3s ease; }
+#scroll-top:hover { transform: translateY(-3px); }
+
+/* ===================================================
+   TOAST
+   =================================================== */
+#toast {
+  position: fixed; bottom: 80px; right: 28px; z-index: 800;
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border2); border-radius: 10px;
+  padding: 10px 18px; font-size: 0.85rem;
+  box-shadow: var(--shadow); display: none;
+  opacity: 0; transition: opacity 0.3s;
+}
+#toast.show { display: block; opacity: 1; animation: slideUp 0.3s ease; }
+
+/* ===================================================
+   ANIMATIONS
+   =================================================== */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===================================================
+   RESPONSIVE
+   =================================================== */
+@media (max-width: 1024px) {
+  #sidebar {
+    position: fixed; left: -280px; top: 0;
+    height: 100vh; z-index: 450;
+    transition: left 0.3s ease;
+    border-right-color: var(--border2);
+    padding-top: var(--nav-h);
+  }
+  #sidebar.open { left: 0; box-shadow: var(--shadow-lg); }
+  #hamburger { display: flex !important; }
+  .chapter-header, .topic-block { padding-left: 24px; padding-right: 24px; }
+}
+
+@media (max-width: 768px) {
+  .two-col, .cs-body { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr 1fr; }
+  .flow-diagram { flex-direction: column; align-items: flex-start; }
+  .flow-arrow { transform: rotate(90deg); }
+  .hero-stats { gap: 20px; }
+  .nav-center { display: none; }
+  .hero-badge-float { display: none; }
+}
+
+@media (max-width: 480px) {
+  .card-grid, .card-grid.g3 { grid-template-columns: 1fr; }
+  #hero { padding: 48px 16px 64px; }
+  .chapter-header, .topic-block { padding-left: 16px; padding-right: 16px; }
+  #hero h1 { font-size: 1.9rem; }
+  .hero-cta { flex-direction: column; align-items: center; }
+  .hero-stats { flex-wrap: wrap; justify-content: center; }
+}
+
+/* ===================================================
+   PRINT STYLES
+   =================================================== */
+@media print {
+  #navbar, #sidebar, #scroll-top, #toast, #progress-bar,
+  .topic-actions, .chapter-meta, .nav-actions, .hero-cta { display: none !important; }
+  body { font-size: 12pt; background: #fff; color: #000; }
+  .layout { display: block; }
+  #main-content { padding: 0; }
+  .chapter-section { break-inside: avoid; }
+  .code-block { background: #f5f5f5 !important; color: #000 !important; border: 1px solid #ccc !important; }
+  h1, h2, h3 { color: #000 !important; }
+}
+  </style>
 </head>
 <body>
 
-    <div id="progress-bar"></div>
+<!-- Reading Progress Bar -->
+<div id="progress-bar"></div>
 
-    <nav>
-       <nav>
-    <div class="logo"><i class="fas fa-database"></i> DBMS Hub</div>
-    <div class="nav-links">
-        <a href="#intro">Intro</a>
-        <a href="#normalization">Normalization</a>
-        <a href="#sql">SQL</a>
-        <a href="#keys">Keys & Rel</a>
+<!-- ====== NAVBAR ====== -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text">DBMS<em>Notes</em></span>
     </div>
-    
-    <!-- NEW CONTROLS SECTION -->
-    <div class="controls">
-        <a href="https://www.youtube.com/watch?v=YRnjGeQbsHQ" class="nav-btn nav-btn-outline">Video</a>
-        <a href="https://drive.google.com/drive/folders/1JjtRHyF3nCg8_EOac5-Nrj--JPIPY0B9?usp=drive_link" class="nav-btn nav-btn-solid">Drive</a>
-        
-        <!-- Keeping the dark mode toggle next to the buttons -->
-        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    <div class="nav-center">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="search-input" placeholder="Search topics, keywords…" autocomplete="off"/>
+        <kbd>Ctrl K</kbd>
+      </div>
     </div>
+    <div class="nav-actions">
+      <button id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">☽</button>
+      <button id="print-btn" title="Print notes" aria-label="Print">⎙</button>
+      <button id="hamburger" aria-label="Menu">☰</button>
+    </div>
+  </div>
+  <!-- Search Results Dropdown -->
+  <div id="search-results" class="search-dropdown"></div>
 </nav>
-      
-    </nav>
 
-    <header id="home">
-        <h1 data-aos="fade-down">DBMS Learning Hub</h1>
-        <p data-aos="fade-up" data-aos-delay="100">Master Database Management Systems with interactive notes</p>
-        <div class="quick-access" data-aos="fade-up" data-aos-delay="200">
-            <a href="#intro" class="btn-glass"><i class="fas fa-book"></i> Intro to DBMS</a>
-            <a href="#normalization" class="btn-glass"><i class="fas fa-layer-group"></i> Normalization</a>
-            <a href="#sql" class="btn-glass"><i class="fas fa-code"></i> SQL Commands</a>
-            <a href="#keys" class="btn-glass"><i class="fas fa-key"></i> Keys & Relations</a>
+<!-- ====== HERO ====== -->
+<header id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow g1"></div>
+  <div class="hero-glow g2"></div>
+  <div class="hero-content">
+    <div class="hero-badge">University Study Notes • SE / TE</div>
+    <h1>Database Management<br/><em>System</em></h1>
+    <p class="hero-sub">Complete theory, SQL mastery, ER models, normalization & more — curated for exam success.</p>
+    <div class="hero-stats">
+      <div class="stat"><span id="stat-chapters">6</span><small>Chapters</small></div>
+      <div class="stat"><span id="stat-topics">40+</span><small>Topics</small></div>
+      <div class="stat"><span id="stat-completed">0</span><small>Completed</small></div>
+    </div>
+    <div class="hero-cta">
+      <a href="#chapter1" class="btn-primary">Start Learning →</a>
+      <button class="btn-ghost" id="scroll-to-progress">View Progress</button>
+    </div>
+  </div>
+  <div class="hero-badge-float">
+    <span>📘 DBMS</span>
+  </div>
+</header>
+
+<!-- ====== LAYOUT ====== -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sidebar-inner">
+
+      <!-- Progress Panel -->
+      <div class="progress-panel" id="progress-panel">
+        <div class="progress-header">
+          <span>📊 Progress</span>
+          <span id="progress-pct">0%</span>
         </div>
-    </header>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-meta"><span id="done-count">0</span> / <span id="total-count">0</span> topics done</div>
+      </div>
 
-    <div class="container">
-        
-        <!-- Section 1: Introduction -->
-        <section id="intro" class="searchable">
-            <h2 class="section-title" data-aos="fade-right">1. Introduction to DBMS</h2>
-            
-            <div class="glass-card" data-aos="fade-up">
-                <h3>Definition & Basics</h3>
-                <p>A Database Management System (DBMS) is software designed to store, retrieve, define, and manage data in a database.</p>
-                <br>
-                <div class="grid-2">
-                    <div>
-                        <h4>Data vs Information</h4>
-                        <ul>
-                            <li><strong>Data:</strong> Raw, unorganized facts (e.g., "100", "John").</li>
-                            <li><strong>Information:</strong> Processed data that carries meaning (e.g., "Student John scored 100").</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>Advantages of DBMS</h4>
-                        <ul>
-                            <li>Controls database redundancy</li>
-                            <li>Data sharing and integration</li>
-                            <li>Enforces data security and integrity</li>
-                            <li>Data consistency</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+      <!-- Nav Chapters -->
+      <nav class="sidebar-nav" aria-label="Chapter navigation">
 
-            <div class="grid-2">
-                <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
-                    <h3>Features of DBMS</h3>
-                    <ul>
-                        <li><i class="fas fa-shield-alt"></i> <strong>Data Security:</strong> Protection against unauthorized access.</li>
-                        <li><i class="fas fa-compress-arrows-alt"></i> <strong>Reduced Redundancy:</strong> Eliminates duplicate data.</li>
-                        <li><i class="fas fa-check-circle"></i> <strong>Data Consistency:</strong> Ensures data is accurate across all tables.</li>
-                        <li><i class="fas fa-users"></i> <strong>Multi-user Access:</strong> Concurrent access without data loss.</li>
-                    </ul>
-                </div>
-                <div class="glass-card" data-aos="fade-up" data-aos-delay="200">
-                    <h3>Types of DBMS</h3>
-                    <ul>
-                        <li><strong>Hierarchical:</strong> Tree-like structure (Parent-Child).</li>
-                        <li><strong>Network:</strong> Graph structure allowing complex relationships.</li>
-                        <li><strong>Relational (RDBMS):</strong> Data stored in tables (Rows/Columns). <em>Most common.</em></li>
-                        <li><strong>Object-Oriented:</strong> Data stored as objects, similar to OOP.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+        <div class="nav-section">
+          <button class="nav-chapter-btn active" data-chapter="chapter1">
+            <span class="ch-num">01</span>
+            <span class="ch-title">Introduction to DBMS</span>
+            <span class="ch-arrow">›</span>
+          </button>
+          <ul class="nav-topics" id="topics-chapter1">
+            <li><a href="#intro-overview">Overview &amp; Definition</a></li>
+            <li><a href="#intro-fs-problems">File System Drawbacks</a></li>
+            <li><a href="#intro-dbms-adv">Advantages of DBMS</a></li>
+            <li><a href="#intro-architecture">3-Level Architecture</a></li>
+            <li><a href="#intro-users">Types of DB Users</a></li>
+            <li><a href="#intro-structure">DBMS Structure</a></li>
+          </ul>
+        </div>
 
-        <!-- Section 2: Normalization -->
-        <section id="normalization" class="searchable">
-            <h2 class="section-title" data-aos="fade-right">2. Normalization</h2>
-            <div class="glass-card" data-aos="fade-up">
-                <h3>Definition & Purpose</h3>
-                <p>Normalization is the process of organizing data to minimize redundancy and eliminate insertion, update, and deletion anomalies. <strong>Purpose:</strong> Reduce redundancy and improve data consistency.</p>
-            </div>
+        <div class="nav-section">
+          <button class="nav-chapter-btn" data-chapter="chapter2">
+            <span class="ch-num">02</span>
+            <span class="ch-title">ER Model &amp; Entities</span>
+            <span class="ch-arrow">›</span>
+          </button>
+          <ul class="nav-topics" id="topics-chapter2">
+            <li><a href="#er-entity">Entities in DBMS</a></li>
+            <li><a href="#er-types">Strong vs Weak Entity</a></li>
+            <li><a href="#er-participation">Participation &amp; Symbols</a></li>
+            <li><a href="#er-casestudies">ER Case Studies</a></li>
+            <li><a href="#er-steps">Steps to Solve ER</a></li>
+          </ul>
+        </div>
 
-            <div class="accordion-container" data-aos="fade-up" data-aos-delay="100">
-                <div class="accordion">
-                    <div class="accordion-header">First Normal Form (1NF) <i class="fas fa-chevron-down"></i></div>
-                    <div class="accordion-content">
-                        <p>A table is in 1NF if it contains only atomic (indivisible) values. There are no repeating groups or arrays.</p>
-                    </div>
-                </div>
-                <div class="accordion">
-                    <div class="accordion-header">Second Normal Form (2NF) <i class="fas fa-chevron-down"></i></div>
-                    <div class="accordion-content">
-                        <p>Must be in 1NF. All non-key attributes must be fully functionally dependent on the primary key. (Removes partial dependency).</p>
-                    </div>
-                </div>
-                <div class="accordion">
-                    <div class="accordion-header">Third Normal Form (3NF) <i class="fas fa-chevron-down"></i></div>
-                    <div class="accordion-content">
-                        <p>Must be in 2NF. There should be no transitive dependency (non-key attributes should not depend on other non-key attributes).</p>
-                    </div>
-                </div>
-                <div class="accordion">
-                    <div class="accordion-header">Boyce-Codd Normal Form (BCNF) <i class="fas fa-chevron-down"></i></div>
-                    <div class="accordion-content">
-                        <p>A stricter version of 3NF. For every functional dependency X → Y, X must be a super key.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div class="nav-section">
+          <button class="nav-chapter-btn" data-chapter="chapter3">
+            <span class="ch-num">03</span>
+            <span class="ch-title">Relational Model (RDBMS)</span>
+            <span class="ch-arrow">›</span>
+          </button>
+          <ul class="nav-topics" id="topics-chapter3">
+            <li><a href="#rm-keyterms">Key Terms</a></li>
+            <li><a href="#rm-keys">Types of Keys</a></li>
+            <li><a href="#rm-constraints">Constraints</a></li>
+            <li><a href="#rm-anomalies">Anomalies</a></li>
+            <li><a href="#rm-functions">SQL Functions</a></li>
+          </ul>
+        </div>
 
-        <!-- Section 3: SQL Commands -->
-        <section id="sql" class="searchable">
-            <h2 class="section-title" data-aos="fade-right">3. SQL Commands</h2>
-            
-            <div class="grid-2">
-                <!-- DDL -->
-                <div class="glass-card" data-aos="fade-up">
-                    <h3>Data Definition Language (DDL)</h3>
-                    <p>Defines the database structure or schema.</p>
-                    <ul>
-                        <li><code>CREATE</code>: Creates a new table/database.</li>
-                        <li><code>ALTER</code>: Modifies structure.</li>
-                        <li><code>DROP</code>: Deletes table structure and data.</li>
-                    </ul>
-                    <pre><code class="language-sql">CREATE TABLE Student(
-   ID INT PRIMARY KEY,
-   Name VARCHAR(20)
-);</code></pre>
-                </div>
+        <div class="nav-section">
+          <button class="nav-chapter-btn" data-chapter="chapter4">
+            <span class="ch-num">04</span>
+            <span class="ch-title">Normalization &amp; FDs</span>
+            <span class="ch-arrow">›</span>
+          </button>
+          <ul class="nav-topics" id="topics-chapter4">
+            <li><a href="#fd-intro">Functional Dependencies</a></li>
+            <li><a href="#fd-pitfalls">Design Pitfalls</a></li>
+            <li><a href="#fd-closure">Attribute Closure</a></li>
+            <li><a href="#fd-keys">Finding Candidate Keys</a></li>
+            <li><a href="#norm-1nf">1NF</a></li>
+            <li><a href="#norm-2nf">2NF</a></li>
+            <li><a href="#norm-3nf">3NF</a></li>
+          </ul>
+        </div>
 
-                <!-- DML -->
-                <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
-                    <h3>Data Manipulation Language (DML)</h3>
-                    <p>Manages data within schema objects.</p>
-                    <ul>
-                        <li><code>INSERT</code>: Adds new rows.</li>
-                        <li><code>UPDATE</code>: Modifies existing rows.</li>
-                        <li><code>DELETE</code>: Removes rows.</li>
-                    </ul>
-                    <pre><code class="language-sql">INSERT INTO Student (ID, Name) 
-VALUES (1, 'Alice');
+        <div class="nav-section">
+          <button class="nav-chapter-btn" data-chapter="chapter5">
+            <span class="ch-num">05</span>
+            <span class="ch-title">SQL Fundamentals</span>
+            <span class="ch-arrow">›</span>
+          </button>
+          <ul class="nav-topics" id="topics-chapter5">
+            <li><a href="#sql-intro">SQL Introduction</a></li>
+            <li><a href="#sql-commands">SQL Commands (DDL/DML…)</a></li>
+            <li><a href="#sql-ddl">DDL in Detail</a></li>
+            <li><a href="#sql-dml">DML in Detail</a></li>
+            <li><a href="#sql-constraints">SQL Constraints</a></li>
+            <li><a href="#sql-operators">IN, BETWEEN, LIKE</a></li>
+            <li><a href="#sql-null">NULL Values</a></li>
+          </ul>
+        </div>
 
-UPDATE Student SET Name = 'Bob' 
-WHERE ID = 1;</code></pre>
-                </div>
+        <div class="nav-section">
+          <button class="nav-chapter-btn" data-chapter="chapter6">
+            <span class="ch-num">06</span>
+            <span class="ch-title">Advanced SQL</span>
+            <span class="ch-arrow">›</span>
+          </button>
+          <ul class="nav-topics" id="topics-chapter6">
+            <li><a href="#adv-aggregate">Aggregate Functions</a></li>
+            <li><a href="#adv-groupby">GROUP BY &amp; HAVING</a></li>
+            <li><a href="#adv-setops">Set Operations</a></li>
+            <li><a href="#adv-joins">Joins</a></li>
+            <li><a href="#adv-subquery">Subqueries</a></li>
+          </ul>
+        </div>
 
-                <!-- DQL & TCL -->
-                <div class="glass-card" data-aos="fade-up">
-                    <h3>DQL & TCL</h3>
-                    <p><strong>DQL (Data Query Language):</strong> Used to fetch data.</p>
-                    <pre><code class="language-sql">SELECT * FROM Student;</code></pre>
-                    <br>
-                    <p><strong>TCL (Transaction Control Language):</strong> Manages transactions.</p>
-                    <ul>
-                        <li><code>COMMIT</code>: Saves work permanently.</li>
-                        <li><code>ROLLBACK</code>: Restores database to last commit.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+      </nav>
 
-        <!-- Section 4: Keys & Relationships -->
-        <section id="keys" class="searchable">
-            <h2 class="section-title" data-aos="fade-right">4. Keys & Relationships</h2>
-            
-            <div class="grid-2">
-                <div class="glass-card" data-aos="fade-up">
-                    <h3>Database Keys</h3>
-                    <ul>
-                        <li><strong>Primary Key:</strong> Uniquely identifies each record in a table. Cannot be NULL.</li>
-                        <li><strong>Foreign Key:</strong> A key used to link two tables together; refers to the PK of another table.</li>
-                        <li><strong>Candidate Key:</strong> A set of attributes that can uniquely identify a tuple. A table can have multiple.</li>
-                        <li><strong>Super Key:</strong> A set of one or more attributes which can uniquely identify a row.</li>
-                        <li><strong>Composite Key:</strong> A primary key consisting of more than one attribute.</li>
-                    </ul>
-                </div>
-
-                <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
-                    <h3>Table Relationships</h3>
-                    <div class="accordion-container">
-                        <div class="accordion">
-                            <div class="accordion-header">One-to-One (1:1) <i class="fas fa-link"></i></div>
-                            <div class="accordion-content">
-                                <p>One record in Table A is linked to exactly one record in Table B. (e.g., User and UserProfile).</p>
-                            </div>
-                        </div>
-                        <div class="accordion">
-                            <div class="accordion-header">One-to-Many (1:N) <i class="fas fa-project-diagram"></i></div>
-                            <div class="accordion-content">
-                                <p>One record in Table A relates to multiple records in Table B. (e.g., Department and Employees).</p>
-                            </div>
-                        </div>
-                        <div class="accordion">
-                            <div class="accordion-header">Many-to-Many (M:N) <i class="fas fa-network-wired"></i></div>
-                            <div class="accordion-content">
-                                <p>Multiple records in Table A relate to multiple records in Table B. Requires a junction table. (e.g., Students and Courses).</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <!-- Bookmarks -->
+      <div class="bookmark-panel">
+        <div class="bm-header">🔖 Bookmarks <span id="bm-count">0</span></div>
+        <ul id="bookmark-list"><li class="bm-empty">No bookmarks yet.</li></ul>
+      </div>
 
     </div>
+  </aside>
 
-    <!-- Floating Back to Top -->
-    <a href="#home" class="floating-btn" id="scrollTop"><i class="fas fa-arrow-up"></i></a>
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
 
-    <!-- Scripts -->
-    <!-- AOS Animation JS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- Prism.js for Syntax Highlighting -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <!-- ══════════════════════════════════════════ -->
+    <!-- CHAPTER 1: Introduction to DBMS           -->
+    <!-- ══════════════════════════════════════════ -->
+    <section class="chapter-section" id="chapter1">
+      <div class="chapter-header">
+        <div class="ch-badge">Chapter 01</div>
+        <h2>Introduction to DBMS</h2>
+        <p>Foundations, architecture, users, and why file systems fall short.</p>
+        <div class="chapter-meta">
+          <span>⏱ ~25 min read</span>
+          <button class="bookmark-btn" data-id="chapter1" title="Bookmark">🔖</button>
+          <button class="complete-btn" data-id="chapter1">Mark Complete ✓</button>
+        </div>
+      </div>
 
-    <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true
+      <!-- Topic: Overview -->
+      <div class="topic-block" id="intro-overview">
+        <div class="topic-header">
+          <h3>1.1 Overview &amp; Definition</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="intro-overview">🔖</button>
+            <button class="complete-btn" data-id="intro-overview">✓</button>
+          </div>
+        </div>
+
+        <div class="highlight-box exam">⭐ Exam Favourite — Definition of DBMS asked in 2-mark &amp; 5-mark questions.</div>
+
+        <div class="definition-card">
+          <div class="def-label">Definition</div>
+          <p><strong>DBMS (Database Management System)</strong> is a software system that manages, stores, and retrieves data efficiently in a structured format. It allows users to create, update, and query databases, ensures data integrity &amp; consistency, reduces redundancy, and supports concurrent access.</p>
+        </div>
+
+        <div class="definition-card mt">
+          <div class="def-label">Database</div>
+          <p>An <strong>organized collection</strong> of related information that can be searched, sorted, and updated — typically stored electronically and accessed via a DBMS using SQL.</p>
+        </div>
+
+        <div class="tip-card">
+          <span class="tip-icon">💡</span>
+          <div><strong>Analogy:</strong> Think of DBMS as a <em>smart librarian</em> — it knows where every book (data) is, controls who can access it, and can retrieve any book instantly.</div>
+        </div>
+
+        <h4>How DBMS Works — API Bridge</h4>
+        <div class="flow-diagram">
+          <div class="flow-step">👤 User / App</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">API Request</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">DBMS Engine</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Database</div>
+        </div>
+        <p class="text-muted mt-sm">Users never touch the database directly. The DBMS validates, authorizes, and retrieves data safely.</p>
+
+        <div class="table-wrap">
+          <div class="table-title">Database vs DBMS</div>
+          <table>
+            <thead><tr><th>Feature</th><th>Database</th><th>DBMS</th></tr></thead>
+            <tbody>
+              <tr><td>Nature</td><td>Data (an entity)</td><td>Software (a set of programs)</td></tr>
+              <tr><td>Function</td><td>Stores data</td><td>Manages, retrieves, and controls data</td></tr>
+              <tr><td>Security</td><td>No built-in security</td><td>Role-based authentication &amp; access control</td></tr>
+              <tr><td>Examples</td><td>Library record, spreadsheet</td><td>MySQL, Oracle, PostgreSQL, SQL Server</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Topic: File System Problems -->
+      <div class="topic-block" id="intro-fs-problems">
+        <div class="topic-header">
+          <h3>1.2 File System Drawbacks</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="intro-fs-problems">🔖</button>
+            <button class="complete-btn" data-id="intro-fs-problems">✓</button>
+          </div>
+        </div>
+        <div class="highlight-box vip">🔴 Very Important — Often asked for 5 marks. List &amp; explain any 5.</div>
+        <div class="card-grid">
+          <div class="concept-card"><div class="cc-icon">♻</div><h5>Data Redundancy</h5><p>Same data stored in multiple files, wasting storage and causing inconsistencies.</p></div>
+          <div class="concept-card"><div class="cc-icon">⚠</div><h5>Data Inconsistency</h5><p>Updating one file but not others leads to conflicting data across the system.</p></div>
+          <div class="concept-card"><div class="cc-icon">🔒</div><h5>Poor Security</h5><p>No built-in access control; any user can potentially access sensitive files.</p></div>
+          <div class="concept-card"><div class="cc-icon">⚛</div><h5>Atomicity Issues</h5><p>Partial transactions (e.g., debit without credit) cannot be automatically rolled back.</p></div>
+          <div class="concept-card"><div class="cc-icon">🔗</div><h5>Data Isolation</h5><p>Scattered files in different formats make it hard to write retrieval programs.</p></div>
+          <div class="concept-card"><div class="cc-icon">👥</div><h5>No Concurrency</h5><p>Two users cannot safely update the same file simultaneously.</p></div>
+        </div>
+        <div class="table-wrap mt">
+          <div class="table-title">File System vs DBMS</div>
+          <table>
+            <thead><tr><th>Aspect</th><th>File System</th><th>DBMS</th></tr></thead>
+            <tbody>
+              <tr><td>Data Redundancy</td><td class="neg">High</td><td class="pos">Eliminated via normalization</td></tr>
+              <tr><td>Backup &amp; Recovery</td><td class="neg">Manual / None</td><td class="pos">Built-in tools</td></tr>
+              <tr><td>Concurrent Access</td><td class="neg">Single user</td><td class="pos">Multi-user with locking</td></tr>
+              <tr><td>Security</td><td class="neg">Very low</td><td class="pos">Authentication &amp; ACL</td></tr>
+              <tr><td>Data Independence</td><td class="neg">None</td><td class="pos">Logical &amp; Physical</td></tr>
+              <tr><td>Query Processing</td><td class="neg">Inefficient</td><td class="pos">Optimized query engine</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Topic: Advantages of DBMS -->
+      <div class="topic-block" id="intro-dbms-adv">
+        <div class="topic-header">
+          <h3>1.3 Advantages of DBMS</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="intro-dbms-adv">🔖</button>
+            <button class="complete-btn" data-id="intro-dbms-adv">✓</button>
+          </div>
+        </div>
+        <ol class="styled-list">
+          <li><strong>Data Security</strong> — Access control &amp; encryption protect sensitive data.</li>
+          <li><strong>Data Integration</strong> — Centralizes data from multiple sources for a unified view.</li>
+          <li><strong>Data Abstraction</strong> — Hides internal complexity from end users.</li>
+          <li><strong>Reduced Redundancy</strong> — Unique constraints eliminate duplicate records.</li>
+          <li><strong>Data Sharing</strong> — Multiple applications and users share the same data.</li>
+          <li><strong>Data Consistency &amp; Accuracy</strong> — Integrity constraints sync updates across views.</li>
+          <li><strong>Efficient Access</strong> — Indexing &amp; query optimization for fast retrieval.</li>
+          <li><strong>Scalability</strong> — Easily handles growing data volumes.</li>
+        </ol>
+        <div class="highlight-box info">📝 <strong>Disadvantages:</strong> High cost (hardware + staff), complexity, performance issues for small firms, frequent upgrades needed.</div>
+      </div>
+
+      <!-- Topic: Architecture -->
+      <div class="topic-block" id="intro-architecture">
+        <div class="topic-header">
+          <h3>1.4 Three-Level DBMS Architecture</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="intro-architecture">🔖</button>
+            <button class="complete-btn" data-id="intro-architecture">✓</button>
+          </div>
+        </div>
+        <div class="highlight-box exam">⭐ This is asked in almost every exam — 5-mark or diagram question.</div>
+        <div class="arch-diagram">
+          <div class="arch-level ext"><span class="arch-num">3</span><strong>External / View Level</strong><em>How users see the data — tailored views per user group</em></div>
+          <div class="arch-arrow">↕ Logical Data Independence</div>
+          <div class="arch-level con"><span class="arch-num">2</span><strong>Conceptual / Logical Level</strong><em>Overall database structure — tables, attributes, relationships</em></div>
+          <div class="arch-arrow">↕ Physical Data Independence</div>
+          <div class="arch-level int"><span class="arch-num">1</span><strong>Internal / Physical Level</strong><em>Actual storage — files, indexing, compression on disk</em></div>
+        </div>
+        <div class="two-col mt">
+          <div class="def-card"><strong>Physical Data Independence</strong><br/>Change in internal level without affecting the conceptual/logical level.</div>
+          <div class="def-card"><strong>Logical Data Independence</strong><br/>Change in conceptual level without affecting the external/view level.</div>
+        </div>
+      </div>
+
+      <!-- Topic: Types of Users -->
+      <div class="topic-block" id="intro-users">
+        <div class="topic-header">
+          <h3>1.5 Types of Database Users</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="intro-users">🔖</button>
+            <button class="complete-btn" data-id="intro-users">✓</button>
+          </div>
+        </div>
+        <div class="card-grid g3">
+          <div class="concept-card accent"><div class="cc-icon">🛡</div><h5>DBA</h5><p>Defines schema, controls access, manages security, backup &amp; recovery.</p></div>
+          <div class="concept-card"><div class="cc-icon">🖥</div><h5>Application Programmers</h5><p>Write backend code using DML; create "canned transactions" for naive users.</p></div>
+          <div class="concept-card"><div class="cc-icon">👤</div><h5>Naive / Parametric Users</h5><p>Use pre-built apps (ATM, ticket booking) without knowing DBMS.</p></div>
+          <div class="concept-card"><div class="cc-icon">📐</div><h5>Database Designers</h5><p>Design tables, views, indexes, and constraints before the DB is populated.</p></div>
+          <div class="concept-card"><div class="cc-icon">🔬</div><h5>Sophisticated Users</h5><p>Write SQL queries directly to access and analyze data.</p></div>
+          <div class="concept-card"><div class="cc-icon">⚡</div><h5>Specialized Users</h5><p>Build expert systems, CAD applications, etc., on top of DB.</p></div>
+        </div>
+      </div>
+
+      <!-- Topic: DBMS Structure -->
+      <div class="topic-block" id="intro-structure">
+        <div class="topic-header">
+          <h3>1.6 Structure / Components of DBMS</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="intro-structure">🔖</button>
+            <button class="complete-btn" data-id="intro-structure">✓</button>
+          </div>
+        </div>
+        <div class="card-grid">
+          <div class="concept-card"><div class="cc-icon">⚙</div><h5>Query Processor</h5><p>Interprets user queries. Contains DML Compiler, DDL Interpreter, Query Optimizer, Embedded DML Pre-compiler.</p></div>
+          <div class="concept-card"><div class="cc-icon">💾</div><h5>Storage Manager</h5><p>Interface between data &amp; queries. Contains Authorization Manager, Integrity Manager, Transaction Manager, File Manager, Buffer Manager.</p></div>
+          <div class="concept-card"><div class="cc-icon">🗄</div><h5>Disk Storage</h5><p>Contains Data Files (actual data), Data Dictionary (metadata), and Indices (fast retrieval).</p></div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section mt">
+          <h4>❓ Viva &amp; FAQ — Chapter 1</h4>
+          <div class="faq-item">
+            <button class="faq-q">What is the difference between a Database and a DBMS?</button>
+            <div class="faq-a"><p>A <strong>database</strong> is the organized collection of data. A <strong>DBMS</strong> is the software that manages, stores, and retrieves that data. The database is the data; the DBMS is the tool to handle it.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">What is data independence?</button>
+            <div class="faq-a"><p>The ability to change the schema at one level without affecting the schema at the next higher level. Two types: <strong>Physical</strong> (change storage without affecting logical) and <strong>Logical</strong> (change logical without affecting view).</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">What is the role of a DBA?</button>
+            <div class="faq-a"><p>DBA defines schema, creates user accounts, controls access (GRANT/REVOKE), monitors backups, handles security breaches, and repairs hardware/software failures.</p></div>
+          </div>
+        </div>
+
+        <!-- Question Bank -->
+        <div class="qbank mt">
+          <h4>📋 Question Bank — Chapter 1</h4>
+          <div class="q-group">
+            <div class="q-badge q2">2 Mark</div>
+            <ul><li>Define DBMS.</li><li>What is data redundancy?</li><li>What is data independence?</li></ul>
+          </div>
+          <div class="q-group">
+            <div class="q-badge q5">5 Mark</div>
+            <ul><li>Explain any 5 drawbacks of a file-based system.</li><li>Compare File System vs DBMS with a table.</li><li>Explain the 3-level DBMS architecture.</li></ul>
+          </div>
+          <div class="q-group">
+            <div class="q-badge q10">10 Mark</div>
+            <ul><li>Explain the structure of DBMS with a neat diagram including Query Processor and Storage Manager components.</li><li>What are the advantages and disadvantages of DBMS? Explain with examples.</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- CHAPTER 2: ER Model                        -->
+    <!-- ══════════════════════════════════════════ -->
+    <section class="chapter-section" id="chapter2">
+      <div class="chapter-header">
+        <div class="ch-badge">Chapter 02</div>
+        <h2>ER Model &amp; Entities</h2>
+        <p>Entity-Relationship diagrams, entity types, attributes, and case studies.</p>
+        <div class="chapter-meta">
+          <span>⏱ ~20 min read</span>
+          <button class="bookmark-btn" data-id="chapter2">🔖</button>
+          <button class="complete-btn" data-id="chapter2">Mark Complete ✓</button>
+        </div>
+      </div>
+
+      <div class="topic-block" id="er-entity">
+        <div class="topic-header">
+          <h3>2.1 Entities in DBMS</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="er-entity">🔖</button>
+            <button class="complete-btn" data-id="er-entity">✓</button>
+          </div>
+        </div>
+        <div class="definition-card">
+          <div class="def-label">Definition</div>
+          <p>An <strong>entity</strong> is a real-world object or concept that can be uniquely identified and stored in a database. It forms the foundation of an ER model.</p>
+          <p class="mt-sm"><em>Examples: Student, Employee, Bank Account, Order</em></p>
+        </div>
+        <div class="two-col mt">
+          <div class="concept-card"><div class="cc-icon">🏛</div><h5>Tangible Entity</h5><p>Physical, touchable objects. <em>Ex: Products, People, Vehicles</em></p></div>
+          <div class="concept-card"><div class="cc-icon">💭</div><h5>Intangible Entity</h5><p>Abstract or conceptual objects. <em>Ex: Appointments, Transactions, Events</em></p></div>
+        </div>
+      </div>
+
+      <div class="topic-block" id="er-types">
+        <div class="topic-header">
+          <h3>2.2 Strong vs Weak Entity</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="er-types">🔖</button>
+            <button class="complete-btn" data-id="er-types">✓</button>
+          </div>
+        </div>
+        <div class="highlight-box exam">⭐ This difference is asked every year. Learn symbols carefully!</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Feature</th><th>Strong Entity</th><th>Weak Entity</th></tr></thead>
+            <tbody>
+              <tr><td>Existence</td><td class="pos">Independent</td><td class="neg">Depends on strong entity</td></tr>
+              <tr><td>Identifier</td><td>Primary Key</td><td>Partial Discriminator Key</td></tr>
+              <tr><td>Symbol (ER diagram)</td><td>Single Rectangle □</td><td>Double Rectangle ⊡</td></tr>
+              <tr><td>Relationship symbol</td><td>Single Diamond ◇</td><td>Double Diamond ⬦ (identifying)</td></tr>
+              <tr><td>Example</td><td>Customer, Employee</td><td>Loan (needs Customer), Dependent (needs Employee)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tip-card mt"><span class="tip-icon">🎯</span><div><strong>Mnemonic:</strong> Weak = <em>W</em>ants support → <em>W</em>aits for strong entity → <em>W</em>ords: double rectangle + double diamond.</div></div>
+      </div>
+
+      <div class="topic-block" id="er-participation">
+        <div class="topic-header">
+          <h3>2.3 Participation &amp; ER Symbols</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="er-participation">🔖</button>
+            <button class="complete-btn" data-id="er-participation">✓</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>Single line ─</td><td>Partial participation (optional) — not every instance must participate</td></tr>
+              <tr><td>Double line ═</td><td>Total participation (mandatory) — every instance must participate</td></tr>
+              <tr><td>Double diamond ⬦</td><td>Identifying relationship for a weak entity</td></tr>
+              <tr><td>Double rectangle ⊡</td><td>Weak entity</td></tr>
+              <tr><td>Oval ○</td><td>Attribute</td></tr>
+              <tr><td>Underlined oval</td><td>Primary key attribute</td></tr>
+              <tr><td>Dashed oval</td><td>Derived attribute</td></tr>
+              <tr><td>Double oval</td><td>Multi-valued attribute</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="topic-block" id="er-casestudies">
+        <div class="topic-header">
+          <h3>2.4 ER Case Studies</h3>
+          <div class="topic-actions">
+            <button class="bookmark-btn" data-id="er-casestudies">🔖</button>
+            <button class="complete-btn" data-id="er-casestudies">✓</button>
+          </div>
+        </div>
+        <div class="highlight-box vip">🔴 Case studies are 10-mark questions — practise drawing ER diagrams!</div>
+
+        <div class="case-study-card">
+          <div class="cs-header">📚 Case Study 1: Library Management System</div>
+          <div class="cs-body">
+            <div class="cs-col">
+              <strong>Entities:</strong> Book, Member<br/>
+              <strong>Relationship:</strong> Member <em>borrows</em> Book<br/>
+              <strong>Cardinality:</strong> Many-to-Many (M:N)
+            </div>
+            <div class="cs-col">
+              <strong>Book attributes:</strong> BookID (PK), Title, Author, Publisher<br/>
+              <strong>Member attributes:</strong> MemberID (PK), Name, Address, Phone
+            </div>
+          </div>
+        </div>
+
+        <div class="case-study-card">
+          <div class="cs-header">🏫 Case Study 2: College Database</div>
+          <div class="cs-body">
+            <div class="cs-col">
+              <strong>Entities:</strong> Student, Course, Teacher<br/>
+              <strong>Relationships:</strong> Student <em>enrolls in</em> Course; Teacher <em>teaches</em> Course
+            </div>
+            <div class="cs-col">
+              <strong>Cardinalities:</strong><br/>
+              Student–Course: Many-to-Many<br/>
+              Teacher–Course: One-to-Many
+            </div>
+          </div>
+        </div>
+
+        <div class="case-study-card">
+          <div class="cs-header">🏥 Case Study 3: Hospital Management</div>
+          <div class="cs-body">
+            <div class="cs-col">
+              <strong>Entities:</strong> Doctor, Patient<br/>
+              <strong>Relationship:</strong> Doctor <em>treats</em> Patient<br/>
+              <strong>Cardinality:</strong> Many-to-Many
+            </div>
+            <div class="cs-col">
+              <strong>Doctor attrs:</strong> DoctorID, Name, Specialization, Phone<br/>
+              <strong>Patient attrs:</strong> PatientID, Name, Age, Disease
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-block" id="er-steps">
+        <div class="topic-header"><h3>2.5 Steps to Solve ER Problems</h3><div class="topic-actions"><button class="bookmark-btn" data-id="er-steps">🔖</button><button class="complete-btn" data-id="er-steps">✓</button></div></div>
+        <div class="steps-list">
+          <div class="step"><span class="step-num">1</span><div><strong>Identify Entities</strong> — nouns in the problem (Student, Book…)</div></div>
+          <div class="step"><span class="step-num">2</span><div><strong>Identify Attributes</strong> — properties of each entity (Name, ID…)</div></div>
+          <div class="step"><span class="step-num">3</span><div><strong>Identify Relationships</strong> — verbs connecting entities (enrolls in, treats…)</div></div>
+          <div class="step"><span class="step-num">4</span><div><strong>Determine Cardinality</strong> — 1:1, 1:N, or M:N</div></div>
+          <div class="step"><span class="step-num">5</span><div><strong>Draw ER Diagram</strong> — use proper symbols (rectangles, ovals, diamonds)</div></div>
+        </div>
+        <div class="qbank mt">
+          <h4>📋 Question Bank — Chapter 2</h4>
+          <div class="q-group"><div class="q-badge q2">2 Mark</div><ul><li>Define entity. Give two examples.</li><li>Difference between strong and weak entity.</li><li>What is cardinality?</li></ul></div>
+          <div class="q-group"><div class="q-badge q5">5 Mark</div><ul><li>Explain ER symbols with a table.</li><li>Design ER diagram for Library Management System.</li></ul></div>
+          <div class="q-group"><div class="q-badge q10">10 Mark</div><ul><li>Design ER diagram for College Database System with all attributes and relationships.</li><li>Design ER diagram for Hospital Management System.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- CHAPTER 3: Relational Model                -->
+    <!-- ══════════════════════════════════════════ -->
+    <section class="chapter-section" id="chapter3">
+      <div class="chapter-header">
+        <div class="ch-badge">Chapter 03</div>
+        <h2>Relational Model (RDBMS)</h2>
+        <p>Tables, keys, constraints, anomalies, and SQL functions.</p>
+        <div class="chapter-meta"><span>⏱ ~30 min read</span><button class="bookmark-btn" data-id="chapter3">🔖</button><button class="complete-btn" data-id="chapter3">Mark Complete ✓</button></div>
+      </div>
+
+      <div class="topic-block" id="rm-keyterms">
+        <div class="topic-header"><h3>3.1 Key Terms in the Relational Model</h3><div class="topic-actions"><button class="bookmark-btn" data-id="rm-keyterms">🔖</button><button class="complete-btn" data-id="rm-keyterms">✓</button></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Term</th><th>Definition</th><th>Example (STUDENT table)</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Attribute</strong></td><td>Column — property of an entity</td><td>ROLL_NO, NAME, AGE</td></tr>
+              <tr><td><strong>Tuple</strong></td><td>Row — one record</td><td>(1, RAM, DELHI, 9455…, 18)</td></tr>
+              <tr><td><strong>Relation Schema</strong></td><td>Table structure definition</td><td>STUDENT(ROLL_NO, NAME, ADDRESS, PHONE, AGE)</td></tr>
+              <tr><td><strong>Relation Instance</strong></td><td>Set of tuples at a given time</td><td>The actual data rows in STUDENT right now</td></tr>
+              <tr><td><strong>Degree</strong></td><td>Number of attributes (columns)</td><td>STUDENT has degree 5</td></tr>
+              <tr><td><strong>Cardinality</strong></td><td>Number of tuples (rows)</td><td>STUDENT with 4 students → cardinality = 4</td></tr>
+              <tr><td><strong>NULL</strong></td><td>Unknown / unavailable value</td><td>PHONE of student 4 is NULL</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="topic-block" id="rm-keys">
+        <div class="topic-header"><h3>3.2 Types of Keys</h3><div class="topic-actions"><button class="bookmark-btn" data-id="rm-keys">🔖</button><button class="complete-btn" data-id="rm-keys">✓</button></div></div>
+        <div class="highlight-box exam">⭐ Keys are asked in every exam! Memorize definitions + differences.</div>
+        <div class="card-grid">
+          <div class="concept-card accent"><div class="cc-icon">🗝</div><h5>Primary Key</h5><p>Uniquely identifies each tuple. Must be <strong>unique</strong> and <strong>NOT NULL</strong>. Only one per table.</p></div>
+          <div class="concept-card"><div class="cc-icon">🔑</div><h5>Candidate Key</h5><p>Set of attributes that can uniquely identify a tuple. Minimal superkey. There can be multiple.</p></div>
+          <div class="concept-card"><div class="cc-icon">🔓</div><h5>Super Key</h5><p>Any set of attributes that uniquely identifies a tuple. May have extra attributes.</p></div>
+          <div class="concept-card"><div class="cc-icon">🔗</div><h5>Foreign Key</h5><p>Attribute in one table referring to the Primary Key of another. Enforces referential integrity.</p></div>
+          <div class="concept-card"><div class="cc-icon">🔐</div><h5>Composite Key</h5><p>Two or more attributes combined to uniquely identify a tuple.</p></div>
+          <div class="concept-card"><div class="cc-icon">✨</div><h5>Unique Key</h5><p>All values must be distinct. Unlike PK, CAN contain one NULL. Multiple per table allowed.</p></div>
+        </div>
+        <div class="table-wrap mt">
+          <table>
+            <thead><tr><th>Feature</th><th>Primary Key</th><th>Unique Key</th><th>Foreign Key</th></tr></thead>
+            <tbody>
+              <tr><td>NULL allowed?</td><td class="neg">No</td><td class="pos">Yes (one)</td><td class="pos">Yes (if allowed)</td></tr>
+              <tr><td>How many per table?</td><td>Only one</td><td>Multiple</td><td>Multiple</td></tr>
+              <tr><td>Purpose</td><td>Identify rows</td><td>Prevent duplicates</td><td>Link tables</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="topic-block" id="rm-constraints">
+        <div class="topic-header"><h3>3.3 Constraints in Relational Model</h3><div class="topic-actions"><button class="bookmark-btn" data-id="rm-constraints">🔖</button><button class="complete-btn" data-id="rm-constraints">✓</button></div></div>
+        <ol class="styled-list">
+          <li><strong>Domain Constraints</strong> — Each attribute value must be atomic and from its defined domain (INT, VARCHAR, DATE…).</li>
+          <li><strong>Key Integrity</strong> — Every relation must have a key; it must be unique and NOT NULL.</li>
+          <li><strong>Referential Integrity</strong> — Foreign key values must match existing primary key values in the referenced table.</li>
+          <li><strong>Check Constraints</strong> — Values must satisfy a logical condition (e.g., age ≥ 18).</li>
+        </ol>
+      </div>
+
+      <div class="topic-block" id="rm-anomalies">
+        <div class="topic-header"><h3>3.4 Anomalies</h3><div class="topic-actions"><button class="bookmark-btn" data-id="rm-anomalies">🔖</button><button class="complete-btn" data-id="rm-anomalies">✓</button></div></div>
+        <div class="card-grid g3">
+          <div class="concept-card neg-card"><div class="cc-icon">➕</div><h5>Insertion Anomaly</h5><p>Cannot insert data unless other (unrelated) data is also present. E.g., can't add a new course until a student enrolls.</p></div>
+          <div class="concept-card neg-card"><div class="cc-icon">🗑</div><h5>Deletion Anomaly</h5><p>Deleting one record unintentionally removes other important data. E.g., deleting last student in a course removes the course info too.</p></div>
+          <div class="concept-card neg-card"><div class="cc-icon">✏</div><h5>Update Anomaly</h5><p>Same data in many rows — updating only some leads to inconsistency. E.g., changing a name in one row but not others.</p></div>
+        </div>
+        <div class="tip-card"><span class="tip-icon">💡</span><div>Anomalies are solved by <strong>Normalization</strong> — splitting tables to reduce redundancy.</div></div>
+      </div>
+
+      <div class="topic-block" id="rm-functions">
+        <div class="topic-header"><h3>3.5 SQL Functions</h3><div class="topic-actions"><button class="bookmark-btn" data-id="rm-functions">🔖</button><button class="complete-btn" data-id="rm-functions">✓</button></div></div>
+        <div class="two-col">
+          <div>
+            <h4>Aggregate Functions</h4>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td><code>AVG()</code></td><td>Average value</td></tr>
+                  <tr><td><code>COUNT()</code></td><td>Number of rows</td></tr>
+                  <tr><td><code>MAX()</code></td><td>Maximum value</td></tr>
+                  <tr><td><code>MIN()</code></td><td>Minimum value</td></tr>
+                  <tr><td><code>SUM()</code></td><td>Total sum</td></tr>
+                  <tr><td><code>FIRST()</code></td><td>First value in ordered set</td></tr>
+                  <tr><td><code>LAST()</code></td><td>Last value in ordered set</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h4>Scalar Functions</h4>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td><code>UCASE()</code></td><td>Convert to uppercase</td></tr>
+                  <tr><td><code>LCASE()</code></td><td>Convert to lowercase</td></tr>
+                  <tr><td><code>MID()</code></td><td>Extract substring</td></tr>
+                  <tr><td><code>LEN()</code></td><td>String length</td></tr>
+                  <tr><td><code>ROUND()</code></td><td>Round to decimals</td></tr>
+                  <tr><td><code>NOW()</code></td><td>Current date &amp; time</td></tr>
+                  <tr><td><code>FORMAT()</code></td><td>Format a value</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="code-block">
+<pre><span class="sql-kw">SELECT</span> <span class="sql-fn">AVG</span>(MARKS) <span class="sql-kw">AS</span> AvgMarks <span class="sql-kw">FROM</span> Students;
+<span class="sql-kw">SELECT</span> <span class="sql-fn">UCASE</span>(NAME) <span class="sql-kw">FROM</span> Students;
+<span class="sql-kw">SELECT</span> <span class="sql-fn">MID</span>(NAME, 1, 4) <span class="sql-kw">FROM</span> Students;
+<span class="sql-kw">SELECT</span> <span class="sql-fn">NOW</span>() <span class="sql-kw">AS</span> CurrentTime;</pre>
+        </div>
+        <div class="qbank mt">
+          <h4>📋 Question Bank — Chapter 3</h4>
+          <div class="q-group"><div class="q-badge q2">2 Mark</div><ul><li>Define tuple and cardinality.</li><li>Difference between Primary and Unique key.</li><li>What is referential integrity?</li></ul></div>
+          <div class="q-group"><div class="q-badge q5">5 Mark</div><ul><li>Explain types of keys with examples.</li><li>Explain insertion, deletion, and update anomalies.</li><li>List and explain SQL scalar functions with syntax.</li></ul></div>
+          <div class="q-group"><div class="q-badge q10">10 Mark</div><ul><li>Explain all constraints in the relational model with examples.</li><li>Explain SQL aggregate and scalar functions with examples and output.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- CHAPTER 4: Normalization & FDs             -->
+    <!-- ══════════════════════════════════════════ -->
+    <section class="chapter-section" id="chapter4">
+      <div class="chapter-header">
+        <div class="ch-badge">Chapter 04</div>
+        <h2>Normalization &amp; Functional Dependencies</h2>
+        <p>FDs, Armstrong's axioms, closure, candidate keys, 1NF, 2NF, 3NF.</p>
+        <div class="chapter-meta"><span>⏱ ~35 min read</span><button class="bookmark-btn" data-id="chapter4">🔖</button><button class="complete-btn" data-id="chapter4">Mark Complete ✓</button></div>
+      </div>
+
+      <div class="topic-block" id="fd-intro">
+        <div class="topic-header"><h3>4.1 Functional Dependencies</h3><div class="topic-actions"><button class="bookmark-btn" data-id="fd-intro">🔖</button><button class="complete-btn" data-id="fd-intro">✓</button></div></div>
+        <div class="definition-card">
+          <div class="def-label">Definition</div>
+          <p>An FD <strong>X → Y</strong> means: for any two tuples t₁, t₂ in relation R, if t₁[X] = t₂[X] then t₁[Y] = t₂[Y]. In other words, <strong>X determines Y</strong>.</p>
+        </div>
+        <div class="tip-card"><span class="tip-icon">📌</span><div><strong>Example:</strong> RollNo → Name, Branch, Year (one roll number has exactly one name, one branch, one year).</div></div>
+        <h4>Armstrong's Axioms (sound &amp; complete)</h4>
+        <div class="steps-list">
+          <div class="step"><span class="step-num">A1</span><div><strong>Reflexivity:</strong> If Y ⊆ X, then X → Y</div></div>
+          <div class="step"><span class="step-num">A2</span><div><strong>Augmentation:</strong> If X → Y, then XZ → YZ</div></div>
+          <div class="step"><span class="step-num">A3</span><div><strong>Transitivity:</strong> If X → Y and Y → Z, then X → Z</div></div>
+        </div>
+      </div>
+
+      <div class="topic-block" id="fd-pitfalls">
+        <div class="topic-header"><h3>4.2 Design Pitfalls</h3><div class="topic-actions"><button class="bookmark-btn" data-id="fd-pitfalls">🔖</button><button class="complete-btn" data-id="fd-pitfalls">✓</button></div></div>
+        <div class="card-grid">
+          <div class="concept-card neg-card"><div class="cc-icon">♻</div><h5>Redundancy</h5><p>Same fact stored in many rows. Name repeated for every course of the same student.</p></div>
+          <div class="concept-card neg-card"><div class="cc-icon">➕</div><h5>Insertion Anomaly</h5><p>Can't store a new course until a student enrolls.</p></div>
+          <div class="concept-card neg-card"><div class="cc-icon">🗑</div><h5>Deletion Anomaly</h5><p>Deleting last row of a course removes course info permanently.</p></div>
+          <div class="concept-card neg-card"><div class="cc-icon">✏</div><h5>Update Anomaly</h5><p>Updating name in one row while others remain with old value → inconsistency.</p></div>
+        </div>
+      </div>
+
+      <div class="topic-block" id="fd-closure">
+        <div class="topic-header"><h3>4.3 Attribute Closure (X⁺)</h3><div class="topic-actions"><button class="bookmark-btn" data-id="fd-closure">🔖</button><button class="complete-btn" data-id="fd-closure">✓</button></div></div>
+        <div class="highlight-box exam">⭐ Algorithm for X⁺ is a guaranteed exam question. Practise with examples!</div>
+        <div class="definition-card">
+          <div class="def-label">Definition</div>
+          <p>The <strong>closure of attribute set X</strong> (X⁺) is the set of all attributes that are functionally determined by X using the given FD set F.</p>
+        </div>
+        <h4>Algorithm:</h4>
+        <div class="steps-list">
+          <div class="step"><span class="step-num">1</span><div>Initialize: X⁺ := X</div></div>
+          <div class="step"><span class="step-num">2</span><div>Repeat: For each FD Y → Z in F, if Y ⊆ X⁺, add Z to X⁺</div></div>
+          <div class="step"><span class="step-num">3</span><div>Stop when no new attribute can be added</div></div>
+        </div>
+        <div class="example-card">
+          <div class="ex-label">📝 Solved Example</div>
+          <p><strong>R(A,B,C,D)</strong> with FDs: A→B, B→C, CD→A. Find A⁺.</p>
+          <div class="code-block">
+<pre>Start:    A⁺ = {A}
+A → B  ⇒ A⁺ = {A, B}
+B → C  ⇒ A⁺ = {A, B, C}
+CD → A: need D but D ∉ A⁺ → cannot apply
+Result:   A⁺ = {A, B, C}</pre>
+          </div>
+        </div>
+        <div class="tip-card"><span class="tip-icon">💡</span><div><strong>Uses of X⁺:</strong> (1) Check if X is a superkey — if X⁺ = all attributes. (2) Check if FD X→Y holds — if Y ⊆ X⁺. (3) Find candidate keys.</div></div>
+      </div>
+
+      <div class="topic-block" id="fd-keys">
+        <div class="topic-header"><h3>4.4 Finding Candidate Keys</h3><div class="topic-actions"><button class="bookmark-btn" data-id="fd-keys">🔖</button><button class="complete-btn" data-id="fd-keys">✓</button></div></div>
+        <div class="steps-list">
+          <div class="step"><span class="step-num">1</span><div>Find attributes that <strong>never appear on RHS</strong> of any FD → Start with these as K</div></div>
+          <div class="step"><span class="step-num">2</span><div>Compute K⁺ — if it covers all attributes, K is a superkey</div></div>
+          <div class="step"><span class="step-num">3</span><div>If not, add attributes from (R – K) one by one until closure covers all</div></div>
+          <div class="step"><span class="step-num">4</span><div>Remove unnecessary attributes from K to make it <strong>minimal</strong> → Candidate Key</div></div>
+        </div>
+        <div class="example-card">
+          <div class="ex-label">📝 Solved Example</div>
+          <p><strong>R(A,B,C,D,E)</strong> FDs: A→B, B→C, CD→E, E→A. Find candidate key.</p>
+          <div class="code-block">
+<pre>RHS attrs = {B,C,E,A} → D never appears on RHS → K = {D}
+D⁺ = {D} — not all attributes, so add A
+(A,D)⁺:
+  Start: {A,D}
+  A→B ⇒ {A,B,D}
+  B→C ⇒ {A,B,C,D}
+  CD→E ⇒ {A,B,C,D,E}  ✓ All attributes!
+AD is a superkey.
+Check minimality: A⁺={A,B,C}≠all, D⁺={D}≠all
+∴ AD is minimal → Candidate Key = {A,D}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-block" id="norm-1nf">
+        <div class="topic-header"><h3>4.5 First Normal Form (1NF)</h3><div class="topic-actions"><button class="bookmark-btn" data-id="norm-1nf">🔖</button><button class="complete-btn" data-id="norm-1nf">✓</button></div></div>
+        <div class="definition-card"><div class="def-label">Definition</div><p>A relation is in <strong>1NF</strong> if every attribute value is <strong>atomic</strong> (no multi-valued or nested attributes) and each row is unique.</p></div>
+        <div class="two-col mt">
+          <div class="example-card neg-card"><div class="ex-label">❌ NOT in 1NF</div><p>Student(RollNo, Name, Phones) — where Phones = "98765, 91234" (multi-valued).</p></div>
+          <div class="example-card pos-card"><div class="ex-label">✅ In 1NF</div><p>StudentPhone(RollNo, Phone) — each (RollNo, Phone) pair is a separate row.</p></div>
+        </div>
+      </div>
+
+      <div class="topic-block" id="norm-2nf">
+        <div class="topic-header"><h3>4.6 Second Normal Form (2NF)</h3><div class="topic-actions"><button class="bookmark-btn" data-id="norm-2nf">🔖</button><button class="complete-btn" data-id="norm-2nf">✓</button></div></div>
+        <div class="definition-card"><div class="def-label">Definition</div><p>A relation is in <strong>2NF</strong> if it is in 1NF AND every non-prime attribute is <strong>fully functionally dependent</strong> on the entire candidate key (no partial dependency).</p></div>
+        <div class="highlight-box info">📌 <strong>Partial Dependency:</strong> A non-prime attribute depends on only part of a composite key.</div>
+        <div class="example-card">
+          <div class="ex-label">📝 Example</div>
+          <p>Enroll(SID, CourseID, SName, Dept) — Key: (SID, CourseID)<br/>FD: SID → SName, Dept ← Partial dependency! SName depends only on SID.</p>
+          <p class="mt-sm"><strong>Fix:</strong> Decompose into Student(SID, SName, Dept) + Enroll(SID, CourseID)</p>
+        </div>
+      </div>
+
+      <div class="topic-block" id="norm-3nf">
+        <div class="topic-header"><h3>4.7 Third Normal Form (3NF)</h3><div class="topic-actions"><button class="bookmark-btn" data-id="norm-3nf">🔖</button><button class="complete-btn" data-id="norm-3nf">✓</button></div></div>
+        <div class="definition-card"><div class="def-label">Definition</div><p>A relation is in <strong>3NF</strong> if it is in 2NF AND there is <strong>no transitive dependency</strong> of a non-prime attribute on a candidate key. For every FD X→A, either X is a superkey OR A is a prime attribute.</p></div>
+        <div class="example-card">
+          <div class="ex-label">📝 Example</div>
+          <p>Emp(EmpID, DeptID, DeptName) — EmpID→DeptID, DeptID→DeptName<br/>Transitive: EmpID → DeptID → DeptName</p>
+          <p class="mt-sm"><strong>Fix:</strong> Emp(EmpID, DeptID) + Dept(DeptID, DeptName)</p>
+        </div>
+        <div class="table-wrap mt">
+          <div class="table-title">Normal Forms Summary</div>
+          <table>
+            <thead><tr><th>NF</th><th>Condition</th><th>Eliminates</th></tr></thead>
+            <tbody>
+              <tr><td>1NF</td><td>Atomic values, unique rows</td><td>Multi-valued attributes</td></tr>
+              <tr><td>2NF</td><td>1NF + No partial dependency</td><td>Partial dependencies</td></tr>
+              <tr><td>3NF</td><td>2NF + No transitive dependency</td><td>Transitive dependencies</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="qbank mt">
+          <h4>📋 Question Bank — Chapter 4</h4>
+          <div class="q-group"><div class="q-badge q2">2 Mark</div><ul><li>Define functional dependency.</li><li>What is a candidate key?</li><li>Define 1NF.</li></ul></div>
+          <div class="q-group"><div class="q-badge q5">5 Mark</div><ul><li>Explain Armstrong's axioms.</li><li>Find closure of A⁺ given FDs.</li><li>Explain 2NF with a suitable example.</li></ul></div>
+          <div class="q-group"><div class="q-badge q10">10 Mark</div><ul><li>Explain 1NF, 2NF, 3NF with examples and decompositions.</li><li>Explain the algorithm to find candidate keys using attribute closure. Give a solved example.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- CHAPTER 5: SQL Fundamentals               -->
+    <!-- ══════════════════════════════════════════ -->
+    <section class="chapter-section" id="chapter5">
+      <div class="chapter-header">
+        <div class="ch-badge">Chapter 05</div>
+        <h2>SQL Fundamentals</h2>
+        <p>DDL, DML, DCL, TCL, constraints, operators, NULL values.</p>
+        <div class="chapter-meta"><span>⏱ ~40 min read</span><button class="bookmark-btn" data-id="chapter5">🔖</button><button class="complete-btn" data-id="chapter5">Mark Complete ✓</button></div>
+      </div>
+
+      <div class="topic-block" id="sql-intro">
+        <div class="topic-header"><h3>5.1 SQL Introduction</h3><div class="topic-actions"><button class="bookmark-btn" data-id="sql-intro">🔖</button><button class="complete-btn" data-id="sql-intro">✓</button></div></div>
+        <div class="definition-card"><div class="def-label">Definition</div><p><strong>SQL (Structured Query Language)</strong> is the standard language for relational DBMSs. It is <em>declarative</em> — the user specifies <em>what</em> data is needed, not <em>how</em> to access it. Originated at IBM in 1970s as SEQUEL.</p></div>
+        <h4>SQL Execution Steps:</h4>
+        <div class="flow-diagram">
+          <div class="flow-step">Input<br/>(Query)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">Parsing<br/>(Syntax check)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Optimization<br/>(Best plan)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">Execution</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">Output</div>
+        </div>
+      </div>
+
+      <div class="topic-block" id="sql-commands">
+        <div class="topic-header"><h3>5.2 SQL Command Categories</h3><div class="topic-actions"><button class="bookmark-btn" data-id="sql-commands">🔖</button><button class="complete-btn" data-id="sql-commands">✓</button></div></div>
+        <div class="highlight-box exam">⭐ Extremely common — list all 5 categories with commands for 5-mark questions.</div>
+        <div class="card-grid g3">
+          <div class="concept-card accent"><div class="cc-icon">🏗</div><h5>DDL — Data Definition Language</h5><p><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>, <code>RENAME</code><br/><em>Auto-committed. Changes structure.</em></p></div>
+          <div class="concept-card"><div class="cc-icon">✏</div><h5>DML — Data Manipulation Language</h5><p><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code><br/><em>Can be rolled back. Changes data.</em></p></div>
+          <div class="concept-card"><div class="cc-icon">🔍</div><h5>DQL — Data Query Language</h5><p><code>SELECT</code><br/><em>Retrieves data. Read-only.</em></p></div>
+          <div class="concept-card"><div class="cc-icon">🛡</div><h5>DCL — Data Control Language</h5><p><code>GRANT</code>, <code>REVOKE</code><br/><em>Manages user permissions.</em></p></div>
+          <div class="concept-card"><div class="cc-icon">⚡</div><h5>TCL — Transaction Control Language</h5><p><code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code><br/><em>Manages transactions.</em></p></div>
+        </div>
+      </div>
+
+      <div class="topic-block" id="sql-ddl">
+        <div class="topic-header"><h3>5.3 DDL Commands in Detail</h3><div class="topic-actions"><button class="bookmark-btn" data-id="sql-ddl">🔖</button><button class="complete-btn" data-id="sql-ddl">✓</button></div></div>
+        <div class="code-block">
+<pre><span class="sql-cmt">-- CREATE TABLE</span>
+<span class="sql-kw">CREATE TABLE</span> Student (
+  RollNo   <span class="sql-type">INT</span>         <span class="sql-kw">PRIMARY KEY</span>,
+  Name     <span class="sql-type">VARCHAR</span>(40) <span class="sql-kw">NOT NULL</span>,
+  Branch   <span class="sql-type">VARCHAR</span>(20),
+  Year     <span class="sql-type">INT</span>         <span class="sql-kw">CHECK</span> (Year <span class="sql-kw">BETWEEN</span> 1 <span class="sql-kw">AND</span> 3),
+  Email    <span class="sql-type">VARCHAR</span>(50) <span class="sql-kw">UNIQUE</span>
+);
+
+<span class="sql-cmt">-- ALTER: Add column</span>
+<span class="sql-kw">ALTER TABLE</span> Student <span class="sql-kw">ADD</span> Phone <span class="sql-type">VARCHAR</span>(15);
+
+<span class="sql-cmt">-- ALTER: Modify column</span>
+<span class="sql-kw">ALTER TABLE</span> Student <span class="sql-kw">MODIFY</span> Year <span class="sql-type">TINYINT</span>;
+
+<span class="sql-cmt">-- ALTER: Drop column</span>
+<span class="sql-kw">ALTER TABLE</span> Student <span class="sql-kw">DROP COLUMN</span> Email;
+
+<span class="sql-cmt">-- DROP TABLE (permanent!)</span>
+<span class="sql-kw">DROP TABLE</span> Student;
+
+<span class="sql-cmt">-- TRUNCATE (removes data, keeps structure)</span>
+<span class="sql-kw">TRUNCATE TABLE</span> Student;</pre>
+        </div>
+      </div>
+
+      <div class="topic-block" id="sql-dml">
+        <div class="topic-header"><h3>5.4 DML Commands in Detail</h3><div class="topic-actions"><button class="bookmark-btn" data-id="sql-dml">🔖</button><button class="complete-btn" data-id="sql-dml">✓</button></div></div>
+        <div class="code-block">
+<pre><span class="sql-cmt">-- INSERT</span>
+<span class="sql-kw">INSERT INTO</span> Student (RollNo, Name, Branch, Year)
+<span class="sql-kw">VALUES</span> (1, <span class="sql-str">'Rohan'</span>, <span class="sql-str">'CS'</span>, 1);
+
+<span class="sql-cmt">-- UPDATE (always use WHERE!)</span>
+<span class="sql-kw">UPDATE</span> Student
+<span class="sql-kw">SET</span> Year = 2
+<span class="sql-kw">WHERE</span> RollNo = 1;
+
+<span class="sql-cmt">-- DELETE (always use WHERE!)</span>
+<span class="sql-kw">DELETE FROM</span> Student
+<span class="sql-kw">WHERE</span> Year = 3;
+
+<span class="sql-cmt">-- SELECT with DISTINCT</span>
+<span class="sql-kw">SELECT DISTINCT</span> Branch
+<span class="sql-kw">FROM</span> Student;
+
+<span class="sql-cmt">-- SELECT with sorting</span>
+<span class="sql-kw">SELECT</span> RollNo, Name, Year
+<span class="sql-kw">FROM</span> Student
+<span class="sql-kw">ORDER BY</span> Year <span class="sql-kw">DESC</span>, Name <span class="sql-kw">ASC</span>;</pre>
+        </div>
+        <div class="highlight-box info">⚠ Without WHERE in UPDATE or DELETE, <strong>all rows</strong> are affected!</div>
+      </div>
+
+      <div class="topic-block" id="sql-constraints">
+        <div class="topic-header"><h3>5.5 SQL Constraints with Examples</h3><div class="topic-actions"><button class="bookmark-btn" data-id="sql-constraints">🔖</button><button class="complete-btn" data-id="sql-constraints">✓</button></div></div>
+        <div class="code-block">
+<pre><span class="sql-kw">CREATE TABLE</span> Student (
+  Student_ID  <span class="sql-type">INT</span>          <span class="sql-kw">PRIMARY KEY</span>,       <span class="sql-cmt">-- unique + not null</span>
+  Name        <span class="sql-type">VARCHAR</span>(50)  <span class="sql-kw">NOT NULL</span>,          <span class="sql-cmt">-- must have value</span>
+  Email       <span class="sql-type">VARCHAR</span>(50)  <span class="sql-kw">UNIQUE</span>,            <span class="sql-cmt">-- no duplicates</span>
+  Gender      <span class="sql-type">CHAR</span>(1)      <span class="sql-kw">CHECK</span> (Gender <span class="sql-kw">IN</span> (<span class="sql-str">'M'</span>,<span class="sql-str">'F'</span>)),
+  Marks       <span class="sql-type">INT</span>          <span class="sql-kw">CHECK</span> (Marks >= 0 <span class="sql-kw">AND</span> Marks <= 100),
+  Department  <span class="sql-type">VARCHAR</span>(30)  <span class="sql-kw">DEFAULT</span> <span class="sql-str">'CS'</span>       <span class="sql-cmt">-- auto-fills if not given</span>
+);
+
+<span class="sql-cmt">-- FOREIGN KEY Example</span>
+<span class="sql-kw">CREATE TABLE</span> Employee (
+  emp_id   <span class="sql-type">INT</span> <span class="sql-kw">PRIMARY KEY</span>,
+  emp_name <span class="sql-type">VARCHAR</span>(50),
+  dept_id  <span class="sql-type">INT</span>,
+  <span class="sql-kw">FOREIGN KEY</span> (dept_id) <span class="sql-kw">REFERENCES</span> Department(dept_id)
+    <span class="sql-kw">ON DELETE CASCADE</span>
+);</pre>
+        </div>
+        <div class="table-wrap mt">
+          <table>
+            <thead><tr><th>Constraint</th><th>Purpose</th><th>NULL?</th></tr></thead>
+            <tbody>
+              <tr><td>PRIMARY KEY</td><td>Uniquely identifies each row</td><td class="neg">No</td></tr>
+              <tr><td>NOT NULL</td><td>Forbids NULL values</td><td class="neg">No</td></tr>
+              <tr><td>UNIQUE</td><td>All values must be distinct</td><td class="pos">Yes (one)</td></tr>
+              <tr><td>CHECK</td><td>Validates a condition</td><td class="pos">Yes (if condition allows)</td></tr>
+              <tr><td>FOREIGN KEY</td><td>Links child table to parent</td><td class="pos">Yes (if allowed)</td></tr>
+              <tr><td>DEFAULT</td><td>Auto-fills value if none given</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="topic-block" id="sql-operators">
+        <div class="topic-header"><h3>5.6 IN, NOT IN, BETWEEN, LIKE</h3><div class="topic-actions"><button class="bookmark-btn" data-id="sql-operators">🔖</button><button class="complete-btn" data-id="sql-operators">✓</button></div></div>
+        <div class="code-block">
+<pre><span class="sql-cmt">-- IN: match any value in a list</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> Student <span class="sql-kw">WHERE</span> Department <span class="sql-kw">IN</span> (<span class="sql-str">'CS'</span>, <span class="sql-str">'IT'</span>);
+
+<span class="sql-cmt">-- NOT IN: exclude values in list</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> Student <span class="sql-kw">WHERE</span> Department <span class="sql-kw">NOT IN</span> (<span class="sql-str">'Finance'</span>);
+
+<span class="sql-cmt">-- BETWEEN: inclusive range</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> Student <span class="sql-kw">WHERE</span> Marks <span class="sql-kw">BETWEEN</span> 70 <span class="sql-kw">AND</span> 90;
+
+<span class="sql-cmt">-- LIKE: pattern matching</span>
+<span class="sql-kw">SELECT</span> Name <span class="sql-kw">FROM</span> Student <span class="sql-kw">WHERE</span> Name <span class="sql-kw">LIKE</span> <span class="sql-str">'A%'</span>;    <span class="sql-cmt">-- starts with A</span>
+<span class="sql-kw">SELECT</span> Name <span class="sql-kw">FROM</span> Student <span class="sql-kw">WHERE</span> Name <span class="sql-kw">LIKE</span> <span class="sql-str">'%a'</span>;    <span class="sql-cmt">-- ends with a</span>
+<span class="sql-kw">SELECT</span> Name <span class="sql-kw">FROM</span> Student <span class="sql-kw">WHERE</span> Name <span class="sql-kw">LIKE</span> <span class="sql-str">'_a%'</span>;   <span class="sql-cmt">-- 2nd letter is a</span>
+<span class="sql-kw">SELECT</span> Name <span class="sql-kw">FROM</span> Student <span class="sql-kw">WHERE</span> Name <span class="sql-kw">LIKE</span> <span class="sql-str">'%oo%'</span>;  <span class="sql-cmt">-- contains 'oo'</span></pre>
+        </div>
+        <div class="tip-card"><span class="tip-icon">🎯</span><div><strong>LIKE wildcards:</strong> <code>%</code> = any number of chars | <code>_</code> = exactly one char</div></div>
+      </div>
+
+      <div class="topic-block" id="sql-null">
+        <div class="topic-header"><h3>5.7 NULL Values in SQL</h3><div class="topic-actions"><button class="bookmark-btn" data-id="sql-null">🔖</button><button class="complete-btn" data-id="sql-null">✓</button></div></div>
+        <div class="definition-card"><div class="def-label">Definition</div><p><strong>NULL</strong> means the absence of a value — it is NOT zero and NOT an empty string. You cannot use =, &lt;, &gt; with NULL. Use <code>IS NULL</code> or <code>IS NOT NULL</code>.</p></div>
+        <div class="code-block">
+<pre><span class="sql-cmt">-- Check for NULL values</span>
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> Customers <span class="sql-kw">WHERE</span> SALARY <span class="sql-kw">IS NULL</span>;
+<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> Customers <span class="sql-kw">WHERE</span> SALARY <span class="sql-kw">IS NOT NULL</span>;
+
+<span class="sql-cmt">-- Update NULL values</span>
+<span class="sql-kw">UPDATE</span> Customers <span class="sql-kw">SET</span> SALARY = 9000 <span class="sql-kw">WHERE</span> SALARY <span class="sql-kw">IS NULL</span>;</pre>
+        </div>
+        <div class="qbank mt">
+          <h4>📋 Question Bank — Chapter 5</h4>
+          <div class="q-group"><div class="q-badge q2">2 Mark</div><ul><li>What is DDL? Give two commands.</li><li>Difference between DELETE and TRUNCATE.</li><li>What is NULL in SQL?</li></ul></div>
+          <div class="q-group"><div class="q-badge q5">5 Mark</div><ul><li>Explain all SQL command categories with examples.</li><li>Write SQL to create a Student table with all constraints.</li><li>Explain IN, BETWEEN, LIKE with examples.</li></ul></div>
+          <div class="q-group"><div class="q-badge q10">10 Mark</div><ul><li>Explain all SQL constraints with syntax and examples. Demonstrate constraint violations.</li><li>Explain DDL and DML commands with syntax and examples.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- CHAPTER 6: Advanced SQL                   -->
+    <!-- ══════════════════════════════════════════ -->
+    <section class="chapter-section" id="chapter6">
+      <div class="chapter-header">
+        <div class="ch-badge">Chapter 06</div>
+        <h2>Advanced SQL</h2>
+        <p>Aggregate functions, GROUP BY, HAVING, Set operations, Joins, and Subqueries.</p>
+        <div class="chapter-meta"><span>⏱ ~35 min read</span><button class="bookmark-btn" data-id="chapter6">🔖</button><button class="complete-btn" data-id="chapter6">Mark Complete ✓</button></div>
+      </div>
+
+      <div class="topic-block" id="adv-aggregate">
+        <div class="topic-header"><h3>6.1 Aggregate Functions</h3><div class="topic-actions"><button class="bookmark-btn" data-id="adv-aggregate">🔖</button><button class="complete-btn" data-id="adv-aggregate">✓</button></div></div>
+        <div class="definition-card"><div class="def-label">Definition</div><p>Aggregate functions compute a <strong>single value from many rows</strong> (whole table or per group). Usually used with <code>GROUP BY</code>.</p></div>
+        <div class="code-block">
+<pre><span class="sql-cmt">-- COUNT all students</span>
+<span class="sql-kw">SELECT</span> <span class="sql-fn">COUNT</span>(*) <span class="sql-kw">AS</span> NumStudents <span class="sql-kw">FROM</span> Student;
+
+<span class="sql-cmt">-- Average salary per department</span>
+<span class="sql-kw">SELECT</span> DeptID, <span class="sql-fn">AVG</span>(Salary) <span class="sql-kw">AS</span> AvgSalary
+<span class="sql-kw">FROM</span> Employee
+<span class="sql-kw">GROUP BY</span> DeptID;
+
+<span class="sql-cmt">-- MAX and MIN marks</span>
+<span class="sql-kw">SELECT</span> <span class="sql-fn">MAX</span>(Marks) <span class="sql-kw">AS</span> Highest, <span class="sql-fn">MIN</span>(Marks) <span class="sql-kw">AS</span> Lowest <span class="sql-kw">FROM</span> Result;</pre>
+        </div>
+      </div>
+
+      <div class="topic-block" id="adv-groupby">
+        <div class="topic-header"><h3>6.2 GROUP BY, HAVING, ORDER BY</h3><div class="topic-actions"><button class="bookmark-btn" data-id="adv-groupby">🔖</button><button class="complete-btn" data-id="adv-groupby">✓</button></div></div>
+        <div class="highlight-box exam">⭐ GROUP BY + HAVING + ORDER BY is asked in almost every practical/theory exam.</div>
+        <div class="tip-card"><span class="tip-icon">🎯</span><div><strong>Key rule:</strong> GROUP BY forms groups → HAVING filters groups → ORDER BY sorts the result.</div></div>
+        <div class="code-block">
+<pre><span class="sql-cmt">-- Branches with avg percentage ≥ 60, sorted by avg</span>
+<span class="sql-kw">SELECT</span> Branch, <span class="sql-fn">AVG</span>(Percentage) <span class="sql-kw">AS</span> AvgPercent
+<span class="sql-kw">FROM</span> Result
+<span class="sql-kw">GROUP BY</span> Branch
+<span class="sql-kw">HAVING</span> <span class="sql-fn">AVG</span>(Percentage) >= 60
+<span class="sql-kw">ORDER BY</span> AvgPercent <span class="sql-kw">DESC</span>;
+
+<span class="sql-cmt">-- WHERE filters rows BEFORE grouping
+-- HAVING filters groups AFTER aggregation</span></pre>
+        </div>
+        <div class="table-wrap mt">
+          <table>
+            <thead><tr><th>Clause</th><th>When Applied</th><th>Can Use Aggregates?</th></tr></thead>
+            <tbody>
+              <tr><td>WHERE</td><td>Before GROUP BY (row level)</td><td class="neg">No</td></tr>
+              <tr><td>HAVING</td><td>After GROUP BY (group level)</td><td class="pos">Yes</td></tr>
+              <tr><td>ORDER BY</td><td>Last (on final result)</td><td class="pos">Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="topic-block" id="adv-setops">
+        <div class="topic-header"><h3>6.3 Set Operations</h3><div class="topic-actions"><button class="bookmark-btn" data-id="adv-setops">🔖</button><button class="complete-btn" data-id="adv-setops">✓</button></div></div>
+        <div class="card-grid g3">
+          <div class="concept-card accent"><div class="cc-icon">∪</div><h5>UNION</h5><p>All distinct rows from both queries. <code>UNION ALL</code> keeps duplicates.</p></div>
+          <div class="concept-card"><div class="cc-icon">∩</div><h5>INTERSECT</h5><p>Only rows that appear in both result sets.</p></div>
+          <div class="concept-card"><div class="cc-icon">∖</div><h5>EXCEPT / MINUS</h5><p>Rows from first query NOT in second. (Oracle uses MINUS)</p></div>
+        </div>
+        <div class="code-block mt">
+<pre><span class="sql-cmt">-- Students in CS or IT courses</span>
+<span class="sql-kw">SELECT</span> RollNo <span class="sql-kw">FROM</span> Enroll <span class="sql-kw">WHERE</span> CourseID <span class="sql-kw">LIKE</span> <span class="sql-str">'CS%'</span>
+<span class="sql-kw">UNION</span>
+<span class="sql-kw">SELECT</span> RollNo <span class="sql-kw">FROM</span> Enroll <span class="sql-kw">WHERE</span> CourseID <span class="sql-kw">LIKE</span> <span class="sql-str">'IT%'</span>;
+
+<span class="sql-cmt">-- Students in BOTH CS and IT</span>
+<span class="sql-kw">SELECT</span> RollNo <span class="sql-kw">FROM</span> Enroll <span class="sql-kw">WHERE</span> CourseID <span class="sql-kw">LIKE</span> <span class="sql-str">'CS%'</span>
+<span class="sql-kw">INTERSECT</span>
+<span class="sql-kw">SELECT</span> RollNo <span class="sql-kw">FROM</span> Enroll <span class="sql-kw">WHERE</span> CourseID <span class="sql-kw">LIKE</span> <span class="sql-str">'IT%'</span>;
+
+<span class="sql-cmt">-- Students in CS but NOT IT</span>
+<span class="sql-kw">SELECT</span> RollNo <span class="sql-kw">FROM</span> Enroll <span class="sql-kw">WHERE</span> CourseID <span class="sql-kw">LIKE</span> <span class="sql-str">'CS%'</span>
+<span class="sql-kw">EXCEPT</span>
+<span class="sql-kw">SELECT</span> RollNo <span class="sql-kw">FROM</span> Enroll <span class="sql-kw">WHERE</span> CourseID <span class="sql-kw">LIKE</span> <span class="sql-str">'IT%'</span>;</pre>
+        </div>
+      </div>
+
+      <div class="topic-block" id="adv-joins">
+        <div class="topic-header"><h3>6.4 Joins</h3><div class="topic-actions"><button class="bookmark-btn" data-id="adv-joins">🔖</button><button class="complete-btn" data-id="adv-joins">✓</button></div></div>
+        <div class="highlight-box vip">🔴 Very Important — Joins are 5–10 mark questions. Know all 4 types!</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Join Type</th><th>Returns</th><th>NULLs?</th></tr></thead>
+            <tbody>
+              <tr><td>INNER JOIN</td><td>Matching rows from both tables</td><td class="neg">No NULLs</td></tr>
+              <tr><td>LEFT OUTER JOIN</td><td>All left rows + matching right rows</td><td class="pos">Right side NULLs if no match</td></tr>
+              <tr><td>RIGHT OUTER JOIN</td><td>All right rows + matching left rows</td><td class="pos">Left side NULLs if no match</td></tr>
+              <tr><td>FULL OUTER JOIN</td><td>All rows from both tables</td><td class="pos">NULLs on unmatched sides</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block mt">
+<pre><span class="sql-cmt">-- INNER JOIN: only enrolled students</span>
+<span class="sql-kw">SELECT</span> s.RollNo, s.Name, e.CourseID
+<span class="sql-kw">FROM</span> Student s
+<span class="sql-kw">INNER JOIN</span> Enroll e <span class="sql-kw">ON</span> s.RollNo = e.RollNo;
+
+<span class="sql-cmt">-- LEFT JOIN: all students (unenrolled show NULL)</span>
+<span class="sql-kw">SELECT</span> s.RollNo, s.Name, e.CourseID
+<span class="sql-kw">FROM</span> Student s
+<span class="sql-kw">LEFT JOIN</span> Enroll e <span class="sql-kw">ON</span> s.RollNo = e.RollNo;
+
+<span class="sql-cmt">-- RIGHT JOIN: all courses (even with no students)</span>
+<span class="sql-kw">SELECT</span> c.CourseID, c.Title, e.RollNo
+<span class="sql-kw">FROM</span> Enroll e
+<span class="sql-kw">RIGHT JOIN</span> Course c <span class="sql-kw">ON</span> e.CourseID = c.CourseID;</pre>
+        </div>
+      </div>
+
+      <div class="topic-block" id="adv-subquery">
+        <div class="topic-header"><h3>6.5 Subqueries (Nested Queries)</h3><div class="topic-actions"><button class="bookmark-btn" data-id="adv-subquery">🔖</button><button class="complete-btn" data-id="adv-subquery">✓</button></div></div>
+        <div class="definition-card"><div class="def-label">Definition</div><p>A <strong>subquery</strong> is a SELECT statement written inside another SQL statement. The inner query runs first; its result is used by the outer query.</p></div>
+        <div class="code-block">
+<pre><span class="sql-cmt">-- Scalar subquery: above average marks</span>
+<span class="sql-kw">SELECT</span> RollNo, Name, Percentage
+<span class="sql-kw">FROM</span> Result
+<span class="sql-kw">WHERE</span> Percentage > (<span class="sql-kw">SELECT</span> <span class="sql-fn">AVG</span>(Percentage) <span class="sql-kw">FROM</span> Result);
+
+<span class="sql-cmt">-- IN subquery: students in CS courses</span>
+<span class="sql-kw">SELECT</span> RollNo, Name <span class="sql-kw">FROM</span> Student
+<span class="sql-kw">WHERE</span> RollNo <span class="sql-kw">IN</span> (
+    <span class="sql-kw">SELECT DISTINCT</span> RollNo <span class="sql-kw">FROM</span> Enroll
+    <span class="sql-kw">WHERE</span> CourseID <span class="sql-kw">LIKE</span> <span class="sql-str">'CS%'</span>
+);
+
+<span class="sql-cmt">-- Correlated subquery: above branch-wise average</span>
+<span class="sql-kw">SELECT</span> s.Name, r.Branch, r.Percentage
+<span class="sql-kw">FROM</span> Result r <span class="sql-kw">JOIN</span> Student s <span class="sql-kw">ON</span> s.RollNo = r.RollNo
+<span class="sql-kw">WHERE</span> r.Percentage > (
+    <span class="sql-kw">SELECT</span> <span class="sql-fn">AVG</span>(r2.Percentage)
+    <span class="sql-kw">FROM</span> Result r2
+    <span class="sql-kw">WHERE</span> r2.Branch = r.Branch  <span class="sql-cmt">-- re-runs for each outer row</span>
+);</pre>
+        </div>
+
+        <div class="faq-section mt">
+          <h4>❓ Viva &amp; FAQ — Chapter 6</h4>
+          <div class="faq-item">
+            <button class="faq-q">Difference between WHERE and HAVING?</button>
+            <div class="faq-a"><p><strong>WHERE</strong> filters individual rows BEFORE grouping. <strong>HAVING</strong> filters groups AFTER aggregation. HAVING can use aggregate functions; WHERE cannot.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">What is the difference between UNION and UNION ALL?</button>
+            <div class="faq-a"><p><strong>UNION</strong> removes duplicate rows and returns only distinct rows. <strong>UNION ALL</strong> retains all rows including duplicates. UNION ALL is faster.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">What is a correlated subquery?</button>
+            <div class="faq-a"><p>A correlated subquery references a column from the outer query. It re-executes for each row processed by the outer query (e.g., comparing each student to their branch's average).</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">Which join returns NULLs?</button>
+            <div class="faq-a"><p>Outer joins return NULLs for unmatched rows. LEFT JOIN → right side NULLs. RIGHT JOIN → left side NULLs. FULL OUTER JOIN → both sides can have NULLs. INNER JOIN never returns NULLs.</p></div>
+          </div>
+        </div>
+
+        <div class="qbank mt">
+          <h4>📋 Question Bank — Chapter 6</h4>
+          <div class="q-group"><div class="q-badge q2">2 Mark</div><ul><li>What is GROUP BY?</li><li>Difference between UNION and INTERSECT.</li><li>Define subquery.</li></ul></div>
+          <div class="q-group"><div class="q-badge q5">5 Mark</div><ul><li>Explain INNER JOIN and LEFT JOIN with examples.</li><li>Write SQL using GROUP BY and HAVING to find branches with avg marks > 70.</li><li>Explain set operations with examples.</li></ul></div>
+          <div class="q-group"><div class="q-badge q10">10 Mark</div><ul><li>Explain all types of joins with syntax, examples, and differences.</li><li>Explain subqueries: scalar, IN, and correlated — with examples.</li><li>Write SQL queries using GROUP BY, HAVING, ORDER BY, and aggregate functions on a given table.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scroll spacer -->
+    <div style="height: 80px;"></div>
+  </main>
+</div>
+
+<!-- Scroll to Top -->
+<button id="scroll-top" title="Scroll to top" aria-label="Scroll to top">↑</button>
+
+<!-- Toast Notification -->
+<div id="toast"></div>
+
+<script>/* ===================================================
+   DBMS MasterNotes — script.js
+   Handles: theme, sidebar, search, bookmarks,
+            progress tracking, FAQ, scroll, toast
+   =================================================== */
+
+'use strict';
+
+/* ---- Utility ---- */
+function $(id) { return document.getElementById(id); }
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ===================================================
+   READING PROGRESS BAR
+   =================================================== */
+function initProgressBar() {
+  const bar = $('progress-bar');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+}
+
+/* ===================================================
+   THEME TOGGLE
+   =================================================== */
+function initTheme() {
+  const btn = $('theme-toggle');
+  if (!btn) return;
+
+  const savedTheme = localStorage.getItem('dbms-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  btn.textContent = savedTheme === 'dark' ? '☀' : '☽';
+
+  btn.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('dbms-theme', next);
+    btn.textContent = next === 'dark' ? '☀' : '☽';
+    showToast(next === 'light' ? '☀ Light mode' : '☽ Dark mode');
+  });
+}
+
+/* ===================================================
+   PRINT BUTTON
+   =================================================== */
+function initPrint() {
+  const btn = $('print-btn');
+  if (btn) btn.addEventListener('click', () => window.print());
+}
+
+/* ===================================================
+   HAMBURGER / SIDEBAR (mobile)
+   =================================================== */
+function initSidebar() {
+  const hamburger = $('hamburger');
+  const sidebar = $('sidebar');
+  if (!hamburger || !sidebar) return;
+
+  // Open/close sidebar
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sidebar.classList.toggle('open');
+  });
+
+  // Close when clicking outside on mobile
+  document.addEventListener('click', (e) => {
+    if (
+      sidebar.classList.contains('open') &&
+      !sidebar.contains(e.target) &&
+      e.target !== hamburger
+    ) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  // Close sidebar when a nav link is clicked on mobile
+  sidebar.querySelectorAll('.nav-topics li a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        sidebar.classList.remove('open');
+      }
+    });
+  });
+}
+
+/* ===================================================
+   SIDEBAR — CHAPTER ACCORDION
+   =================================================== */
+function initChapterAccordion() {
+  const chapterBtns = document.querySelectorAll('.nav-chapter-btn');
+
+  chapterBtns.forEach(btn => {
+    const chapterId = btn.getAttribute('data-chapter');
+    const topicsList = $('topics-' + chapterId);
+
+    btn.addEventListener('click', () => {
+      const isOpen = btn.classList.contains('open');
+
+      // Close all
+      chapterBtns.forEach(b => {
+        b.classList.remove('open', 'active');
+        const id = b.getAttribute('data-chapter');
+        const tl = $('topics-' + id);
+        if (tl) tl.classList.remove('open');
+      });
+
+      // Open clicked (toggle)
+      if (!isOpen) {
+        btn.classList.add('open', 'active');
+        if (topicsList) topicsList.classList.add('open');
+      }
+    });
+  });
+
+  // Auto-open the first chapter
+  const first = chapterBtns[0];
+  if (first) {
+    first.classList.add('open', 'active');
+    const id = first.getAttribute('data-chapter');
+    const tl = $('topics-' + id);
+    if (tl) tl.classList.add('open');
+  }
+}
+
+/* ===================================================
+   ACTIVE NAV LINK ON SCROLL (IntersectionObserver)
+   =================================================== */
+function initScrollSpy() {
+  const sections = document.querySelectorAll('.topic-block[id], .chapter-section[id]');
+  const navLinks = document.querySelectorAll('.nav-topics li a');
+
+  if (!sections.length || !navLinks.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
         });
 
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const icon = themeToggle.querySelector('i');
-
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            if (body.classList.contains('light-mode')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
+        // Also activate the parent chapter button
+        const parentSection = entry.target.closest('.chapter-section');
+        if (parentSection) {
+          const chapterId = parentSection.id;
+          document.querySelectorAll('.nav-chapter-btn').forEach(btn => {
+            const isMatch = btn.getAttribute('data-chapter') === chapterId;
+            btn.classList.toggle('active', isMatch);
+            if (isMatch && !btn.classList.contains('open')) {
+              // Auto-open that chapter accordion
+              document.querySelectorAll('.nav-chapter-btn').forEach(b => {
+                b.classList.remove('open');
+                const tl = $('topics-' + b.getAttribute('data-chapter'));
+                if (tl) tl.classList.remove('open');
+              });
+              btn.classList.add('open');
+              const tl = $('topics-' + chapterId);
+              if (tl) tl.classList.add('open');
             }
+          });
+        }
+      }
+    });
+  }, {
+    rootMargin: `-${getNavHeight()}px 0px -60% 0px`,
+    threshold: 0
+  });
+
+  sections.forEach(s => observer.observe(s));
+}
+
+function getNavHeight() {
+  const nav = $('navbar');
+  return nav ? nav.offsetHeight : 64;
+}
+
+/* ===================================================
+   SCROLL TO TOP BUTTON
+   =================================================== */
+function initScrollTop() {
+  const btn = $('scroll-top');
+  if (!btn) return;
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ===================================================
+   HERO — "View Progress" BUTTON
+   =================================================== */
+function initHeroCta() {
+  const btn = $('scroll-to-progress');
+  const panel = $('progress-panel');
+  if (!btn || !panel) return;
+  btn.addEventListener('click', () => {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+}
+
+/* ===================================================
+   SEARCH
+   =================================================== */
+// Build a searchable index from all topic blocks
+function buildSearchIndex() {
+  const index = [];
+  document.querySelectorAll('.topic-block[id]').forEach(block => {
+    const id = block.id;
+    const heading = block.querySelector('h3');
+    const title = heading ? heading.textContent.trim() : id;
+
+    // Find chapter title
+    const chapterSection = block.closest('.chapter-section');
+    const chapterHeading = chapterSection ? chapterSection.querySelector('.chapter-header h2') : null;
+    const chapter = chapterHeading ? chapterHeading.textContent.trim() : '';
+
+    // Extract plain text excerpt (strip tags, limit length)
+    const textContent = block.textContent.replace(/\s+/g, ' ').trim().slice(0, 300);
+
+    index.push({ id, title, chapter, text: textContent });
+  });
+  return index;
+}
+
+function initSearch() {
+  const input = $('search-input');
+  const dropdown = $('search-results');
+  if (!input || !dropdown) return;
+
+  const index = buildSearchIndex();
+
+  function doSearch(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      dropdown.classList.remove('open');
+      return;
+    }
+
+    const results = index.filter(item =>
+      item.title.toLowerCase().includes(q) ||
+      item.chapter.toLowerCase().includes(q) ||
+      item.text.toLowerCase().includes(q)
+    ).slice(0, 8);
+
+    if (!results.length) {
+      dropdown.innerHTML = `<div class="no-results">No results for "<strong>${escapeHtml(query)}</strong>"</div>`;
+    } else {
+      dropdown.innerHTML = results.map(item => {
+        const excerpt = getExcerpt(item.text, q);
+        const highlightedTitle = highlight(item.title, q);
+        return `
+          <div class="search-result-item" data-target="${item.id}">
+            <div class="sri-title">${highlightedTitle}</div>
+            <div class="sri-chapter">${escapeHtml(item.chapter)}</div>
+            ${excerpt ? `<div class="sri-excerpt">${excerpt}</div>` : ''}
+          </div>`;
+      }).join('');
+
+      // Click handler for results
+      dropdown.querySelectorAll('.search-result-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const target = document.getElementById(el.dataset.target);
+          if (target) {
+            dropdown.classList.remove('open');
+            input.value = '';
+            setTimeout(() => {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
+          }
         });
+      });
+    }
 
-        // Scroll Progress Bar
-        window.onscroll = function() {
-            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            document.getElementById("progress-bar").style.width = scrolled + "%";
+    dropdown.classList.add('open');
+  }
 
-            // Floating Button Visibility
-            const floatBtn = document.getElementById('scrollTop');
-            if (document.documentElement.scrollTop > 300) {
-                floatBtn.classList.add('visible');
-            } else {
-                floatBtn.classList.remove('visible');
-            }
-        };
+  input.addEventListener('input', (e) => doSearch(e.target.value));
+  input.addEventListener('focus', (e) => { if (e.target.value) doSearch(e.target.value); });
 
-        // Accordion Logic
-        const accordions = document.querySelectorAll('.accordion');
-        accordions.forEach(acc => {
-            const header = acc.querySelector('.accordion-header');
-            header.addEventListener('click', () => {
-                // Close others
-                accordions.forEach(item => {
-                    if (item !== acc) item.classList.remove('active');
-                });
-                acc.classList.toggle('active');
-            });
+  // Keyboard shortcut Ctrl+K / Cmd+K
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+    if (e.key === 'Escape') {
+      dropdown.classList.remove('open');
+      input.blur();
+    }
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove('open');
+    }
+  });
+}
+
+function highlight(text, query) {
+  if (!query) return escapeHtml(text);
+  const re = new RegExp(`(${escapeRe(query)})`, 'gi');
+  return escapeHtml(text).replace(re, '<span class="sri-match">$1</span>');
+}
+
+function getExcerpt(text, query) {
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return '';
+  const start = Math.max(0, idx - 40);
+  const end = Math.min(text.length, idx + query.length + 80);
+  let snippet = (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
+  return highlight(snippet, query);
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escapeRe(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/* ===================================================
+   BOOKMARKS
+   =================================================== */
+function getBookmarks() {
+  try { return JSON.parse(localStorage.getItem('dbms-bookmarks') || '[]'); }
+  catch { return []; }
+}
+function saveBookmarks(arr) {
+  localStorage.setItem('dbms-bookmarks', JSON.stringify(arr));
+}
+
+function renderBookmarkList() {
+  const list = $('bookmark-list');
+  const countEl = $('bm-count');
+  if (!list) return;
+
+  const bookmarks = getBookmarks();
+  if (countEl) countEl.textContent = bookmarks.length;
+
+  if (!bookmarks.length) {
+    list.innerHTML = '<li class="bm-empty">No bookmarks yet.</li>';
+    return;
+  }
+
+  list.innerHTML = bookmarks.map(bm => `
+    <li><a href="#${bm.id}" title="${escapeHtml(bm.title)}">${escapeHtml(bm.title)}</a></li>
+  `).join('');
+
+  list.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.innerWidth <= 1024) $('sidebar').classList.remove('open');
+    });
+  });
+}
+
+function initBookmarks() {
+  // Restore active state on load
+  const bookmarks = getBookmarks();
+  const bookmarkedIds = new Set(bookmarks.map(b => b.id));
+
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    const id = btn.getAttribute('data-id');
+    if (bookmarkedIds.has(id)) btn.classList.add('active');
+
+    btn.addEventListener('click', () => {
+      const bms = getBookmarks();
+      const idx = bms.findIndex(b => b.id === id);
+
+      if (idx > -1) {
+        bms.splice(idx, 1);
+        btn.classList.remove('active');
+        showToast('🔖 Bookmark removed');
+      } else {
+        // Get label: heading text or chapter heading
+        const block = document.getElementById(id);
+        let title = id;
+        if (block) {
+          const h = block.querySelector('h2, h3, h4');
+          if (h) title = h.textContent.trim();
+        }
+        bms.push({ id, title });
+        btn.classList.add('active');
+        showToast('🔖 Bookmarked!');
+      }
+
+      saveBookmarks(bms);
+      renderBookmarkList();
+    });
+  });
+
+  renderBookmarkList();
+}
+
+/* ===================================================
+   COMPLETION TRACKING & PROGRESS
+   =================================================== */
+function getCompleted() {
+  try { return JSON.parse(localStorage.getItem('dbms-completed') || '[]'); }
+  catch { return []; }
+}
+function saveCompleted(arr) {
+  localStorage.setItem('dbms-completed', JSON.stringify(arr));
+}
+
+function updateProgressUI() {
+  const all = document.querySelectorAll('.complete-btn');
+  const completed = getCompleted();
+  const total = all.length;
+  const done = completed.length;
+
+  // Sidebar
+  const fillEl = $('progress-fill');
+  const pctEl = $('progress-pct');
+  const doneEl = $('done-count');
+  const totalEl = $('total-count');
+
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  if (fillEl) fillEl.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (doneEl) doneEl.textContent = done;
+  if (totalEl) totalEl.textContent = total;
+
+  // Hero counter
+  const statEl = $('stat-completed');
+  if (statEl) statEl.textContent = done;
+}
+
+function initCompletion() {
+  const completed = getCompleted();
+  const completedSet = new Set(completed);
+
+  document.querySelectorAll('.complete-btn').forEach(btn => {
+    const id = btn.getAttribute('data-id');
+    if (completedSet.has(id)) btn.classList.add('done');
+
+    btn.addEventListener('click', () => {
+      const arr = getCompleted();
+      const idx = arr.indexOf(id);
+
+      if (idx > -1) {
+        arr.splice(idx, 1);
+        btn.classList.remove('done');
+        showToast('↩ Marked incomplete');
+      } else {
+        arr.push(id);
+        btn.classList.add('done');
+        showToast('✅ Topic completed!');
+      }
+
+      saveCompleted(arr);
+      updateProgressUI();
+    });
+  });
+
+  updateProgressUI();
+}
+
+/* ===================================================
+   FAQ ACCORDION
+   =================================================== */
+function initFAQ() {
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = btn.nextElementSibling;
+      const isOpen = btn.classList.contains('open');
+
+      // Close all in same section
+      const section = btn.closest('.faq-section');
+      if (section) {
+        section.querySelectorAll('.faq-q').forEach(b => {
+          b.classList.remove('open');
+          if (b.nextElementSibling) b.nextElementSibling.classList.remove('open');
         });
+      }
 
-        // Simple Search Filter
-        const searchInput = document.getElementById('searchInput');
-        const searchableSections = document.querySelectorAll('.searchable');
+      // Toggle current
+      if (!isOpen) {
+        btn.classList.add('open');
+        if (answer) answer.classList.add('open');
+      }
+    });
+  });
+}
 
-        searchInput.addEventListener('keyup', function(e) {
-            const term = e.target.value.toLowerCase();
-            
-            searchableSections.forEach(section => {
-                const text = section.innerText.toLowerCase();
-                if(text.includes(term)) {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-        });
-    </script>
+/* ===================================================
+   KEYBOARD ACCESSIBILITY — smooth anchor scrolling
+   =================================================== */
+function initAnchorScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const id = link.getAttribute('href').slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        const offset = getNavHeight() + 16;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+/* ===================================================
+   STAT COUNTER ANIMATION (hero)
+   =================================================== */
+function animateCounter(el, target, duration = 800) {
+  if (!el) return;
+  const isNumeric = /^\d+$/.test(String(target));
+  if (!isNumeric) { el.textContent = target; return; }
+
+  let start = 0;
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    el.textContent = Math.floor(progress * target);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(step);
+}
+
+function initHeroStats() {
+  animateCounter($('stat-chapters'), 6);
+  // stat-topics is "40+" — leave as-is
+  // stat-completed is managed by updateProgressUI
+}
+
+/* ===================================================
+   RESIZE HANDLER — close sidebar on desktop resize
+   =================================================== */
+function initResize() {
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (window.innerWidth > 1024) {
+        const sidebar = $('sidebar');
+        if (sidebar) sidebar.classList.remove('open');
+      }
+    }, 150);
+  });
+}
+
+/* ===================================================
+   INIT ALL
+   =================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  initProgressBar();
+  initTheme();
+  initPrint();
+  initSidebar();
+  initChapterAccordion();
+  initScrollSpy();
+  initScrollTop();
+  initHeroCta();
+  initSearch();
+  initBookmarks();
+  initCompletion();
+  initFAQ();
+  initAnchorScroll();
+  initHeroStats();
+  initResize();
+});</script>
 </body>
 </html>
